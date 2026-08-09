@@ -13,7 +13,7 @@ import { mapTrainsQueryOptions, stationMetadataQueryOptions } from "@/lib/querie
 import type { TrainCategory } from "@/lib/types/trainTypes";
 import { getTrainCategory } from "@/lib/utils/trainClassification";
 import RailwaysOnMap from "./RailwaysOnMap";
-import StationsOnMap from "./StationsOnMap";
+import StationsOnMap, { STATION_POINT_LAYER_IDS } from "./StationsOnMap";
 import TrainSelector from "./TrainSelector";
 import TrainsOnMap from "./TrainsOnMap";
 import type { MapPopupSelection } from "./mapTypes";
@@ -94,7 +94,11 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
             return;
         }
 
-        if (feature.layer.id === "station-points") {
+        if (
+            STATION_POINT_LAYER_IDS.includes(
+                feature.layer.id as (typeof STATION_POINT_LAYER_IDS)[number],
+            )
+        ) {
             const code = feature.properties?.code;
             setPopup(typeof code === "string" ? { type: "station", id: code } : null);
             return;
@@ -120,7 +124,7 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
                 ref={mapRef}
                 initialViewState={INITIAL_VIEW_STATE}
                 mapStyle={DARK_STYLE}
-                interactiveLayerIds={["station-points"]}
+                interactiveLayerIds={[...STATION_POINT_LAYER_IDS]}
                 onClick={handleMapClick}
                 attributionControl={false}
                 style={{ width: "100%", height: "100%" }}

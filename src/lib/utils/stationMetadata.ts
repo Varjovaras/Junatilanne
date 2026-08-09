@@ -65,6 +65,15 @@ export const normalizeStationMetadata = (value: unknown): StationMetadata[] => {
     return stations;
 };
 
+export type StationTier = "major" | "commuter" | "minor";
+
+export const getStationTier = (
+    station: Pick<StationMetadata, "type" | "passengerTraffic">,
+): StationTier => {
+    if (!station.passengerTraffic) return "minor";
+    return station.type === "STOPPING_POINT" ? "commuter" : "major";
+};
+
 export type StationFeatureCollection = {
     type: "FeatureCollection";
     features: Array<{
@@ -78,6 +87,7 @@ export type StationFeatureCollection = {
             name: string;
             passengerTraffic: boolean;
             type: StationMetadataType;
+            tier: StationTier;
         };
     }>;
 };
@@ -97,6 +107,7 @@ export const stationMetadataToGeoJson = (
             name: station.stationName,
             passengerTraffic: station.passengerTraffic,
             type: station.type,
+            tier: getStationTier(station),
         },
     })),
 });

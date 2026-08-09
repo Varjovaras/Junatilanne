@@ -17,18 +17,38 @@ type StationsOnMapProps = {
     setPopup: (popup: MapPopupSelection) => void;
 };
 
-const stationPointLayer: CircleLayerSpecification = {
-    id: "station-points",
+export const STATION_POINT_LAYER_IDS = [
+    "station-points-major",
+    "station-points-commuter",
+    "station-points-minor",
+] as const;
+
+const tierLayer = (
+    id: string,
+    minzoom: number,
+    radius: number,
+    color: string,
+    strokeColor: string,
+    strokeWidth: number,
+): CircleLayerSpecification => ({
+    id,
     type: "circle",
     source: "stations",
-    minzoom: 8,
+    minzoom,
+    filter: ["==", ["get", "tier"], id.replace("station-points-", "")],
     paint: {
-        "circle-color": "#ffffff",
-        "circle-radius": 4,
-        "circle-stroke-color": "#374151",
-        "circle-stroke-width": 2,
+        "circle-color": color,
+        "circle-radius": radius,
+        "circle-stroke-color": strokeColor,
+        "circle-stroke-width": strokeWidth,
     },
-};
+});
+
+const stationPointLayers = [
+    tierLayer("station-points-major", 7, 6, "#ffffff", "#374151", 2),
+    tierLayer("station-points-commuter", 10, 4, "#ffffff", "#374151", 1.5),
+    tierLayer("station-points-minor", 12, 4.5, "#d1d5db", "#6b7280", 1.25),
+];
 
 const StationsOnMap = ({ stations, popup, setPopup }: StationsOnMapProps) => {
     const { translations } = useTranslations();
@@ -53,7 +73,9 @@ const StationsOnMap = ({ stations, popup, setPopup }: StationsOnMapProps) => {
         <>
             {stations.length > 0 && (
                 <Source id="stations" type="geojson" data={stationData} cluster={false}>
-                    <Layer {...stationPointLayer} />
+                    {stationPointLayers.map((layer) => (
+                        <Layer key={layer.id} {...layer} />
+                    ))}
                 </Source>
             )}
             {station && stationCode && (
