@@ -18,6 +18,8 @@ import type { TrainType } from "../types/trainTypes";
 export const MAP_REFETCH_INTERVAL_MS = 10_000;
 export const HOME_TRAINS_REFETCH_INTERVAL_MS = 10_000;
 export const HOME_TRAINS_STALE_TIME_MS = 10_000;
+export const STATION_SCHEDULES_REFETCH_INTERVAL_MS = 60_000;
+export const TRAIN_DETAILS_REFETCH_INTERVAL_MS = 60_000;
 export const STATION_METADATA_STALE_TIME_MS = 86_400_000;
 export const TODAY_TRAIN_STALE_TIME_MS = 300_000;
 
@@ -54,6 +56,7 @@ export const stationSchedulesQueryOptions = (stationId: string) => {
     return queryOptions({
         queryKey: queryKeys.stationSchedules(normalizedStationId),
         queryFn: () => fetchStationData({ data: normalizedStationId }),
+        refetchInterval: STATION_SCHEDULES_REFETCH_INTERVAL_MS,
         select: (schedules: StationSchedule[]) => ({
             stationId: normalizedStationId,
             schedules: sortSchedules(schedules, normalizedStationId),
@@ -119,5 +122,12 @@ export const trainDetailsQueryOptions = (trainId: string) =>
                 kind: "live",
                 train: await client.fetchQuery(todayTrainQueryOptions(trainId)),
             };
+        },
+        refetchInterval: (query) => {
+            const data = query.state.data;
+            if (data?.kind !== "live" || !data.train?.runningCurrently) {
+                return false;
+            }
+            return TRAIN_DETAILS_REFETCH_INTERVAL_MS;
         },
     });

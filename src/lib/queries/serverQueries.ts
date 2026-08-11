@@ -1,8 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getStationData } from "./getStationData";
 import { getStationMetadata } from "./getStationMetadata";
 import { getStationMessages } from "./getStationMessages";
-import { getSingleTrainData } from "./getSingleTrainData";
 import { getTrainByDateData } from "./getTrainByDateData";
 
 export const fetchTrainData = createServerFn({ method: "GET" }).handler(async () => {
@@ -13,7 +11,11 @@ export const fetchTrainData = createServerFn({ method: "GET" }).handler(async ()
 
 export const fetchStationData = createServerFn({ method: "GET" })
     .validator((stationId: string) => stationId)
-    .handler(({ data: stationId }) => getStationData(stationId));
+    .handler(async ({ data: stationId }) => {
+        const { getCachedStationData } = await import("./getCachedStationData");
+
+        return getCachedStationData(stationId);
+    });
 
 export const fetchStationMetadata = createServerFn({ method: "GET" }).handler(() =>
     getStationMetadata(),
@@ -29,4 +31,8 @@ export const fetchTrainByDateData = createServerFn({ method: "GET" })
 
 export const fetchSingleTrainData = createServerFn({ method: "GET" })
     .validator((trainNumber: string) => trainNumber)
-    .handler(({ data: trainNumber }) => getSingleTrainData(trainNumber));
+    .handler(async ({ data: trainNumber }) => {
+        const { getCachedSingleTrain } = await import("./getCachedSingleTrain");
+
+        return getCachedSingleTrain(trainNumber);
+    });
