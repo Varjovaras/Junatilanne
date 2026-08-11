@@ -26,7 +26,7 @@ const RouteDisplay = ({
 
     if (isAirportLine && variant === "details") {
         return (
-            <div className="text-2xl text-foreground/70 flex items-center justify-center gap-4">
+            <div className="text-lg sm:text-2xl text-foreground/70 flex items-center justify-center gap-2 sm:gap-4">
                 <div className="flex flex-col items-center">
                     <Link
                         to="/stations/$id"
