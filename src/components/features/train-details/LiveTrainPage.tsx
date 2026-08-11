@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import DelayCauses from "@/components/features/delay-info/DelayCauses";
 import TrainHeader from "@/components/features/train-details/TrainHeader";
 import type { TrainType } from "@/lib/types/trainTypes";
 import Train from "./Train";
@@ -38,6 +39,7 @@ const LiveTrainPage = ({ train }: LiveTrainPageProps) => {
                 </Link>
                 <div className="w-full max-w-2xl">
                     <TrainStatusBoxes train={train} />
+                    <DelayCauses train={train} />
                 </div>
             </div>
             <div className="w-full">
