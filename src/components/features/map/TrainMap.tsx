@@ -50,26 +50,30 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
         return () => window.removeEventListener("keydown", handleEscape);
     }, [popup]);
 
-    useEffect(() => {
+    const centerOnTrain = () => {
         if (
-            trainNumber &&
-            trainNumber !== lastCenteredTrain.current &&
-            mapRef.current &&
-            trains.length > 0
+            !trainNumber ||
+            trainNumber === lastCenteredTrain.current ||
+            !mapRef.current ||
+            trains.length === 0
         ) {
-            const targetTrain = trains.find(
-                (train) => train.trainNumber.toString() === trainNumber,
-            );
-            if (targetTrain?.trainLocations[0]?.location) {
-                const [lng, lat] = targetTrain.trainLocations[0].location;
-                mapRef.current.flyTo({
-                    center: [lng, lat],
-                    zoom: 10,
-                    duration: 1500,
-                });
-                lastCenteredTrain.current = trainNumber;
-            }
+            return;
         }
+
+        const targetTrain = trains.find((train) => train.trainNumber.toString() === trainNumber);
+        if (targetTrain?.trainLocations[0]?.location) {
+            const [lng, lat] = targetTrain.trainLocations[0].location;
+            mapRef.current.flyTo({
+                center: [lng, lat],
+                zoom: 10,
+                duration: 1500,
+            });
+            lastCenteredTrain.current = trainNumber;
+        }
+    };
+
+    useEffect(() => {
+        centerOnTrain();
     }, [trainNumber, trains]);
 
     const filteredTrains = useMemo(() => {
@@ -124,6 +128,7 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
                 ref={mapRef}
                 initialViewState={INITIAL_VIEW_STATE}
                 mapStyle={DARK_STYLE}
+                onLoad={centerOnTrain}
                 interactiveLayerIds={[...STATION_POINT_LAYER_IDS]}
                 onClick={handleMapClick}
                 attributionControl={false}
