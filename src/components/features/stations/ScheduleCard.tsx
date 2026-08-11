@@ -22,7 +22,11 @@ const ScheduleCard = ({ schedule, stationId }: ScheduleCardProps) => {
             className="border border-border bg-surface rounded-lg p-4 space-y-3 flex flex-col"
         >
             <div className="flex justify-between items-start gap-2">
-                <ScheduleCardHeader schedule={schedule} departureRow={departureRow} />
+                <ScheduleCardHeader
+                    schedule={schedule}
+                    departureRow={departureRow}
+                    stationId={stationId}
+                />
                 <ScheduleCardStatus schedule={schedule} />
             </div>
 

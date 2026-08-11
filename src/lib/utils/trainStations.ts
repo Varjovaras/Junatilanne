@@ -103,3 +103,14 @@ export const findStationTimeTableRow = (
             (type === undefined || row.type === type),
     );
 };
+
+export const findStationArrivalWithId = (schedule: StationSchedule, stationId: string) => {
+    return findStationTimeTableRow(schedule, stationId, "ARRIVAL");
+};
+
+export const isStationTerminus = (schedule: StationSchedule, stationId: string): boolean => {
+    return (
+        findStationArrivalWithId(schedule, stationId) !== undefined &&
+        findStationTimeTableRow(schedule, stationId, "DEPARTURE") === undefined
+    );
+};

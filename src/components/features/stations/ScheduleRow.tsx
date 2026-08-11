@@ -6,6 +6,7 @@ import { formatTime } from "@/lib/utils/dateUtils";
 import { findStationDepartureWithId } from "@/lib/utils/scheduleUtils";
 import { getFormattedStationName } from "@/lib/utils/stationUtils";
 import { getScheduleTrainDisplayName, getScheduleTrainLink } from "@/lib/utils/trainDisplay";
+import { findStationArrivalWithId, isStationTerminus } from "@/lib/utils/trainStations";
 import ScheduleCardStatus from "./ScheduleCardStatus";
 
 type ScheduleRowProps = {
@@ -21,6 +22,10 @@ const ScheduleRow = ({ schedule, stationId }: ScheduleRowProps) => {
     const lastRow = schedule.timeTableRows[schedule.timeTableRows.length - 1];
 
     const stationRows = schedule.timeTableRows.filter((row) => row.stationShortCode === stationId);
+    const arrivesOnly = isStationTerminus(schedule, stationId);
+    const track =
+        departureRow?.commercialTrack ??
+        findStationArrivalWithId(schedule, stationId)?.commercialTrack;
 
     return (
         <div className="border border-border bg-surface rounded-lg px-4 py-3 flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
@@ -45,10 +50,15 @@ const ScheduleRow = ({ schedule, stationId }: ScheduleRowProps) => {
                         shortCode: lastRow.stationShortCode,
                     }}
                 />
-                {departureRow?.commercialTrack && (
+                {track && (
                     <p className="text-sm text-foreground/60">
-                        {translations.track} {departureRow.commercialTrack}
+                        {translations.track} {track}
                     </p>
+                )}
+                {arrivesOnly && (
+                    <span className="inline-block w-fit px-2 py-1 rounded-full text-sm bg-blue-500/10 text-blue-500">
+                        {translations.arrivesOnly}
+                    </span>
                 )}
             </div>
 

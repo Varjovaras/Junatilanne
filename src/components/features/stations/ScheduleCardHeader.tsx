@@ -4,17 +4,23 @@ import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { StationSchedule, StationTimeTableRow } from "@/lib/types/stationTypes";
 import { getFormattedStationName, getTrainTypeString } from "@/lib/utils/stationUtils";
 import { getScheduleTrainDisplayName, getScheduleTrainLink } from "@/lib/utils/trainDisplay";
+import { findStationArrivalWithId, isStationTerminus } from "@/lib/utils/trainStations";
 
 type ScheduleHeaderProps = {
     schedule: StationSchedule;
     departureRow?: StationTimeTableRow;
+    stationId: string;
 };
 
-const ScheduleCardHeader = ({ schedule, departureRow }: ScheduleHeaderProps) => {
+const ScheduleCardHeader = ({ schedule, departureRow, stationId }: ScheduleHeaderProps) => {
     const { translations } = useTranslations();
 
     const firstRow = schedule.timeTableRows[0];
     const lastRow = schedule.timeTableRows[schedule.timeTableRows.length - 1];
+    const arrivesOnly = isStationTerminus(schedule, stationId);
+    const track =
+        departureRow?.commercialTrack ??
+        findStationArrivalWithId(schedule, stationId)?.commercialTrack;
 
     return (
         <div className="flex justify-between items-start min-w-0">
@@ -28,9 +34,14 @@ const ScheduleCardHeader = ({ schedule, departureRow }: ScheduleHeaderProps) => 
 
                 <p className="text-sm text-foreground/60 truncate">
                     {getTrainTypeString(schedule, translations)}
-                    {departureRow?.commercialTrack && (
+                    {track && (
                         <span className="ml-2">
-                            • {translations.track} {departureRow.commercialTrack}
+                            • {translations.track} {track}
+                        </span>
+                    )}
+                    {arrivesOnly && (
+                        <span className="ml-2">
+                            • <span className="text-blue-500">{translations.arrivesOnly}</span>
                         </span>
                     )}
                 </p>

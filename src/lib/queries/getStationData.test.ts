@@ -9,6 +9,21 @@ const mockFetch = (body: string | null) => {
 };
 
 describe("getStationData", () => {
+    it("requests 24 hours of departures and arrivals", async () => {
+        let requestedUrl = "";
+        globalThis.fetch = mock((input: string | URL | Request) => {
+            requestedUrl = String(input);
+            return Promise.resolve(new Response("[]", { status: 200 }));
+        }) as unknown as typeof fetch;
+
+        await getStationData("LOP");
+
+        expect(requestedUrl).toContain("minutes_before_departure=1440");
+        expect(requestedUrl).toContain("minutes_after_departure=0");
+        expect(requestedUrl).toContain("minutes_before_arrival=1440");
+        expect(requestedUrl).toContain("minutes_after_arrival=0");
+    });
+
     it("returns schedules when the API returns JSON", async () => {
         const schedules = [{ trainNumber: 1, timeTableRows: [] }] as unknown as StationSchedule[];
         mockFetch(JSON.stringify(schedules));

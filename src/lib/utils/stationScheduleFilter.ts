@@ -1,5 +1,6 @@
 import type { StationSchedule } from "../types/stationTypes";
-import { findStationTimeTableRow } from "./trainStations";
+import { findStationDepartureWithId } from "./scheduleUtils";
+import { findStationArrivalWithId } from "./trainStations";
 
 export const stationScheduleFilter = (
     stationSchedules: StationSchedule[],
@@ -9,11 +10,13 @@ export const stationScheduleFilter = (
 
     // Filter schedules to only include trains that:
     // 1. Actually stop at this station
-    // 2. Haven't departed yet (scheduled time is in the future)
+    // 2. Haven't departed yet (scheduled departure or arrival time is in the future)
     const filtered: Array<{ schedule: StationSchedule; stationTime: number }> = [];
 
     for (const schedule of stationSchedules) {
-        const stationRow = findStationTimeTableRow(schedule, stationId);
+        const stationRow =
+            findStationDepartureWithId(schedule, stationId) ??
+            findStationArrivalWithId(schedule, stationId);
 
         if (!stationRow) continue;
 
