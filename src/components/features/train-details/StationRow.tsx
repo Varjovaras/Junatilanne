@@ -33,13 +33,13 @@ const StationRow = ({ station, status, isPassenger }: StationRowProps) => {
     const isNextStation = status === "next";
     const isFutureStation = status === "next" || status === "future";
 
-    const rowClassName = `flex gap-4 py-2 px-3 rounded-md
+    const rowClassName = `flex flex-wrap justify-end items-center gap-x-4 gap-y-1 py-2 px-3 rounded-md
     ${isCurrentStation ? "bg-green-500/5" : ""}
     ${isNextStation ? "bg-blue-500/5" : ""}`;
 
     return (
         <div className={rowClassName}>
-            <div className="flex gap-4 flex-1 min-w-0">
+            <div className="flex gap-4 items-center grow shrink basis-full sm:basis-auto min-w-0">
                 <StationIndicator
                     isCurrentStation={isCurrentStation}
                     isNextStation={isNextStation}
@@ -57,16 +57,7 @@ const StationRow = ({ station, status, isPassenger }: StationRowProps) => {
                 </Link>
             </div>
 
-            {station.commercialTrack && (
-                <div className="flex items-center justify-end gap-1 text-sm text-foreground/60 shrink-0 min-w-[60px]">
-                    <span className="hidden sm:inline">{translations.track}</span>
-                    <span className="font-medium text-foreground/80">
-                        {station.commercialTrack}
-                    </span>
-                </div>
-            )}
-
-            <div className="flex flex-col items-end gap-1 text-sm min-w-[120px] sm:min-w-[200px] shrink-0">
+            <div className="flex flex-col items-end gap-1 text-sm shrink-0 sm:min-w-[200px]">
                 <StationTime
                     label={translations.scheduled}
                     time={scheduledTime}
@@ -87,6 +78,15 @@ const StationRow = ({ station, status, isPassenger }: StationRowProps) => {
                         time={estimatedTime}
                         colorClassName="text-yellow-500"
                     />
+                )}
+
+                {station.commercialTrack && (
+                    <div className="w-full flex justify-end sm:justify-between text-foreground/60">
+                        <span className="hidden sm:inline">{translations.track}</span>
+                        <span className="font-medium text-foreground/80">
+                            {station.commercialTrack}
+                        </span>
+                    </div>
                 )}
 
                 {isLate && <DelayDisplay delay={delay} minShortened={translations.minShortened} />}
