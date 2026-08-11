@@ -3,7 +3,6 @@ import DelayCauses from "@/components/features/delay-info/DelayCauses";
 import TrainHeader from "@/components/features/train-details/TrainHeader";
 import type { TrainType } from "@/lib/types/trainTypes";
 import Train from "./Train";
-import TrainStatusBoxes from "./TrainStatusBoxes";
 
 type LiveTrainPageProps = {
     train: TrainType;
@@ -38,7 +37,6 @@ const LiveTrainPage = ({ train }: LiveTrainPageProps) => {
                     View on Map
                 </Link>
                 <div className="w-full max-w-2xl">
-                    <TrainStatusBoxes train={train} />
                     <DelayCauses train={train} />
                 </div>
             </div>
