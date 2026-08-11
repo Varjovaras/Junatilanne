@@ -24,7 +24,7 @@ const DelayCauses = ({ train }: DelayCausesProps) => {
 
     return (
         <>
-            <div className="mt-3 md:flex md:justify-center">
+            <div className="mt-3 flex justify-center">
                 <button
                     type="button"
                     onClick={() => setShowDelayCauses(!showDelayCauses)}
