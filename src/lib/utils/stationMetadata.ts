@@ -1,6 +1,7 @@
 import type { StationMetadata, StationMetadataType } from "../types/stationTypes";
 
 const STATION_TYPES: ReadonlySet<StationMetadataType> = new Set(["STATION", "STOPPING_POINT"]);
+const SUPPORTED_COUNTRY_CODES: ReadonlySet<StationMetadata["countryCode"]> = new Set(["FI", "SE"]);
 
 type StationMetadataRecord = Record<string, unknown>;
 
@@ -30,7 +31,7 @@ export const normalizeStationMetadata = (value: unknown): StationMetadata[] => {
         const longitude = entry.longitude;
 
         if (
-            countryCode !== "FI" ||
+            !SUPPORTED_COUNTRY_CODES.has(countryCode as StationMetadata["countryCode"]) ||
             !isStationType(type) ||
             typeof stationName !== "string" ||
             !stationName.trim() ||
@@ -49,7 +50,7 @@ export const normalizeStationMetadata = (value: unknown): StationMetadata[] => {
         const stationUICCode = entry.stationUICCode;
 
         stations.push({
-            countryCode: "FI",
+            countryCode: countryCode as StationMetadata["countryCode"],
             latitude,
             longitude,
             passengerTraffic: entry.passengerTraffic === true,

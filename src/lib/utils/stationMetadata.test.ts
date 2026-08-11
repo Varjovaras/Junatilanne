@@ -36,6 +36,21 @@ describe("station metadata normalization", () => {
         ]);
     });
 
+    it("keeps Swedish stations while excluding other country codes", () => {
+        const result = normalizeStationMetadata([
+            station({
+                countryCode: "SE",
+                stationShortCode: "HPA",
+                stationName: "Haaparanta pohjoinen",
+            }),
+            station({ countryCode: "RU", stationShortCode: "RUS", stationName: "Venäjän asema" }),
+        ]);
+
+        expect(
+            result.map(({ stationShortCode, countryCode }) => [stationShortCode, countryCode]),
+        ).toEqual([["HPA", "SE"]]);
+    });
+
     it("rejects missing names and invalid coordinates", () => {
         const result = normalizeStationMetadata([
             station({ stationName: "" }),

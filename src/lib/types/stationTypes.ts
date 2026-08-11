@@ -1,7 +1,7 @@
 export type StationMetadataType = "STATION" | "STOPPING_POINT";
 
 export type StationMetadata = {
-    countryCode: "FI";
+    countryCode: "FI" | "SE";
     latitude: number;
     longitude: number;
     passengerTraffic: boolean;

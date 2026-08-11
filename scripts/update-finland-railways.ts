@@ -86,17 +86,33 @@ function simplifyCoordinates(coordinates: Coordinate[]): Coordinate[] {
     ]);
 }
 
+// Bounding box around Haparanda (Sweden) so the Tornio–Haaparanta line is drawn
+// across the border to the Haparanda station approach. Overpass `way(bbox)`
+// returns the full geometry of intersecting ways and the union dedupes the
+// Finnish ways already matched by the area query.
+const HAPARANDA_BBOX = "65.80,24.02,65.88,24.22";
+
 const query = `
 [out:json][timeout:120];
 area["ISO3166-1"="FI"]["boundary"="administrative"]->.finland;
-way(area.finland)
-  ["railway"="rail"]
-  ["service"!~"^(siding|spur|yard|crossover|maintenance)$"]
-  ["usage"!~"^(disused|abandoned)$"]
-  ["disused"!~"^(yes|true)$"]
-  ["abandoned"!~"^(yes|true)$"]
-  ["construction"!~"^(yes|true)$"]
-  ["proposed"!~"^(yes|true)$"];
+(
+  way(area.finland)
+    ["railway"="rail"]
+    ["service"!~"^(siding|spur|yard|crossover|maintenance)$"]
+    ["usage"!~"^(disused|abandoned)$"]
+    ["disused"!~"^(yes|true)$"]
+    ["abandoned"!~"^(yes|true)$"]
+    ["construction"!~"^(yes|true)$"]
+    ["proposed"!~"^(yes|true)$"];
+  way(${HAPARANDA_BBOX})
+    ["railway"="rail"]
+    ["service"!~"^(siding|spur|yard|crossover|maintenance)$"]
+    ["usage"!~"^(disused|abandoned)$"]
+    ["disused"!~"^(yes|true)$"]
+    ["abandoned"!~"^(yes|true)$"]
+    ["construction"!~"^(yes|true)$"]
+    ["proposed"!~"^(yes|true)$"];
+);
 out geom qt;
 `;
 
