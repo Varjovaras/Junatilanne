@@ -1,13 +1,16 @@
 import { describe, expect, it, mock } from "bun:test";
+import type { StationSchedule } from "../types/stationTypes";
 import { getStationData } from "./getStationData";
 
 const mockFetch = (body: string | null) => {
-    globalThis.fetch = mock(() => Promise.resolve(new Response(body, { status: 200 })));
+    globalThis.fetch = mock(() =>
+        Promise.resolve(new Response(body, { status: 200 })),
+    ) as unknown as typeof fetch;
 };
 
 describe("getStationData", () => {
     it("returns schedules when the API returns JSON", async () => {
-        const schedules = [{ trainNumber: 1, timeTableRows: [] }];
+        const schedules = [{ trainNumber: 1, timeTableRows: [] }] as unknown as StationSchedule[];
         mockFetch(JSON.stringify(schedules));
 
         const result = await getStationData("LOP");
