@@ -13,14 +13,14 @@ const DelayReasonCard = ({ timeTableRow, minutes }: DelayReasonCardProps) => {
     const { translations } = useTranslations();
     const delayColorClass = minutes ? getDelayColorClass(minutes) : "text-gray-500";
     return (
-        <div className="bg-surface-muted rounded-lg p-4">
-            <div className="mb-2">
+        <div className="bg-surface-muted rounded-lg p-4 min-w-0">
+            <div className="mb-2 break-words">
                 <span className="font-semibold text-red-500">{translations.station} </span>
                 {timeTableRow.station.name}
             </div>
             {timeTableRow.causes?.map((cause) =>
                 hasMeaningfulCauseText(cause) ? (
-                    <div key={getCauseKey(cause)} className="ml-4 space-y-1">
+                    <div key={getCauseKey(cause)} className="ml-4 space-y-1 min-w-0">
                         {cause.categoryCode?.name?.trim() && (
                             <CauseItem
                                 label={translations.category}

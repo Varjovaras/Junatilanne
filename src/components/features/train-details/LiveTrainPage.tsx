@@ -1,18 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import DelayInformation from "@/components/features/delay-info/DelayInformation";
 import TrainHeader from "@/components/features/train-details/TrainHeader";
 import type { TrainType } from "@/lib/types/trainTypes";
 import Train from "./Train";
-import TrainProgressBar from "./TrainProgressBar";
+import TrainStatusBoxes from "./TrainStatusBoxes";
 
 type LiveTrainPageProps = {
     train: TrainType;
 };
 
 const LiveTrainPage = ({ train }: LiveTrainPageProps) => {
-    const timeTablesWithCauses = train.timeTableRows.filter((row) => row.causes !== null);
-    const hasDelayCauses = timeTablesWithCauses.length > 0;
-
     return (
         <div className="mx-auto flex flex-col items-center max-w-6xl px-4">
             <div className="w-full flex flex-col items-center gap-4 mb-8">
@@ -40,20 +36,13 @@ const LiveTrainPage = ({ train }: LiveTrainPageProps) => {
                     </svg>
                     View on Map
                 </Link>
-                <div className="w-full max-w-2xl">
-                    <TrainProgressBar train={train} />
+                <div className="w-full">
+                    <TrainStatusBoxes train={train} />
                 </div>
             </div>
-            {hasDelayCauses ? (
-                <div className="space-y-8 w-full">
-                    <DelayInformation train={train} />
-                    <Train train={train} />
-                </div>
-            ) : (
-                <div className="w-full">
-                    <Train train={train} />
-                </div>
-            )}
+            <div className="w-full">
+                <Train train={train} />
+            </div>
         </div>
     );
 };
