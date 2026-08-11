@@ -24,15 +24,9 @@ const RouteDisplay = ({
 }: RouteDisplayProps) => {
     const { translations } = useTranslations();
 
-    if (isAirportLine && variant !== "list") {
+    if (isAirportLine && variant === "details") {
         return (
-            <div
-                className={
-                    variant === "details"
-                        ? "text-2xl text-foreground/70 flex items-center justify-center gap-4"
-                        : undefined
-                }
-            >
+            <div className="text-2xl text-foreground/70 flex items-center justify-center gap-4">
                 <div className="flex flex-col items-center">
                     <Link
                         to="/stations/$id"
@@ -41,9 +35,7 @@ const RouteDisplay = ({
                     >
                         {start.name}
                     </Link>
-                    {variant === "details" && start.time && (
-                        <span className="text-sm text-foreground/60">{start.time}</span>
-                    )}
+                    {start.time && <span className="text-sm text-foreground/60">{start.time}</span>}
                 </div>
                 <span className="mx-2">→</span>
                 <div className="flex flex-col items-center">
@@ -64,15 +56,13 @@ const RouteDisplay = ({
                     >
                         {end.name}
                     </Link>
-                    {variant === "details" && end.time && (
-                        <span className="text-sm text-foreground/60">{end.time}</span>
-                    )}
+                    {end.time && <span className="text-sm text-foreground/60">{end.time}</span>}
                 </div>
             </div>
         );
     }
 
-    if (isAirportLine && variant === "list") {
+    if (isAirportLine && (variant === "list" || variant === "compact")) {
         return (
             <div className="grid w-full max-w-md mx-auto grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-2 text-sm">
                 <div className="min-w-0">
