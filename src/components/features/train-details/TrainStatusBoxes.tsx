@@ -29,7 +29,7 @@ const TrainStatusBoxes = ({ train }: TrainStatusBoxesProps) => {
 
     return (
         <div className="bg-surface-muted rounded-lg p-4 my-4">
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center md:justify-center gap-3 flex-wrap">
                 <div className="flex items-center gap-2 min-w-0">
                     <div className="w-2 h-2 bg-red-600 rounded-full shrink-0" />
                     <div className="min-w-0">
@@ -82,7 +82,7 @@ const TrainStatusBoxes = ({ train }: TrainStatusBoxesProps) => {
             </div>
 
             {nextStop && (
-                <div className="text-sm mt-3">
+                <div className="text-sm mt-3 md:text-center">
                     {translations.nextArrival}{" "}
                     <span className="font-semibold">
                         {formatTime(nextStop.liveEstimateTime || nextStop.scheduledTime)}
@@ -92,31 +92,33 @@ const TrainStatusBoxes = ({ train }: TrainStatusBoxesProps) => {
                             +{nextStop.differenceInMinutes} min
                         </span>
                     )}
-                    <span className="text-xs text-foreground/70 ml-2">
+                    <div className="text-xs text-foreground/70 mt-1">
                         {mounted
                             ? getArrivalCountdown(
                                   new Date(nextStop.liveEstimateTime || nextStop.scheduledTime),
                                   translations,
                               )
                             : ""}
-                    </span>
+                    </div>
                 </div>
             )}
 
             {timeTablesWithCauses.length > 0 && (
-                <div className="mt-3">
-                    <button
-                        type="button"
-                        onClick={() => setShowDelayCauses(!showDelayCauses)}
-                        aria-expanded={showDelayCauses}
-                        className="p-2 text-sm border border-foreground rounded-md hover:bg-foreground hover:text-background transition-colors"
-                    >
-                        {showDelayCauses
-                            ? translations.hideDelayCauses
-                            : translations.showDelayCauses}
-                    </button>
+                <>
+                    <div className="mt-3 md:flex md:justify-center">
+                        <button
+                            type="button"
+                            onClick={() => setShowDelayCauses(!showDelayCauses)}
+                            aria-expanded={showDelayCauses}
+                            className="p-2 text-sm border border-foreground rounded-md hover:bg-foreground hover:text-background transition-colors"
+                        >
+                            {showDelayCauses
+                                ? translations.hideDelayCauses
+                                : translations.showDelayCauses}
+                        </button>
+                    </div>
                     {showDelayCauses && (
-                        <div className="space-y-3 mt-4">
+                        <div className="space-y-3 mt-4 w-full">
                             {timeTablesWithCauses.map((timeTableRow) => (
                                 <DelayReasonCard
                                     key={`${timeTableRow.station.shortCode}-${timeTableRow.type}-${timeTableRow.scheduledTime}`}
@@ -129,7 +131,7 @@ const TrainStatusBoxes = ({ train }: TrainStatusBoxesProps) => {
                             ))}
                         </div>
                     )}
-                </div>
+                </>
             )}
         </div>
     );

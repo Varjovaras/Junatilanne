@@ -36,7 +36,7 @@ const LiveTrainPage = ({ train }: LiveTrainPageProps) => {
                     </svg>
                     View on Map
                 </Link>
-                <div className="w-full">
+                <div className="w-full max-w-2xl">
                     <TrainStatusBoxes train={train} />
                 </div>
             </div>
