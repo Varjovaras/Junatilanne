@@ -1,6 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import type { QueryClient } from "@tanstack/react-query";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import "@/app/globals.css";
 import favicon from "@/favicon.ico?url";
 import geistMono from "@/app/fonts/GeistMonoVF.woff?url";
@@ -88,6 +89,7 @@ function RootLayout() {
                         </LanguageProvider>
                     </ThemeProvider>
                     <Scripts />
+                    <TanStackRouterDevtools />
                 </body>
             </html>
         </QueryClientProvider>
