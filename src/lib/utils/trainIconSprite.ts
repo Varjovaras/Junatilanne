@@ -22,6 +22,14 @@ const TRAIN_SPRITES: Record<string, string> = {
     [TRAIN_ICON_ARROW_SPRITE]: toSvg(arrow),
 };
 
+const loadSvgImage = (url: string): Promise<HTMLImageElement> =>
+    new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error("Failed to load train icon sprite"));
+        image.src = url;
+    });
+
 export const ensureTrainSprites = async (map: Map): Promise<void> => {
     const missing = Object.entries(TRAIN_SPRITES).filter(([name]) => !map.hasImage(name));
     if (missing.length === 0) return;
@@ -29,8 +37,8 @@ export const ensureTrainSprites = async (map: Map): Promise<void> => {
     await Promise.all(
         missing.map(async ([name, body]) => {
             const svgDataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(body)}`;
-            const image = await map.loadImage(svgDataUrl);
-            map.addImage(name, image.data, { sdf: true, pixelRatio: SPRITE_SCALE });
+            const image = await loadSvgImage(svgDataUrl);
+            map.addImage(name, image, { sdf: true, pixelRatio: SPRITE_SCALE });
         }),
     );
 };

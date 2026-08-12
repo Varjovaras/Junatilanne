@@ -121,10 +121,14 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
     };
 
     const handleMapLoad = (event: MapEvent) => {
-        void ensureTrainSprites(event.target).then(() => {
-            setSpritesReady(true);
-            centerOnTrain();
-        });
+        void ensureTrainSprites(event.target)
+            .then(() => {
+                setSpritesReady(true);
+                centerOnTrain();
+            })
+            .catch((error: unknown) => {
+                console.error("Failed to load train sprites", error);
+            });
     };
 
     if (isPending && trains.length === 0) {
