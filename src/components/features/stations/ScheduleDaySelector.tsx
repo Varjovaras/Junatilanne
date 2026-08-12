@@ -13,7 +13,7 @@ const ScheduleDaySelector = ({ date, onDateChange }: ScheduleDaySelectorProps) =
     const tomorrow = addDays(today, 1);
 
     return (
-        <div className={`space-y-3 ${isLoading ? "fade-out" : "fade-in"}`}>
+        <div className={`space-y-3 w-full max-w-xs mx-auto ${isLoading ? "fade-out" : "fade-in"}`}>
             <div className="flex justify-center">
                 <div className="inline-flex flex-wrap justify-center gap-2 md:gap-0 md:flex-nowrap rounded-md border border-border overflow-hidden">
                     <button

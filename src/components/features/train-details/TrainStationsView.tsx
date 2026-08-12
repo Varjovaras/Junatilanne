@@ -2,7 +2,7 @@ import { useLocation } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
-import { isToday } from "@/lib/utils/dateUtils";
+import { formatDate, isToday } from "@/lib/utils/dateUtils";
 import ShowNonCommercialStopsButton from "./ShowNonCommercialStopsButton";
 import ShowStationsButton from "./ShowStationsButton";
 import TrainBasicInfo from "./TrainBasicInfo";
@@ -28,6 +28,9 @@ const TrainStationsView = ({ train }: TrainStationsViewProps) => {
         <div
             className={`mt-2 ${isLoading ? "fade-out" : "fade-in"} flex flex-col flex-1 items-center`}
         >
+            <p className="w-full text-center text-sm text-foreground/60 mb-2">
+                {formatDate(departureDate)}
+            </p>
             {!isToday(departureDate) && (
                 <p className="w-full text-center text-sm text-yellow-500 mb-3">
                     {translations.notTodaysSchedule}

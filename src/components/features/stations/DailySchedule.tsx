@@ -1,6 +1,6 @@
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { StationSchedule } from "@/lib/types/stationTypes";
-import { isToday } from "@/lib/utils/dateUtils";
+import { formatDate, isToday } from "@/lib/utils/dateUtils";
 import { getTrainId } from "@/lib/utils/trainDisplay";
 import ScheduleRow from "./ScheduleRow";
 
@@ -15,6 +15,9 @@ const DailySchedule = ({ schedules, stationId, date }: DailyScheduleProps) => {
 
     return (
         <div>
+            {date && (
+                <p className="text-center text-sm text-foreground/60 mb-2">{formatDate(date)}</p>
+            )}
             {schedules.length === 0 ? (
                 <p className="text-foreground/60 italic">
                     {date && !isToday(date)
