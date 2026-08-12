@@ -47,19 +47,26 @@ const Search = () => {
         return true;
     };
 
+    const inputLower = searchValue.toLowerCase();
+    const exactMatch = Object.entries(majorStations).find(
+        ([code, name]) => name.toLowerCase() === inputLower || code.toLowerCase() === inputLower,
+    );
+
     const handleSubmit = () => {
-        if (suggestions.length === 1) {
-            handleStationSelect(suggestions[0][0]);
-            return;
-        }
         if (selectedIndex >= 0) {
             handleStationSelect(suggestions[selectedIndex][0]);
             return;
         }
+        if (exactMatch) {
+            handleStationSelect(exactMatch[0]);
+            return;
+        }
+        if (suggestions.length > 0) {
+            handleStationSelect(suggestions[0][0]);
+            return;
+        }
         handleTrainSubmit();
     };
-
-    const inputLower = searchValue.toLowerCase();
     const matchingSuggestions =
         searchValue.length < 2
             ? []
