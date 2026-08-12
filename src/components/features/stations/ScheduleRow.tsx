@@ -13,7 +13,6 @@ type ScheduleRowProps = {
     schedule: StationSchedule;
     stationId: string;
 };
-
 const ScheduleRow = ({ schedule, stationId }: ScheduleRowProps) => {
     const { translations } = useTranslations();
     const departureRow = findStationDepartureWithId(schedule, stationId);
@@ -26,7 +25,6 @@ const ScheduleRow = ({ schedule, stationId }: ScheduleRowProps) => {
     const track =
         departureRow?.commercialTrack ??
         findStationArrivalWithId(schedule, stationId)?.commercialTrack;
-
     return (
         <div className="border border-border bg-surface rounded-lg px-4 py-3 flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
             <div className="min-w-0 lg:w-1/3 space-y-1">

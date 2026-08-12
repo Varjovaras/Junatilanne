@@ -22,7 +22,7 @@ const DailySchedule = ({ schedules, stationId, date }: DailyScheduleProps) => {
                         : translations.noTrainsToday}
                 </p>
             ) : (
-                <div className="space-y-2 w-full">
+                <div className="space-y-2 w-full max-w-3xl mx-auto">
                     {schedules.map((schedule) => (
                         <ScheduleRow
                             key={getTrainId(schedule)}
