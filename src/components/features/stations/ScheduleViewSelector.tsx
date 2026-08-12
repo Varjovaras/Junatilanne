@@ -5,9 +5,16 @@ export type ScheduleView = "upcoming" | "schedule";
 type ScheduleViewSelectorProps = {
     view: ScheduleView;
     onViewChange: (view: ScheduleView) => void;
+    upcomingCount: number;
+    scheduleCount: number;
 };
 
-const ScheduleViewSelector = ({ view, onViewChange }: ScheduleViewSelectorProps) => {
+const ScheduleViewSelector = ({
+    view,
+    onViewChange,
+    upcomingCount,
+    scheduleCount,
+}: ScheduleViewSelectorProps) => {
     const { translations, isLoading } = useTranslations();
 
     return (
@@ -22,7 +29,7 @@ const ScheduleViewSelector = ({ view, onViewChange }: ScheduleViewSelectorProps)
                             : "hover:bg-surface-hover"
                     }`}
                 >
-                    {translations.futureTrains}
+                    {translations.futureTrains} ({upcomingCount})
                 </button>
                 <button
                     type="button"
@@ -33,7 +40,7 @@ const ScheduleViewSelector = ({ view, onViewChange }: ScheduleViewSelectorProps)
                             : "hover:bg-surface-hover"
                     }`}
                 >
-                    {translations.schedule}
+                    {translations.schedule} ({scheduleCount})
                 </button>
             </div>
         </div>

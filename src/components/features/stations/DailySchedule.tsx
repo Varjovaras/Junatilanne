@@ -12,10 +12,7 @@ const DailySchedule = ({ schedules, stationId }: DailyScheduleProps) => {
     const { translations } = useTranslations();
 
     return (
-        <div className="space-y-4">
-            <h2 className="text-xl font-bold">
-                {translations.todaysSchedule} ({schedules.length})
-            </h2>
+        <div>
             {schedules.length === 0 ? (
                 <p className="text-foreground/60 italic">{translations.noTrainsToday}</p>
             ) : (

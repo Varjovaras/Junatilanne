@@ -13,9 +13,6 @@ const ScheduleList = ({ schedules, stationId }: ScheduleListProps) => {
 
     return (
         <div>
-            <h2 className="text-xl font-bold mb-4">
-                {translations.futureTrains} ({schedules.length})
-            </h2>
             {schedules.length === 0 ? (
                 <p className="text-foreground/60 italic">{translations.noUpcomingDepartures}</p>
             ) : (

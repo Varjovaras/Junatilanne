@@ -15,6 +15,8 @@ type ScheduleOverviewProps = {
     stationId: string;
 };
 
+const CATEGORIES = ["all", "commuter", "longDistance", "freight", "passengerCommuter"] as const;
+
 const ScheduleOverview = ({ schedules, stationId }: ScheduleOverviewProps) => {
     const [view, setView] = useState<ScheduleView>("upcoming");
     const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
@@ -31,10 +33,9 @@ const ScheduleOverview = ({ schedules, stationId }: ScheduleOverviewProps) => {
         );
     };
 
-    const categoryFilteredSchedules = filterSchedulesByCategory(
-        filteredSchedules,
-        selectedCategory as "all" | "commuter" | "longDistance" | "freight" | "passengerCommuter",
-    );
+    const category = selectedCategory as (typeof CATEGORIES)[number];
+
+    const categoryFilteredSchedules = filterSchedulesByCategory(filteredSchedules, category);
     const displayedSchedules = filterByTrack(categoryFilteredSchedules);
 
     const stationSchedules = schedules.filter(
@@ -42,28 +43,32 @@ const ScheduleOverview = ({ schedules, stationId }: ScheduleOverviewProps) => {
             findStationDepartureWithId(schedule, stationId) ||
             findStationArrivalWithId(schedule, stationId),
     );
+    const dailySchedules = filterByTrack(filterSchedulesByCategory(stationSchedules, category));
 
     return (
         <div className="space-y-8">
-            <ScheduleViewSelector view={view} onViewChange={setView} />
+            <TrainTypeSelector
+                selectedCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
+            />
+
+            <TrackSelector
+                schedules={schedules}
+                stationId={stationId}
+                onTrackSelect={setSelectedTrack}
+            />
+
+            <ScheduleViewSelector
+                view={view}
+                onViewChange={setView}
+                upcomingCount={displayedSchedules.length}
+                scheduleCount={dailySchedules.length}
+            />
 
             {view === "upcoming" ? (
-                <>
-                    <TrainTypeSelector
-                        selectedCategory={selectedCategory}
-                        onCategoryChange={setSelectedCategory}
-                    />
-
-                    <TrackSelector
-                        schedules={schedules}
-                        stationId={stationId}
-                        onTrackSelect={setSelectedTrack}
-                    />
-
-                    <ScheduleList schedules={displayedSchedules} stationId={stationId} />
-                </>
+                <ScheduleList schedules={displayedSchedules} stationId={stationId} />
             ) : (
-                <DailySchedule schedules={stationSchedules} stationId={stationId} />
+                <DailySchedule schedules={dailySchedules} stationId={stationId} />
             )}
         </div>
     );
