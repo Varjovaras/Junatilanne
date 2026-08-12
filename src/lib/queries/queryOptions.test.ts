@@ -10,10 +10,13 @@ const GRAPHQL_ENDPOINT = "https://rata.digitraffic.fi/api/v2/graphql/graphql";
 const fetchTrainData = ({ signal }: ServerQueryOptions = {}) =>
     fetch(GRAPHQL_ENDPOINT, { method: "POST", signal }).then((response) => response.json());
 
-const fetchStationData = ({ data: stationId, signal }: ServerQueryInput) =>
-    fetch(`https://rata.digitraffic.fi/api/v1/live-trains/station/${stationId}`, { signal }).then(
-        (response) => response.json(),
-    );
+const fetchStationSchedulesByDate = async ({ signal }: ServerQueryOptions) => {
+    const response = await fetch(GRAPHQL_ENDPOINT, { method: "POST", signal });
+    const body = (await response.json()) as {
+        data: { previousDay: unknown[]; selectedDay: unknown[] };
+    };
+    return [...body.data.previousDay, ...body.data.selectedDay];
+};
 
 const fetchStationMetadata = () => Promise.resolve([]);
 
@@ -53,7 +56,7 @@ const fetchSingleTrainData = async ({ signal }: ServerQueryInput) => {
 
 mock.module("./serverQueries", () => ({
     fetchTrainData,
-    fetchStationData,
+    fetchStationSchedulesByDate,
     fetchStationMetadata,
     fetchStationMessages,
     fetchTrainByDateData,

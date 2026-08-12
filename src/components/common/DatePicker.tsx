@@ -1,6 +1,5 @@
 import { useId } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { todayISOString } from "@/lib/utils/dateUtils";
 
 type DatePickerProps = {
     date: string;
@@ -11,7 +10,6 @@ const DatePicker = ({ date, setDate }: DatePickerProps) => {
     // Set minimum date to 2017-01-01 (VR's data starts from around this time)
     const { translations } = useTranslations();
     const minDate = "2017-01-01";
-    const today = todayISOString();
     const id = useId();
 
     return (
@@ -28,15 +26,9 @@ const DatePicker = ({ date, setDate }: DatePickerProps) => {
                     setDate(e.target.value);
                 }}
                 min={minDate}
-                max={today}
                 lang="fi-FI"
                 className="w-full px-4 py-2 border border-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-surface text-foreground"
             />
-            {/* {date && (
-        <p className="text-sm text-foreground/60">
-          Selected: {formatDateForDisplay(date)}
-        </p>
-      )} */}
         </div>
     );
 };

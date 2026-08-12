@@ -9,12 +9,13 @@ export const fetchTrainData = createServerFn({ method: "GET" }).handler(async ()
     return getCachedTrains();
 });
 
-export const fetchStationData = createServerFn({ method: "GET" })
-    .validator((stationId: string) => stationId)
-    .handler(async ({ data: stationId }) => {
-        const { getCachedStationData } = await import("./getCachedStationData");
+export const fetchStationSchedulesByDate = createServerFn({ method: "GET" })
+    .validator((params: { stationId: string; date: string }) => params)
+    .handler(async ({ data }) => {
+        const { getCachedStationSchedulesByDate } =
+            await import("./getCachedStationSchedulesByDate");
 
-        return getCachedStationData(stationId);
+        return getCachedStationSchedulesByDate(data.stationId, data.date);
     });
 
 export const fetchStationMetadata = createServerFn({ method: "GET" }).handler(() =>

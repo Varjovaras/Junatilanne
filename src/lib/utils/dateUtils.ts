@@ -22,6 +22,36 @@ export const todayISOString = () => {
     return new Date().toISOString().split("T")[0];
 };
 
+export const helsinkiDateKey = (date: Date): string => {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Europe/Helsinki",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    }).formatToParts(date);
+    const get = (type: Intl.DateTimeFormatPartTypes) =>
+        parts.find((part) => part.type === type)?.value ?? "";
+    return `${get("year")}-${get("month")}-${get("day")}`;
+};
+
+export const todayInHelsinki = () => helsinkiDateKey(new Date());
+
+export const addDays = (date: string, days: number): string => {
+    const result = new Date(`${date}T00:00:00.000Z`);
+    result.setUTCDate(result.getUTCDate() + days);
+    return result.toISOString().split("T")[0];
+};
+
+// Exclusive time window covering one Helsinki day, as UTC ISO strings.
+export const getHelsinkiDayWindow = (date: string) => {
+    const start = addDays(date, -1);
+    const end = date;
+    return {
+        startIso: `${start}T20:59:59.999Z`,
+        endIso: `${end}T21:00:00.000Z`,
+    };
+};
+
 export const formatDate = (date: Date | string) => {
     return new Date(date).toLocaleDateString("fi-FI", {
         timeZone: "Europe/Helsinki",
@@ -32,18 +62,6 @@ export const formatDateTime = (date: Date | string) => {
     return new Date(date).toLocaleString("fi-FI", {
         timeZone: "Europe/Helsinki",
     });
-};
-
-const helsinkiDateKey = (date: Date): string => {
-    const parts = new Intl.DateTimeFormat("en-CA", {
-        timeZone: "Europe/Helsinki",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-    }).formatToParts(date);
-    const get = (type: Intl.DateTimeFormatPartTypes) =>
-        parts.find((part) => part.type === type)?.value ?? "";
-    return `${get("year")}-${get("month")}-${get("day")}`;
 };
 
 export const isToday = (date: string) => {

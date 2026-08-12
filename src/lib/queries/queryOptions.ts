@@ -1,5 +1,11 @@
 import { queryOptions } from "@tanstack/react-query";
-import { formatDateForUrl, todayISOString } from "../utils/dateUtils";
+import {
+    formatDateForUrl,
+    isToday,
+    isTomorrow,
+    todayInHelsinki,
+    todayISOString,
+} from "../utils/dateUtils";
 import { getTrackDistances } from "../utils/trackDistance";
 import { isValidTrainId } from "../utils/urlUtils";
 import { sortSchedules } from "../utils/sortSchedules";
@@ -7,9 +13,9 @@ import { getMapData } from "./getMapData";
 import { normalizeStationId, queryKeys } from "./queryKeys";
 import {
     fetchSingleTrainData,
-    fetchStationData,
     fetchStationMetadata,
     fetchStationMessages,
+    fetchStationSchedulesByDate,
     fetchTrainByDateData,
     fetchTrainData,
 } from "./serverQueries";
@@ -56,10 +62,30 @@ export const stationSchedulesQueryOptions = (stationId: string) => {
 
     return queryOptions({
         queryKey: queryKeys.stationSchedules(normalizedStationId),
-        queryFn: () => fetchStationData({ data: normalizedStationId }),
+        queryFn: () =>
+            fetchStationSchedulesByDate({
+                data: { stationId: normalizedStationId, date: todayInHelsinki() },
+            }),
         refetchInterval: STATION_SCHEDULES_REFETCH_INTERVAL_MS,
         select: (schedules: StationSchedule[]) => ({
             stationId: normalizedStationId,
+            schedules: sortSchedules(schedules, normalizedStationId),
+        }),
+    });
+};
+
+export const stationScheduleByDateQueryOptions = (stationId: string, date: string) => {
+    const normalizedStationId = normalizeStationId(stationId);
+
+    return queryOptions({
+        queryKey: queryKeys.stationSchedulesByDate(normalizedStationId, date),
+        queryFn: () =>
+            fetchStationSchedulesByDate({ data: { stationId: normalizedStationId, date } }),
+        refetchInterval:
+            isToday(date) || isTomorrow(date) ? STATION_SCHEDULES_REFETCH_INTERVAL_MS : false,
+        select: (schedules: StationSchedule[]) => ({
+            stationId: normalizedStationId,
+            date,
             schedules: sortSchedules(schedules, normalizedStationId),
         }),
     });
