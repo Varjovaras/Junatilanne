@@ -201,7 +201,7 @@ export const translations = {
         timetableType: "Timetable type",
         delayReason: "Delay reason",
         nightTrain: "Night train",
-        commuterTrain: "Commuter train",
+        commuterTrain: "Commuter",
         today: "Today",
         tomorrow: "Tomorrow",
         departuresAndArrivals: "Departures and arrivals",
