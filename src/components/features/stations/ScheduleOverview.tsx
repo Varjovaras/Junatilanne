@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TrainTypeSelector from "@/components/features/train-lists/TrainTypeSelector";
 import Loading from "@/components/common/Loading";
 import type { StationSchedule } from "@/lib/types/stationTypes";
@@ -25,9 +25,14 @@ const CATEGORIES = ["all", "commuter", "longDistance", "freight", "passengerComm
 const ScheduleOverview = ({ schedules, stationId, date, onDateChange }: ScheduleOverviewProps) => {
     const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState("passengerCommuter");
+    const [lastScheduleDate, setLastScheduleDate] = useState<string | undefined>(undefined);
     const view: ScheduleView = date ? "schedule" : "upcoming";
     const today = todayInHelsinki();
     const scheduleDate = date ?? today;
+
+    useEffect(() => {
+        if (date) setLastScheduleDate(date);
+    }, [date]);
 
     const { data: dateData, isLoading } = useQuery({
         ...stationScheduleByDateQueryOptions(stationId, scheduleDate),
@@ -69,7 +74,7 @@ const ScheduleOverview = ({ schedules, stationId, date, onDateChange }: Schedule
             <ScheduleViewSelector
                 view={view}
                 onViewChange={(nextView) =>
-                    onDateChange(nextView === "upcoming" ? undefined : today)
+                    onDateChange(nextView === "upcoming" ? undefined : (lastScheduleDate ?? today))
                 }
                 upcomingCount={displayedSchedules.length}
                 scheduleCount={displayedDaySchedules.length}
