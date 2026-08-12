@@ -31,7 +31,7 @@ const TrainBasicInfo = ({ train }: TrainBasicInfoProps) => {
                     time: formatTime(lastRow.scheduledTime),
                 }}
             />
-            <div>
+            <div className="text-center mt-2">
                 <p>
                     <DelayText delay={currentTimeDiff} />
                 </p>

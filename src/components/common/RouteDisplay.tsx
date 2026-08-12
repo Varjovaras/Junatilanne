@@ -179,8 +179,8 @@ const RouteDisplay = ({
     }
 
     return (
-        <div className="overflow-hidden text-ellipsis flex justify-between items-center gap-4 text-xl">
-            <div className="flex flex-col items-start">
+        <div className="flex items-center justify-center gap-4 text-xl">
+            <div className="flex flex-col items-center">
                 <Link
                     to="/stations/$id"
                     params={{ id: start.shortCode }}
@@ -191,7 +191,7 @@ const RouteDisplay = ({
                 {start.time && <span className="text-xs text-foreground/60">{start.time}</span>}
             </div>
             <span className="text-gray-400 shrink-0">→</span>
-            <div className="flex flex-col items-end">
+            <div className="flex flex-col items-center">
                 <Link
                     to="/stations/$id"
                     params={{ id: end.shortCode }}
