@@ -114,3 +114,10 @@ export const isStationTerminus = (schedule: StationSchedule, stationId: string):
         findStationTimeTableRow(schedule, stationId, "DEPARTURE") === undefined
     );
 };
+
+export const getAirportStop = (train: TrainType): TimeTableRow | undefined => {
+    const airportRows = train.timeTableRows.filter(
+        (row) => row.trainStopping && row.station.shortCode === "LEN",
+    );
+    return airportRows.find((row) => row.type === "ARRIVAL") ?? airportRows[0];
+};

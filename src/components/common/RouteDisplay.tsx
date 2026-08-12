@@ -10,6 +10,7 @@ export type RouteStationInfo = {
 type RouteDisplayProps = {
     start: RouteStationInfo;
     end: RouteStationInfo;
+    airport?: RouteStationInfo;
     isAirportLine?: boolean;
     variant?: "default" | "details" | "list" | "compact";
 };
@@ -19,6 +20,7 @@ const AIRPORT_STATION_CODE = "LEN";
 const RouteDisplay = ({
     start,
     end,
+    airport,
     isAirportLine = false,
     variant = "default",
 }: RouteDisplayProps) => {
@@ -46,6 +48,9 @@ const RouteDisplay = ({
                     >
                         {translations.airport}
                     </Link>
+                    {airport?.time && (
+                        <span className="text-sm text-foreground/60">{airport.time}</span>
+                    )}
                 </div>
                 <span className="mx-2">→</span>
                 <div className="flex flex-col items-center">
@@ -73,6 +78,9 @@ const RouteDisplay = ({
                     >
                         {start.name}
                     </Link>
+                    {start.time && (
+                        <span className="block text-xs text-foreground/60">{start.time}</span>
+                    )}
                 </div>
                 <span className="justify-self-center">→</span>
                 <div className="min-w-0 text-center">
@@ -83,6 +91,9 @@ const RouteDisplay = ({
                     >
                         {translations.airport}
                     </Link>
+                    {airport?.time && (
+                        <span className="block text-xs text-foreground/60">{airport.time}</span>
+                    )}
                 </div>
                 <span className="justify-self-center">→</span>
                 <div className="min-w-0 text-right">
@@ -93,6 +104,9 @@ const RouteDisplay = ({
                     >
                         {end.name}
                     </Link>
+                    {end.time && (
+                        <span className="block text-xs text-foreground/60">{end.time}</span>
+                    )}
                 </div>
             </div>
         );

@@ -4,6 +4,7 @@ import type { TrainType } from "@/lib/types/trainTypes";
 import { formatDate, formatTime, isToday } from "@/lib/utils/dateUtils";
 import { removeAsema } from "@/lib/utils/stringUtils";
 import { getTrainDisplayName } from "@/lib/utils/trainDisplay";
+import { getAirportStop } from "@/lib/utils/trainStations";
 
 type TrainHeaderProps = {
     train: TrainType;
@@ -13,6 +14,7 @@ const TrainHeader = ({ train }: TrainHeaderProps) => {
 
     const firstRow = train.timeTableRows[0];
     const lastRow = train.timeTableRows[train.timeTableRows.length - 1];
+    const airportStop = getAirportStop(train);
 
     return (
         <div className="mb-8 text-center mt-2">
@@ -31,6 +33,11 @@ const TrainHeader = ({ train }: TrainHeaderProps) => {
                     name: removeAsema(firstRow.station.name),
                     shortCode: firstRow.station.shortCode,
                     time: formatTime(firstRow.scheduledTime),
+                }}
+                airport={{
+                    name: translations.airport,
+                    shortCode: "LEN",
+                    time: airportStop ? formatTime(airportStop.scheduledTime) : undefined,
                 }}
                 end={{
                     name: removeAsema(lastRow.station.name),

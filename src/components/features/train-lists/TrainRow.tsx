@@ -19,7 +19,7 @@ import { formatTime, getArrivalCountdown } from "@/lib/utils/dateUtils";
 import { removeAsema } from "@/lib/utils/stringUtils";
 import { getTrainCurrentDelay } from "@/lib/utils/trainDelay";
 import { getTrainDisplayName, getTrainLink } from "@/lib/utils/trainDisplay";
-import { calculateTrainProgress } from "@/lib/utils/trainStations";
+import { calculateTrainProgress, getAirportStop } from "@/lib/utils/trainStations";
 import { useMounted } from "@/lib/utils/useMounted";
 
 type TrainRowProps = {
@@ -36,6 +36,7 @@ const TrainRow = ({ train }: TrainRowProps) => {
 
     const firstRow = train.timeTableRows[0];
     const lastRow = train.timeTableRows[train.timeTableRows.length - 1];
+    const airportStop = getAirportStop(train);
 
     const lastStop = progress.lastCompletedStop;
     const nextStop = progress.nextStop;
@@ -92,6 +93,11 @@ const TrainRow = ({ train }: TrainRowProps) => {
                             name: removeAsema(firstRow.station.name),
                             shortCode: firstRow.station.shortCode,
                             time: formatTime(firstRow.scheduledTime),
+                        }}
+                        airport={{
+                            name: translations.airport,
+                            shortCode: "LEN",
+                            time: airportStop ? formatTime(airportStop.scheduledTime) : undefined,
                         }}
                         end={{
                             name: removeAsema(lastRow.station.name),
