@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import MapGL, {
     GeolocateControl,
+    type MapEvent,
     type MapLayerMouseEvent,
     type MapRef,
     NavigationControl,
@@ -12,10 +13,11 @@ import { useTranslations } from "@/lib/i18n/useTranslations";
 import { mapTrainsQueryOptions, stationMetadataQueryOptions } from "@/lib/queries/queryOptions";
 import type { TrainCategory } from "@/lib/types/trainTypes";
 import { getTrainCategory } from "@/lib/utils/trainClassification";
+import { ensureTrainSprites } from "@/lib/utils/trainIconSprite";
 import RailwaysOnMap from "./RailwaysOnMap";
 import StationsOnMap, { STATION_POINT_LAYER_IDS } from "./StationsOnMap";
 import TrainSelector from "./TrainSelector";
-import TrainsOnMap from "./TrainsOnMap";
+import TrainsOnMap, { TRAIN_POINT_LAYER_ID } from "./TrainsOnMap";
 import type { MapPopupSelection } from "./mapTypes";
 
 type TrainMapProps = {
@@ -32,6 +34,7 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
         name: "longDistance",
     });
     const [popup, setPopup] = useState<MapPopupSelection>(null);
+    const [spritesReady, setSpritesReady] = useState(false);
     const lastCenteredTrain = useRef<string | undefined>(undefined);
 
     const { data: trains = [], isFetching, isPending } = useQuery(mapTrainsQueryOptions());
@@ -98,6 +101,12 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
             return;
         }
 
+        if (feature.layer.id === TRAIN_POINT_LAYER_ID) {
+            const trainId = feature.properties?.trainId;
+            setPopup(typeof trainId === "string" ? { type: "train", id: trainId } : null);
+            return;
+        }
+
         if (
             STATION_POINT_LAYER_IDS.includes(
                 feature.layer.id as (typeof STATION_POINT_LAYER_IDS)[number],
@@ -109,6 +118,13 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
         }
 
         setPopup(null);
+    };
+
+    const handleMapLoad = (event: MapEvent) => {
+        void ensureTrainSprites(event.target).then(() => {
+            setSpritesReady(true);
+            centerOnTrain();
+        });
     };
 
     if (isPending && trains.length === 0) {
@@ -128,9 +144,17 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
                 ref={mapRef}
                 initialViewState={INITIAL_VIEW_STATE}
                 mapStyle={DARK_STYLE}
-                onLoad={centerOnTrain}
-                interactiveLayerIds={[...STATION_POINT_LAYER_IDS]}
+                onLoad={handleMapLoad}
+                interactiveLayerIds={[...STATION_POINT_LAYER_IDS, TRAIN_POINT_LAYER_ID]}
                 onClick={handleMapClick}
+                onMouseMove={(event) => {
+                    const isOverTrain =
+                        event.features?.some(
+                            (feature) => feature.layer.id === TRAIN_POINT_LAYER_ID,
+                        ) ?? false;
+                    const canvas = mapRef.current?.getCanvas();
+                    if (canvas) canvas.style.cursor = isOverTrain ? "pointer" : "";
+                }}
                 attributionControl={false}
                 style={{ width: "100%", height: "100%" }}
             >
@@ -138,7 +162,12 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
                 <GeolocateControl position="bottom-right" trackUserLocation={true} />
                 <RailwaysOnMap />
                 <StationsOnMap stations={stations} popup={popup} setPopup={setPopup} />
-                <TrainsOnMap filteredTrains={filteredTrains} popup={popup} setPopup={setPopup} />
+                <TrainsOnMap
+                    filteredTrains={filteredTrains}
+                    popup={popup}
+                    setPopup={setPopup}
+                    spritesReady={spritesReady}
+                />
             </MapGL>
             <TrainSelector category={category} setCategory={setCategory} />
             {isFetching && trains.length > 0 && (
