@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useViewMode } from "@/lib/hooks/useViewMode";
 import type { TrainType } from "@/lib/types/trainTypes";
 import { filterTrainsByCategory } from "@/lib/utils/trainClassification";
 import TrainList from "./TrainList";
@@ -11,7 +10,6 @@ type TrainDataProps = {
 
 const TrainDataDisplay = ({ trains }: TrainDataProps) => {
     const [selectedCategory, setSelectedCategory] = useState("longDistance");
-    const { view, handleViewChange } = useViewMode("trains");
 
     const filteredTrains = filterTrainsByCategory(
         trains,
@@ -33,8 +31,6 @@ const TrainDataDisplay = ({ trains }: TrainDataProps) => {
                           ? "freight"
                           : "longDistance"
                 }
-                view={view}
-                onViewChange={handleViewChange}
             />
         </div>
     );
