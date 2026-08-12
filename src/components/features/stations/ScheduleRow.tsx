@@ -97,7 +97,7 @@ const ScheduleRow = ({ schedule, stationId }: ScheduleRowProps) => {
             </div>
 
             <div className="lg:ml-auto">
-                <ScheduleCardStatus schedule={schedule} />
+                <ScheduleCardStatus schedule={schedule} stationId={stationId} />
             </div>
         </div>
     );

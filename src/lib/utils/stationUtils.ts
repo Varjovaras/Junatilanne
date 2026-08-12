@@ -25,6 +25,6 @@ export const getTrainTypeString = (train: StationSchedule, translations: Transla
         case "HL":
             return translations.commuterTrain;
         default:
-            return `${train.trainCategory} • ${train.trainType}`;
+            return train.trainCategory || train.trainType;
     }
 };

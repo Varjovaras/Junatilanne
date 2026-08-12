@@ -27,7 +27,7 @@ const ScheduleCard = ({ schedule, stationId }: ScheduleCardProps) => {
                     departureRow={departureRow}
                     stationId={stationId}
                 />
-                <ScheduleCardStatus schedule={schedule} />
+                <ScheduleCardStatus schedule={schedule} stationId={stationId} />
             </div>
 
             <div className="space-y-2">

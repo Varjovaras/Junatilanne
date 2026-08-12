@@ -2,23 +2,29 @@ import StatusPill from "@/components/common/StatusPill";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { StationSchedule } from "@/lib/types/stationTypes";
 import { getDateDisplay } from "@/lib/utils/dateUtils";
+import { findStationDepartureWithId } from "@/lib/utils/scheduleUtils";
+import { findStationArrivalWithId } from "@/lib/utils/trainStations";
 
 type ScheduleCardStatusProps = {
     schedule: StationSchedule;
+    stationId: string;
 };
 
-const ScheduleCardStatus = ({ schedule }: ScheduleCardStatusProps) => {
+const ScheduleCardStatus = ({ schedule, stationId }: ScheduleCardStatusProps) => {
     const { translations } = useTranslations();
+    const stationRow =
+        findStationDepartureWithId(schedule, stationId) ??
+        findStationArrivalWithId(schedule, stationId);
 
     return (
-        <div className="flex flex-col items-end shrink-0">
+        <div className="flex items-center justify-end gap-2 shrink-0">
+            <span className="text-xs text-foreground/60">
+                {getDateDisplay(stationRow?.scheduledTime ?? schedule.departureDate, translations)}
+            </span>
             <StatusPill
                 cancelled={schedule.cancelled}
                 runningCurrently={schedule.runningCurrently}
             />
-            <span className="text-xs text-foreground/60 mt-1">
-                {getDateDisplay(schedule.departureDate, translations)}
-            </span>
         </div>
     );
 };
