@@ -21,16 +21,17 @@ type TrainListProps = {
 
 const TrainList = ({ trains, trainType, view, onViewChange }: TrainListProps) => {
     const { translations, isLoading } = useTranslations();
-    const [delayThreshold, setDelayThreshold] = useState(5);
+    const [delayThreshold, setDelayThreshold] = useState(0);
     const [sortOption, setSortOption] = useState<SortOption>({
-        field: "trainNumber",
-        direction: "asc",
+        field: "delay",
+        direction: "desc",
     });
 
     const filteredTrains = filterTrainsByDelay(trains, delayThreshold);
     const sortedTrains = sortTrains(filteredTrains, sortOption);
 
     const getTitle = () => {
+        if (delayThreshold === 0) return translations.allTrains;
         switch (trainType) {
             case "commuter":
                 return translations.lateCommuter;
@@ -47,8 +48,14 @@ const TrainList = ({ trains, trainType, view, onViewChange }: TrainListProps) =>
         <div className={`p-2 space-y-4 w-full ${isLoading ? "fade-out" : "fade-in"}`}>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                 <h2 className="text-left text-2xl">
-                    {getTitle()} ({delayThreshold}
-                    {translations.minutesOrMore})
+                    {getTitle()}
+                    {delayThreshold > 0 ? (
+                        <>
+                            {" "}
+                            ({delayThreshold}
+                            {translations.minutesOrMore})
+                        </>
+                    ) : null}
                 </h2>
                 <ViewModeToggle view={view} onViewChange={onViewChange} />
             </div>
