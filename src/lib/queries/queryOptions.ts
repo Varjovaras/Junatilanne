@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { formatDateForUrl, todayISOString } from "../utils/dateUtils";
+import { getTrackDistances } from "../utils/trackDistance";
 import { isValidTrainId } from "../utils/urlUtils";
 import { sortSchedules } from "../utils/sortSchedules";
 import { getMapData } from "./getMapData";
@@ -72,6 +73,16 @@ export const stationMessagesQueryOptions = (stationId: string) => {
         queryFn: () => fetchStationMessages({ data: normalizedStationId }),
     });
 };
+
+export const trainDistanceQueryOptions = (train: TrainType) =>
+    queryOptions({
+        queryKey: queryKeys.trainDistance(
+            String(train.trainNumber),
+            train.trainLocations[0]?.timestamp ?? "none",
+        ),
+        queryFn: () => getTrackDistances(train),
+        staleTime: TRAIN_DETAILS_REFETCH_INTERVAL_MS,
+    });
 
 export const todayTrainQueryOptions = (trainNumber: string) => {
     const todayTrainId = `${trainNumber}-${formatDateForUrl(todayISOString())}`;

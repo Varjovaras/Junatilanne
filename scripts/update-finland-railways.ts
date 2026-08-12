@@ -8,11 +8,12 @@ const OVERPASS_URLS = [
 ];
 const OUTPUT_PATH = resolve("public/finland-railways.geojson");
 
-// Simplification tolerance in degrees (~220 m at this latitude). The railways
-// are drawn as thin overlay lines between zoom 4-10, so sub-100 m detail is
-// invisible. Rounding to 4 decimals keeps ~11 m precision.
-const SIMPLIFY_TOLERANCE = 0.002;
-const COORDINATE_DECIMALS = 4;
+// The full OSM geometry is used as-is (no line simplification), so every
+// vertex of every railway way is kept — curves stay as rounded as the source
+// data allows.
+// Six decimals keeps ~0.1 m precision; sub-meter rounding only collapses OSM
+// duplicate nodes at shared junctions, which helps the client graph connect.
+const COORDINATE_DECIMALS = 6;
 
 type OverpassWay = {
     type: "way";
@@ -27,60 +28,9 @@ type OverpassResponse = {
 
 type Coordinate = [number, number];
 
-function simplifyLine(coordinates: Coordinate[], tolerance: number): Coordinate[] {
-    if (coordinates.length <= 2) return coordinates;
-
-    const sqTolerance = tolerance * tolerance;
-    const simplified: Coordinate[] = [];
-    const stack: Array<[number, number]> = [[0, coordinates.length - 1]];
-    const keep = new Uint8Array(coordinates.length);
-
-    while (stack.length > 0) {
-        const [first, last] = stack.pop()!;
-        const [x1, y1] = coordinates[first];
-        const [x2, y2] = coordinates[last];
-        const dx = x2 - x1;
-        const dy = y2 - y1;
-        const lineSq = dx * dx + dy * dy;
-
-        let maxDistSq = -1;
-        let index = -1;
-
-        for (let i = first + 1; i < last; i++) {
-            const [px, py] = coordinates[i];
-            let distSq;
-            if (lineSq === 0) {
-                distSq = (px - x1) * (px - x1) + (py - y1) * (py - y1);
-            } else {
-                const t = ((px - x1) * dx + (py - y1) * dy) / lineSq;
-                const tClamped = t < 0 ? 0 : t > 1 ? 1 : t;
-                const qx = x1 + tClamped * dx;
-                const qy = y1 + tClamped * dy;
-                distSq = (px - qx) * (px - qx) + (py - qy) * (py - qy);
-            }
-            if (distSq > maxDistSq) {
-                maxDistSq = distSq;
-                index = i;
-            }
-        }
-
-        if (maxDistSq > sqTolerance && index !== -1) {
-            keep[index] = 1;
-            stack.push([first, index], [index, last]);
-        }
-    }
-
-    for (let i = 0; i < coordinates.length; i++) {
-        if (i === 0 || i === coordinates.length - 1 || keep[i]) {
-            simplified.push(coordinates[i]);
-        }
-    }
-    return simplified;
-}
-
-function simplifyCoordinates(coordinates: Coordinate[]): Coordinate[] {
+function roundToDecimals(coordinates: Coordinate[]): Coordinate[] {
     const factor = 10 ** COORDINATE_DECIMALS;
-    return simplifyLine(coordinates, SIMPLIFY_TOLERANCE).map(([lon, lat]) => [
+    return coordinates.map(([lon, lat]) => [
         Math.round(lon * factor) / factor,
         Math.round(lat * factor) / factor,
     ]);
@@ -147,7 +97,7 @@ if (!payload) {
 
 const lines = payload.elements
     .filter((way) => way.type === "way" && (way.geometry?.length ?? 0) >= 2)
-    .map((way) => simplifyCoordinates(way.geometry!.map(({ lon, lat }) => [lon, lat])))
+    .map((way) => roundToDecimals(way.geometry!.map(({ lon, lat }) => [lon, lat])))
     .filter((line) => line.length >= 2);
 
 const geoJson = {

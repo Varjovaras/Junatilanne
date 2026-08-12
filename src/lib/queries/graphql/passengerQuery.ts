@@ -25,6 +25,7 @@ const passengerQuery = `{
     }
     trainLocations(orderBy: { timestamp: DESCENDING }, take: 1) {
       speed
+      timestamp
       location
     }
     timeTableRows {
@@ -39,6 +40,7 @@ const passengerQuery = `{
       station {
         name
         shortCode
+        location
       }
     }
   }

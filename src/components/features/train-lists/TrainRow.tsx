@@ -12,6 +12,7 @@ import { useState } from "react";
 import DelayText from "@/components/common/DelayText";
 import RouteDisplay from "@/components/common/RouteDisplay";
 import StatusPill from "@/components/common/StatusPill";
+import TrainDistance from "@/components/features/train-details/TrainDistance";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
 import { formatTime, getArrivalCountdown } from "@/lib/utils/dateUtils";
@@ -236,6 +237,7 @@ const TrainRow = ({ train }: TrainRowProps) => {
                                                     {translations.minShortened}
                                                 </span>
                                             )}
+                                            <TrainDistance train={train} align="left" />
                                         </>
                                     ) : lastStop ? (
                                         <span className="text-foreground/60">

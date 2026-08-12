@@ -1,4 +1,5 @@
 import { Layer, Source } from "react-map-gl/maplibre";
+import { RAILWAY_GEOJSON_URL } from "@/lib/utils/railwayData";
 
 const railwayCasingLayer = {
     id: "finland-railways-casing",
@@ -32,7 +33,7 @@ const railwayLineLayer = {
 
 const RailwaysOnMap = () => {
     return (
-        <Source id="finland-railways" type="geojson" data="/finland-railways.geojson">
+        <Source id="finland-railways" type="geojson" data={RAILWAY_GEOJSON_URL}>
             <Layer {...railwayCasingLayer} />
             <Layer {...railwayLineLayer} />
         </Source>

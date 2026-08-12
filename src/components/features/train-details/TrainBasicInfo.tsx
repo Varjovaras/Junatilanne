@@ -4,6 +4,7 @@ import type { TrainType } from "@/lib/types/trainTypes";
 import { formatTime } from "@/lib/utils/dateUtils";
 import { removeAsema } from "@/lib/utils/stringUtils";
 import { getTrainCurrentDelay } from "@/lib/utils/trainDelay";
+import TrainDistance from "./TrainDistance";
 import TrainSpeed from "./TrainSpeed";
 
 type TrainBasicInfoProps = {
@@ -36,6 +37,7 @@ const TrainBasicInfo = ({ train }: TrainBasicInfoProps) => {
                     <DelayText delay={currentTimeDiff} />
                 </p>
                 <TrainSpeed train={train} />
+                <TrainDistance train={train} />
             </div>
         </div>
     );
