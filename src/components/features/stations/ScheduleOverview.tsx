@@ -1,6 +1,5 @@
 import { useState } from "react";
 import TrainTypeSelector from "@/components/features/train-lists/TrainTypeSelector";
-import { useViewMode } from "@/lib/hooks/useViewMode";
 import type { StationSchedule } from "@/lib/types/stationTypes";
 import { stationScheduleFilter } from "@/lib/utils/stationScheduleFilter";
 import { filterSchedulesByCategory } from "@/lib/utils/trainClassification";
@@ -15,7 +14,6 @@ type ScheduleOverviewProps = {
 const ScheduleOverview = ({ schedules, stationId }: ScheduleOverviewProps) => {
     const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState("passengerCommuter");
-    const { view, handleViewChange } = useViewMode("stations");
     const filteredSchedules = stationScheduleFilter(schedules, stationId);
 
     const filterByTrack = (trains: StationSchedule[]) => {
@@ -47,12 +45,7 @@ const ScheduleOverview = ({ schedules, stationId }: ScheduleOverviewProps) => {
                 onTrackSelect={setSelectedTrack}
             />
 
-            <ScheduleList
-                schedules={displayedSchedules}
-                stationId={stationId}
-                view={view}
-                onViewChange={handleViewChange}
-            />
+            <ScheduleList schedules={displayedSchedules} stationId={stationId} />
         </div>
     );
 };
