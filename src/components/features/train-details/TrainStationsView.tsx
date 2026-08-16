@@ -2,10 +2,9 @@ import { useLocation } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
-import { formatDate, isToday } from "@/lib/utils/dateUtils";
+import { isToday } from "@/lib/utils/dateUtils";
 import ShowNonCommercialStopsButton from "./ShowNonCommercialStopsButton";
 import ShowStationsButton from "./ShowStationsButton";
-import TrainBasicInfo from "./TrainBasicInfo";
 import TrainStations from "./TrainStations";
 
 type TrainStationsViewProps = {
@@ -28,23 +27,19 @@ const TrainStationsView = ({ train }: TrainStationsViewProps) => {
         <div
             className={`mt-2 ${isLoading ? "fade-out" : "fade-in"} flex flex-col flex-1 items-center`}
         >
-            <p className="w-full text-center text-sm text-foreground/60 mb-2">
-                {formatDate(departureDate)}
-            </p>
             {!isToday(departureDate) && (
                 <p className="w-full text-center text-sm text-yellow-500 mb-3">
                     {translations.notTodaysSchedule}
                 </p>
             )}
             <div className="flex-1 w-full">
-                <TrainBasicInfo train={train} />
                 <TrainStations
                     train={train}
                     showAllStations={showAllStations}
                     showNonCommercialStops={showNonCommercialStops}
                 />
             </div>
-            <div className="flex flex-col gap-2 mt-4 w-full">
+            <div className="flex flex-col gap-2 mt-4 w-full max-w-2xl mx-auto">
                 <ShowStationsButton
                     showAllStations={showAllStations}
                     setShowAllStations={setUserShowAllStations}

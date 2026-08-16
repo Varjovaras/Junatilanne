@@ -59,7 +59,7 @@ const TrainStations = ({ train, showAllStations, showNonCommercialStops }: Train
     };
 
     return (
-        <div className="my-4 space-y-2 ">
+        <div className="my-4 space-y-2 w-full max-w-2xl mx-auto">
             {stationsToShow.map((station, index) => (
                 <StationRow
                     key={station.scheduledTime.toString() + station.type}
