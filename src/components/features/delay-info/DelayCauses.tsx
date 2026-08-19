@@ -22,15 +22,16 @@ const DelayCauses = ({ train }: DelayCausesProps) => {
     }
 
     return (
-        <div className="relative">
+        <div className="relative flex-1 sm:flex-none">
             <button
                 type="button"
                 onClick={() => setIsOpen(true)}
                 aria-expanded={isOpen}
                 aria-haspopup="dialog"
-                className="px-4 py-2 text-sm border border-foreground bg-foreground text-background hover:bg-surface hover:text-foreground rounded-md transition-colors"
+                className="w-full sm:w-auto inline-flex items-center justify-center text-center h-12 sm:h-auto px-2 sm:px-4 py-2 text-xs sm:text-sm border border-foreground bg-foreground text-background hover:bg-surface hover:text-foreground rounded-md transition-colors"
             >
-                {translations.showDelayCauses}
+                <span className="hidden sm:inline">{translations.showDelayCauses}</span>
+                <span className="sm:hidden">{translations.showDelayCausesMobile}</span>
             </button>
             {isOpen && (
                 <DelayCausesPanel
