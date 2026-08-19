@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
 import { hasMeaningfulCauseText } from "@/lib/utils/causeUtils";
-import DelayCausesModal from "./DelayCausesModal";
+import DelayCausesPanel from "./DelayCausesPanel";
 
 type DelayCausesProps = {
     train: TrainType;
@@ -11,7 +11,6 @@ type DelayCausesProps = {
 const DelayCauses = ({ train }: DelayCausesProps) => {
     const { translations } = useTranslations();
     const [isOpen, setIsOpen] = useState(false);
-    const buttonRef = useRef<HTMLButtonElement>(null);
 
     const timeTablesWithCauses = train.timeTableRows.filter((row) => {
         if (!row.causes || row.causes.length === 0) return false;
@@ -23,9 +22,8 @@ const DelayCauses = ({ train }: DelayCausesProps) => {
     }
 
     return (
-        <>
+        <div className="relative">
             <button
-                ref={buttonRef}
                 type="button"
                 onClick={() => setIsOpen(true)}
                 aria-expanded={isOpen}
@@ -35,13 +33,12 @@ const DelayCauses = ({ train }: DelayCausesProps) => {
                 {translations.showDelayCauses}
             </button>
             {isOpen && (
-                <DelayCausesModal
+                <DelayCausesPanel
                     timeTablesWithCauses={timeTablesWithCauses}
-                    triggerRef={buttonRef}
                     onClose={() => setIsOpen(false)}
                 />
             )}
-        </>
+        </div>
     );
 };
 

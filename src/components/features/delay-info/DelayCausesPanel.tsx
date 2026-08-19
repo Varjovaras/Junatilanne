@@ -1,67 +1,53 @@
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useRef } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TimeTableRow } from "@/lib/types/trainTypes";
 import { getDelayByStation } from "@/lib/utils/trainStations";
 import DelayReasonCard from "./DelayReasonCard";
 
-type DelayCausesModalProps = {
+type DelayCausesPanelProps = {
     timeTablesWithCauses: TimeTableRow[];
-    triggerRef: RefObject<HTMLButtonElement | null>;
     onClose: () => void;
 };
 
-const DelayCausesModal = ({ timeTablesWithCauses, triggerRef, onClose }: DelayCausesModalProps) => {
+const DelayCausesPanel = ({ timeTablesWithCauses, onClose }: DelayCausesPanelProps) => {
     const { translations } = useTranslations();
-    const dialogRef = useRef<HTMLDialogElement>(null);
+    const panelRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const dialog = dialogRef.current;
-        if (!dialog) return;
-
-        dialog.showModal();
-
-        const positionDialog = () => {
-            const trigger = triggerRef.current;
-            if (!trigger) return;
-            const rect = trigger.getBoundingClientRect();
-            const width = dialog.offsetWidth;
-            const left = Math.max(
-                8,
-                Math.min(rect.left + rect.width / 2 - width / 2, window.innerWidth - width - 8),
-            );
-            dialog.style.left = `${left}px`;
-            dialog.style.top = `${rect.bottom + 8}px`;
-        };
-
-        const handleBackdropClick = (e: MouseEvent) => {
-            if (e.target === dialog) {
-                dialog.close();
+        const handleClick = (event: MouseEvent) => {
+            if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+                onClose();
             }
         };
 
-        positionDialog();
-        window.addEventListener("resize", positionDialog);
-        document.addEventListener("click", handleBackdropClick);
-        return () => {
-            window.removeEventListener("resize", positionDialog);
-            document.removeEventListener("click", handleBackdropClick);
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                onClose();
+            }
         };
-    }, [triggerRef, onClose]);
+
+        document.addEventListener("mousedown", handleClick);
+        document.addEventListener("keydown", handleKeyDown);
+        return () => {
+            document.removeEventListener("mousedown", handleClick);
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [onClose]);
 
     return (
-        <dialog
-            ref={dialogRef}
-            onClose={onClose}
+        <div
+            ref={panelRef}
+            role="dialog"
             aria-label={translations.showDelayCauses}
-            className="fixed m-0 max-h-[80vh] w-[min(28rem,calc(100vw-1.5rem))] overflow-y-auto bg-surface text-foreground border border-border rounded-md shadow-lg backdrop:bg-transparent"
+            className="absolute left-1/2 top-full z-10 mt-2 max-h-[75vh] w-[min(28rem,calc(100vw-1.5rem))] -translate-x-1/2 overflow-y-auto bg-surface text-foreground border border-border rounded-md shadow-lg"
         >
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-surface px-4 py-3">
                 <h2 className="text-lg font-semibold">{translations.delayCauses}</h2>
                 <button
                     type="button"
-                    onClick={() => dialogRef.current?.close()}
+                    onClick={onClose}
                     aria-label={translations.closeAriaLabel}
                     className="text-foreground/60 hover:text-foreground transition-colors"
                 >
@@ -77,8 +63,8 @@ const DelayCausesModal = ({ timeTablesWithCauses, triggerRef, onClose }: DelayCa
                     />
                 ))}
             </div>
-        </dialog>
+        </div>
     );
 };
 
-export default DelayCausesModal;
+export default DelayCausesPanel;
