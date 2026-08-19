@@ -16,6 +16,43 @@ const DelayCausesPanel = ({ timeTablesWithCauses, onClose }: DelayCausesPanelPro
     const panelRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        const panel = panelRef.current;
+        const wrapper = panel?.parentElement;
+        if (!panel || !wrapper) return;
+
+        const positionPanel = () => {
+            const wrapperRect = wrapper.getBoundingClientRect();
+            const isMobile = window.innerWidth <= 640;
+            const width = isMobile
+                ? Math.min(384, window.innerWidth - 32)
+                : Math.min(448, window.innerWidth - 16);
+            panel.style.width = `${width}px`;
+
+            if (isMobile) {
+                const top = Math.min(wrapperRect.bottom + 8, window.innerHeight - 72);
+                panel.style.top = `${Math.max(8, top)}px`;
+                panel.style.left = `${(window.innerWidth - width) / 2}px`;
+                return;
+            }
+
+            panel.style.top = "";
+            const margin = 8;
+            const centeredLeft = wrapperRect.left + wrapperRect.width / 2 - width / 2;
+            const viewportLeft = Math.max(
+                margin,
+                Math.min(centeredLeft, window.innerWidth - width - margin),
+            );
+            panel.style.left = `${viewportLeft - wrapperRect.left}px`;
+        };
+
+        positionPanel();
+        window.addEventListener("resize", positionPanel);
+        return () => {
+            window.removeEventListener("resize", positionPanel);
+        };
+    }, []);
+
+    useEffect(() => {
         const handleClick = (event: MouseEvent) => {
             if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
                 onClose();
@@ -41,7 +78,7 @@ const DelayCausesPanel = ({ timeTablesWithCauses, onClose }: DelayCausesPanelPro
             ref={panelRef}
             role="dialog"
             aria-label={translations.showDelayCauses}
-            className="absolute left-1/2 top-full z-10 mt-2 max-h-[75vh] w-[min(28rem,calc(100vw-1.5rem))] -translate-x-1/2 overflow-y-auto bg-surface text-foreground border border-border rounded-md shadow-lg"
+            className="fixed z-10 max-h-[60vh] w-[min(24rem,calc(100vw_-_2rem))] overflow-y-auto bg-surface text-foreground border border-border rounded-md shadow-lg sm:absolute sm:top-full sm:mt-2 sm:max-h-[75vh] sm:w-[28rem]"
         >
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-surface px-4 py-3">
                 <h2 className="text-lg font-semibold">{translations.delayCauses}</h2>
