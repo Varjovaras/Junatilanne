@@ -1,7 +1,9 @@
 {
     "$schema": "./node_modules/oxlint/configuration_schema.json",
-    "plugins": ["unicorn", "typescript", "oxc"],
-    "categories": {},
+    "plugins": ["unicorn", "typescript", "oxc", "react"],
+    "categories": {
+        "correctness": "error"
+    },
     "rules": {
         "for-direction": "warn",
         "no-async-promise-executor": "warn",
@@ -112,9 +114,6 @@
             // "polymorphicPropName": null,
             "components": {},
             "attributes": {}
-        },
-        "next": {
-            "rootDir": []
         },
         "react": {
             "formComponents": [],
