@@ -59,22 +59,40 @@ export const getLatestVisitedStationName = (train: TrainType): string | null => 
     return lastVisitedStation.station.name;
 };
 
+const getLastVisitedRowIndex = (timeTableRows: TimeTableRow[]): number =>
+    timeTableRows.reduce(
+        (lastIndex, row, index) => (row.actualTime !== null ? index : lastIndex),
+        -1,
+    );
+
 export const getNextCommercialStation = (train: TrainType): TimeTableRow | undefined => {
-    const commercialArrivals = getCommercialStations(train.timeTableRows, "ARRIVAL");
-    return commercialArrivals.find((row) => row.actualTime === null && row.type === "ARRIVAL");
+    const timeTableRows = train.timeTableRows;
+    const commercialArrivals = getCommercialStations(timeTableRows, "ARRIVAL");
+
+    const lastVisitedRowIndex = getLastVisitedRowIndex(timeTableRows);
+
+    return commercialArrivals.find(
+        (row) => !row.cancelled && timeTableRows.indexOf(row) > lastVisitedRowIndex,
+    );
 };
 
 export const calculateTrainProgress = (train: TrainType) => {
-    const commercialStops = getCommercialStations(train.timeTableRows, "ARRIVAL");
+    const timeTableRows = train.timeTableRows;
+    const commercialStops = getCommercialStations(timeTableRows, "ARRIVAL");
+
+    const lastVisitedRowIndex = getLastVisitedRowIndex(timeTableRows);
+
     let completed = 0;
     let lastCompletedStop: TimeTableRow | null = null;
     let nextStop: TimeTableRow | null = null;
 
     for (const stop of commercialStops) {
-        if (stop.actualTime !== null) {
+        const isBehind = timeTableRows.indexOf(stop) <= lastVisitedRowIndex;
+
+        if (isBehind && !stop.cancelled) {
             completed += 1;
             lastCompletedStop = stop;
-        } else if (nextStop === null) {
+        } else if (!isBehind && !stop.cancelled && nextStop === null) {
             nextStop = stop;
         }
     }
