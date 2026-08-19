@@ -24,7 +24,7 @@ const TrainHeader = ({ train }: TrainHeaderProps) => {
     const currentTimeDiff = getTrainCurrentDelay(train);
 
     return (
-        <div className="mb-8 text-center mt-2 flex flex-col items-center">
+        <div className="mb-4 text-center mt-2 flex flex-col items-center">
             <div className="mb-2">
                 <p className="text-4xl font-bold">{getTrainDisplayName(train)}</p>
                 <p className="p-2">

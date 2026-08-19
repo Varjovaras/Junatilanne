@@ -14,7 +14,7 @@ const LiveTrainPage = ({ train }: LiveTrainPageProps) => {
 
     return (
         <div className="mx-auto flex flex-col items-center max-w-6xl px-4">
-            <div className="w-full flex flex-col items-center gap-4 mb-8">
+            <div className="w-full flex flex-col items-center gap-2 mb-4">
                 <TrainHeader train={train} />
                 <div className="flex items-center justify-center gap-2">
                     <Link
