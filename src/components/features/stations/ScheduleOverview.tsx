@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TrainTypeSelector from "@/components/features/train-lists/TrainTypeSelector";
 import Loading from "@/components/common/Loading";
 import type { StationSchedule } from "@/lib/types/stationTypes";
@@ -30,9 +30,9 @@ const ScheduleOverview = ({ schedules, stationId, date, onDateChange }: Schedule
     const today = todayInHelsinki();
     const scheduleDate = date ?? today;
 
-    useEffect(() => {
-        if (date) setLastScheduleDate(date);
-    }, [date]);
+    if (date && date !== lastScheduleDate) {
+        setLastScheduleDate(date);
+    }
 
     const { data: dateData, isLoading } = useQuery({
         ...stationScheduleByDateQueryOptions(stationId, scheduleDate),

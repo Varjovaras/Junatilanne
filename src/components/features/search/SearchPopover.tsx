@@ -13,10 +13,6 @@ const SearchPopover = () => {
     const locationHref = useRouterState({ select: (s) => s.location.href });
 
     useEffect(() => {
-        dialogRef.current?.close();
-    }, [locationHref]);
-
-    useEffect(() => {
         if (!isOpen) return;
 
         const positionDialog = () => {
@@ -85,6 +81,7 @@ const SearchPopover = () => {
                 </span>
             </button>
             <dialog
+                key={locationHref}
                 ref={dialogRef}
                 aria-label={translations.search}
                 onClose={() => setIsOpen(false)}

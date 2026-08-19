@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import MapGL, {
     GeolocateControl,
     type MapEvent,
@@ -53,7 +53,7 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
         return () => window.removeEventListener("keydown", handleEscape);
     }, [popup]);
 
-    const centerOnTrain = () => {
+    const centerOnTrain = useCallback(() => {
         if (
             !trainNumber ||
             trainNumber === lastCenteredTrain.current ||
@@ -73,11 +73,11 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
             });
             lastCenteredTrain.current = trainNumber;
         }
-    };
+    }, [trainNumber, trains]);
 
     useEffect(() => {
         centerOnTrain();
-    }, [trainNumber, trains]);
+    }, [centerOnTrain]);
 
     const filteredTrains = useMemo(() => {
         return trains.filter((train) => {

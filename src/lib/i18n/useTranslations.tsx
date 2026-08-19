@@ -1,6 +1,7 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useSyncExternalStore, type ReactNode } from "react";
 import type { Language } from "./config";
 import { translations } from "./translations";
+import { useMounted } from "@/lib/utils/useMounted";
 
 type TranslationContextValue = {
     translations: (typeof translations)[Language];
@@ -10,21 +11,26 @@ type TranslationContextValue = {
 
 const TranslationContext = createContext<TranslationContextValue | undefined>(undefined);
 
-export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-    const [lang, setLang] = useState<Language>("fi");
-    const [isLoading, setIsLoading] = useState(true);
+const subscribe = () => () => {};
 
-    useEffect(() => {
-        const savedLang = localStorage.getItem("preferredLanguage") as Language;
-        if (savedLang === "fi" || savedLang === "en") {
-            setLang(savedLang);
-        }
-        setIsLoading(false);
-    }, []);
+const getSnapshot = (): Language => {
+    const savedLang = localStorage.getItem("preferredLanguage");
+    return savedLang === "en" ? "en" : "fi";
+};
+
+const getServerSnapshot = (): Language => "fi";
+
+export const LanguageProvider = ({ children }: { children: ReactNode }) => {
+    const mounted = useMounted();
+    const lang = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
     return (
         <TranslationContext.Provider
-            value={{ translations: translations[lang], currentLang: lang, isLoading }}
+            value={{
+                translations: translations[lang],
+                currentLang: lang,
+                isLoading: !mounted,
+            }}
         >
             {children}
         </TranslationContext.Provider>
