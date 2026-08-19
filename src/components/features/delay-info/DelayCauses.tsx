@@ -24,16 +24,14 @@ const DelayCauses = ({ train }: DelayCausesProps) => {
 
     return (
         <>
-            <div className="mt-3 flex justify-center">
-                <button
-                    type="button"
-                    onClick={() => setShowDelayCauses(!showDelayCauses)}
-                    aria-expanded={showDelayCauses}
-                    className="p-2 text-sm border border-foreground rounded-md hover:bg-foreground hover:text-background transition-colors"
-                >
-                    {showDelayCauses ? translations.hideDelayCauses : translations.showDelayCauses}
-                </button>
-            </div>
+            <button
+                type="button"
+                onClick={() => setShowDelayCauses(!showDelayCauses)}
+                aria-expanded={showDelayCauses}
+                className="px-4 py-2 text-sm border border-foreground bg-foreground text-background hover:bg-surface hover:text-foreground rounded-md transition-colors"
+            >
+                {showDelayCauses ? translations.hideDelayCauses : translations.showDelayCauses}
+            </button>
             {showDelayCauses && (
                 <div className="mt-4 w-full border border-border bg-surface rounded-lg p-4">
                     <div className="divide-y divide-border">
