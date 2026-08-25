@@ -8,7 +8,6 @@
         "build": "vite build",
         "data:railways": "bun run scripts/update-finland-railways.ts",
         "start": "NITRO_PORT=5173 bun .output/server/index.mjs",
-        "test": "bun test",
         "lint": "oxlint",
         "lint:fix": "oxlint --fix",
         "format": "bun fmt",
