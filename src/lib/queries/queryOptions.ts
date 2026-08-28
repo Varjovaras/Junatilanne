@@ -6,7 +6,7 @@ import {
     todayInHelsinki,
     todayISOString,
 } from "../utils/dateUtils";
-import { getTrackDistances } from "../utils/trackDistance";
+import { getTrainId } from "../utils/trainDisplay";
 import { isValidTrainId } from "../utils/urlUtils";
 import { sortSchedules } from "../utils/sortSchedules";
 import { getMapData } from "./getMapData";
@@ -18,6 +18,7 @@ import {
     fetchStationSchedulesByDate,
     fetchTrainByDateData,
     fetchTrainData,
+    fetchTrainDistances,
 } from "./serverQueries";
 import type { StationSchedule } from "../types/stationTypes";
 import type { TrainType } from "../types/trainTypes";
@@ -100,15 +101,18 @@ export const stationMessagesQueryOptions = (stationId: string) => {
     });
 };
 
-export const trainDistanceQueryOptions = (train: TrainType) =>
-    queryOptions({
-        queryKey: queryKeys.trainDistance(
-            String(train.trainNumber),
-            train.trainLocations[0]?.timestamp ?? "none",
-        ),
-        queryFn: () => getTrackDistances(train),
+export const trainDistanceQueryOptions = (train: TrainType) => {
+    const locationTimestamp = train.trainLocations[0]?.timestamp ?? "none";
+
+    return queryOptions({
+        queryKey: queryKeys.trainDistance(String(train.trainNumber), locationTimestamp),
+        // Distances are precomputed on the server (shared graph + segment cache)
+        // and cached per train, so the browser never downloads or builds the
+        // railway network itself.
+        queryFn: () => fetchTrainDistances({ data: getTrainId(train) }),
         staleTime: TRAIN_DETAILS_REFETCH_INTERVAL_MS,
     });
+};
 
 export const todayTrainQueryOptions = (trainNumber: string) => {
     const todayTrainId = `${trainNumber}-${formatDateForUrl(todayISOString())}`;

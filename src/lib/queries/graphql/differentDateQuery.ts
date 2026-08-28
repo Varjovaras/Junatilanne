@@ -26,7 +26,7 @@ const differentDateQuery = `{
           name
         }
       }
-      trainLocations(take: 1) {
+      trainLocations(orderBy: { timestamp: DESCENDING }, take: 1) {
         speed
         location
       }

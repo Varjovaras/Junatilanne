@@ -4,12 +4,20 @@ import Loading from "@/components/common/Loading";
 import LiveTrainPage from "@/components/features/train-details/LiveTrainPage";
 import NoTrainFound from "@/components/features/train-details/NoTrainFound";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { trainDetailsQueryOptions } from "@/lib/queries/queryOptions";
+import { trainDetailsQueryOptions, trainDistanceQueryOptions } from "@/lib/queries/queryOptions";
 import { formatDate } from "@/lib/utils/dateUtils";
 
 export const Route = createFileRoute("/trains/$id")({
-    loader: ({ context: { queryClient }, params }) => {
-        return queryClient.ensureQueryData(trainDetailsQueryOptions(params.id));
+    loader: async ({ context: { queryClient }, params }) => {
+        const details = await queryClient.ensureQueryData(trainDetailsQueryOptions(params.id));
+
+        // Preload the distance data during SSR so the "X km to next station"
+        // chips arrive in the initial HTML instead of after a client fetch.
+        if (details.train) {
+            await queryClient.ensureQueryData(trainDistanceQueryOptions(details.train));
+        }
+
+        return details;
     },
     pendingComponent: Loading,
     component: TrainRoute,

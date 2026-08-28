@@ -1,5 +1,4 @@
 import type { TimeTableRow, TrainLocation, TrainType } from "../types/trainTypes";
-import { RAILWAY_GEOJSON_URL } from "./railwayData";
 import { distanceBetweenCoordinates } from "./trainDirection";
 import {
     getCommercialArrivalStations,
@@ -63,7 +62,6 @@ export type TrackDistances = {
     method: "track" | "straightLine";
 };
 
-let linesPromise: Promise<Coordinate[][]> | undefined;
 let graphCache: { lines: Coordinate[][]; graph: Promise<Graph> } | undefined;
 
 class MinHeap {
@@ -271,25 +269,6 @@ const getGraphForLines = (lines: Coordinate[][]): Promise<Graph> => {
         graphCache = { lines, graph: buildGraph(lines) };
     }
     return graphCache.graph;
-};
-
-const loadRailwayLines = async (): Promise<Coordinate[][]> => {
-    if (linesPromise) return linesPromise;
-
-    linesPromise = (async () => {
-        const response = await fetch(RAILWAY_GEOJSON_URL);
-        if (!response.ok) {
-            throw new Error(`Railway data not available. HTTP error! status: ${response.status}`);
-        }
-
-        const geojson = (await response.json()) as {
-            features: Array<{ geometry: { coordinates: Coordinate[][] } }>;
-        };
-
-        return geojson.features[0]?.geometry.coordinates ?? [];
-    })();
-
-    return linesPromise;
 };
 
 const toLocalMeters = (point: Coordinate, reference: Coordinate): [number, number] => {
@@ -685,16 +664,4 @@ export const getTrackDistancesForLines = async (
         destinationShortCode: destinationRow.station.shortCode,
         method: "track",
     };
-};
-
-export const getTrackDistances = async (train: TrainType): Promise<TrackDistances | null> => {
-    let lines: Coordinate[][] | undefined;
-
-    try {
-        lines = await loadRailwayLines();
-    } catch {
-        lines = undefined;
-    }
-
-    return getTrackDistancesForLines(train, lines);
 };
