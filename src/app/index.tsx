@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { ClientOnly, createFileRoute } from "@tanstack/react-router";
 import Loading from "@/components/common/Loading";
 import TrainDataDisplay from "@/components/features/train-lists/TrainDataDisplay";
+import { useTrainDistanceWarmup } from "@/components/features/train-lists/useTrainDistanceWarmup";
 import { homeTrainsQueryOptions } from "@/lib/queries/queryOptions";
 
 export const Route = createFileRoute("/")({
@@ -26,6 +27,10 @@ function Home() {
 
 function HomeContent() {
     const { data: trains } = useSuspenseQuery(homeTrainsQueryOptions());
+
+    // Precompute distances for the listed trains in idle time so expanding a
+    // row never has to wait for the calculation.
+    useTrainDistanceWarmup(trains);
 
     return (
         <div className="flex flex-col items-center justify-items-center">

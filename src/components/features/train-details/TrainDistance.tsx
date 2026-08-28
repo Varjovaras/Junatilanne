@@ -11,20 +11,34 @@ type TrainDistanceProps = {
     train: TrainType;
     align?: "center" | "left";
     chip?: boolean;
+    // When false the distance query is not run; used to keep collapsed rows on
+    // the homepage from computing distances until they are expanded.
+    enabled?: boolean;
 };
 
 const formatKilometers = (kilometers: number): string =>
     kilometers < 10 ? kilometers.toFixed(1) : Math.round(kilometers).toString();
 
-const TrainDistance = ({ train, align = "center", chip = false }: TrainDistanceProps) => {
+const TrainDistance = ({
+    train,
+    align = "center",
+    chip = false,
+    enabled = true,
+}: TrainDistanceProps) => {
     const { translations } = useTranslations();
-    const { data } = useQuery(trainDistanceQueryOptions(train));
+    const { data } = useQuery({ ...trainDistanceQueryOptions(train), enabled });
 
     if (!data) return null;
 
-    const nextStation = getNextCommercialStation(train);
-    const commercialArrivals = getCommercialStations(train.timeTableRows, "ARRIVAL");
-    const destination = commercialArrivals[commercialArrivals.length - 1];
+    // The station a distance refers to comes from the distance calculation, so
+    // the label always matches the measurement even when the train is ahead of
+    // the timetable.
+    const nextStation =
+        train.timeTableRows.find((row) => row.station.shortCode === data.nextStationShortCode) ??
+        getNextCommercialStation(train);
+    const destination =
+        train.timeTableRows.find((row) => row.station.shortCode === data.destinationShortCode) ??
+        getCommercialStations(train.timeTableRows, "ARRIVAL").at(-1);
 
     const nextStationText = nextStation
         ? translations.kmToNextStation

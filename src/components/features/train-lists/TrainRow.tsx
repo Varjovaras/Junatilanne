@@ -243,7 +243,11 @@ const TrainRow = ({ train }: TrainRowProps) => {
                                                     {translations.minShortened}
                                                 </span>
                                             )}
-                                            <TrainDistance train={train} align="left" />
+                                            <TrainDistance
+                                                train={train}
+                                                align="left"
+                                                enabled={expanded}
+                                            />
                                         </>
                                     ) : lastStop ? (
                                         <span className="text-foreground/60">

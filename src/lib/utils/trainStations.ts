@@ -24,6 +24,13 @@ export const getCommercialStations = (
     });
 };
 
+// The ordered, non-cancelled commercial arrivals of a train. This is the
+// sequence of stations the train actually stops at, used as the route for
+// distance calculations.
+export const getCommercialArrivalStations = (train: TrainType): TimeTableRow[] => {
+    return getCommercialStations(train.timeTableRows, "ARRIVAL").filter((row) => !row.cancelled);
+};
+
 export const getVisitedStations = (
     timeTableRows: TimeTableRow[],
     commercialOnly = false,
@@ -59,7 +66,7 @@ export const getLatestVisitedStationName = (train: TrainType): string | null => 
     return lastVisitedStation.station.name;
 };
 
-const getLastVisitedRowIndex = (timeTableRows: TimeTableRow[]): number =>
+export const getLastVisitedRowIndex = (timeTableRows: TimeTableRow[]): number =>
     timeTableRows.reduce(
         (lastIndex, row, index) => (row.actualTime !== null ? index : lastIndex),
         -1,
