@@ -3,11 +3,6 @@ import type { StationMetadata, StationMetadataType } from "../types/stationTypes
 const STATION_TYPES: ReadonlySet<StationMetadataType> = new Set(["STATION", "STOPPING_POINT"]);
 const SUPPORTED_COUNTRY_CODES: ReadonlySet<StationMetadata["countryCode"]> = new Set(["FI", "SE"]);
 
-type StationMetadataRecord = Record<string, unknown>;
-
-const isRecord = (value: unknown): value is StationMetadataRecord =>
-    typeof value === "object" && value !== null;
-
 const isFiniteCoordinate = (value: unknown, min: number, max: number): value is number =>
     typeof value === "number" && Number.isFinite(value) && value >= min && value <= max;
 
@@ -20,9 +15,7 @@ export const normalizeStationMetadata = (value: unknown): StationMetadata[] => {
     const seenCodes = new Set<string>();
     const stations: StationMetadata[] = [];
 
-    for (const entry of value) {
-        if (!isRecord(entry)) continue;
-
+    for (const entry of value as Record<string, unknown>[]) {
         const countryCode = entry.countryCode;
         const stationName = entry.stationName;
         const stationShortCode = entry.stationShortCode;
