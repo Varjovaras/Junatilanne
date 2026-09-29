@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { setWorkerUrl } from "maplibre-gl";
+import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import MapGL, {
     GeolocateControl,
     type MapEvent,
@@ -26,6 +28,10 @@ type TrainMapProps = {
 
 const DARK_STYLE = "/map-style.json";
 const INITIAL_VIEW_STATE = { longitude: 25.7, latitude: 65.9, zoom: 5 };
+
+// MapLibre v6 resolves its worker from import.meta.url at runtime, which points at a
+// non-existent file once a bundler processes the module. Use the worker Vite emits instead.
+setWorkerUrl(workerUrl);
 
 const TrainMap = ({ trainNumber }: TrainMapProps) => {
     const { translations } = useTranslations();
