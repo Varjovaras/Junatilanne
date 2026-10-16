@@ -68,19 +68,20 @@ const hexToRgb = (hex: string): Rgb => {
     return [(value >> 16) & 255, (value >> 8) & 255, value & 255];
 };
 
-// Stops from the Okabe–Ito palette, which stays distinguishable for the most
-// common types of colour vision deficiency. Both categories ramp to the same
-// vermillion so an on-time green and a very late red never rely on a red/green
-// comparison alone.
+// On-time colours are the fixed brand-ish green/blue; the ramp through the
+// intermediate stops (Okabe–Ito, chosen to stay distinguishable for common
+// colour vision deficiencies) leads both categories to the same vermillion, so
+// an on-time green and a very late red never rely on a red/green comparison
+// alone.
 const LONG_DISTANCE_COLOR_STOPS: readonly Rgb[] = [
-    hexToRgb("#009e73"), // on time: bluish green
+    hexToRgb("#02893f"), // on time: green
     hexToRgb("#f0e442"), // yellow
     hexToRgb("#e69f00"), // orange
     hexToRgb("#d55e00"), // very late: vermillion
 ];
 
 const COMMUTER_COLOR_STOPS: readonly Rgb[] = [
-    hexToRgb("#0072b2"), // on time: blue
+    hexToRgb("#0074bf"), // on time: blue
     hexToRgb("#cc79a7"), // reddish purple
     hexToRgb("#d55e00"), // very late: vermillion
 ];
