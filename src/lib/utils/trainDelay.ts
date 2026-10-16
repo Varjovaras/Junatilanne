@@ -1,3 +1,4 @@
+import type { TrainGroup } from "./trainClassification";
 import type { TrainType } from "../types/trainTypes";
 
 export const getTrainCurrentDelay = (train: TrainType): number => {
@@ -57,10 +58,60 @@ export const getDelayColorClass = (delayMinutes: number): string => {
     return "text-red-800"; // 45+ minutes late
 };
 
-export const getTrainDelayColor = (delayMinutes: number): string => {
-    const safeDelay = Number.isFinite(delayMinutes) ? delayMinutes : 0;
-    const normalizedDelay = Math.min(Math.max(safeDelay, 0), 45) / 45;
-    const hue = Math.round(120 - normalizedDelay * 120);
+/** Minutes of delay after which a train is shown in the "very late" colour. */
+export const DELAY_FULL_COLOR_MINUTES = 30;
 
-    return `hsl(${hue} 72% 45%)`;
+type Rgb = readonly [number, number, number];
+
+const hexToRgb = (hex: string): Rgb => {
+    const value = Number.parseInt(hex.slice(1), 16);
+    return [(value >> 16) & 255, (value >> 8) & 255, value & 255];
+};
+
+// Stops from the Okabe–Ito palette, which stays distinguishable for the most
+// common types of colour vision deficiency. Both categories ramp to the same
+// vermillion so an on-time green and a very late red never rely on a red/green
+// comparison alone.
+const LONG_DISTANCE_COLOR_STOPS: readonly Rgb[] = [
+    hexToRgb("#009e73"), // on time: bluish green
+    hexToRgb("#f0e442"), // yellow
+    hexToRgb("#e69f00"), // orange
+    hexToRgb("#d55e00"), // very late: vermillion
+];
+
+const COMMUTER_COLOR_STOPS: readonly Rgb[] = [
+    hexToRgb("#0072b2"), // on time: blue
+    hexToRgb("#cc79a7"), // reddish purple
+    hexToRgb("#d55e00"), // very late: vermillion
+];
+
+const lerp = (from: number, to: number, amount: number) => from + (to - from) * amount;
+
+const interpolateStops = (stops: readonly Rgb[], amount: number): Rgb => {
+    const scaled = Math.min(Math.max(amount, 0), 1) * (stops.length - 1);
+    const index = Math.min(Math.floor(scaled), stops.length - 2);
+    const local = scaled - index;
+    const from = stops[index];
+    const to = stops[index + 1];
+
+    return [lerp(from[0], to[0], local), lerp(from[1], to[1], local), lerp(from[2], to[2], local)];
+};
+
+const toCssColor = (rgb: Rgb) =>
+    `rgb(${Math.round(rgb[0])} ${Math.round(rgb[1])} ${Math.round(rgb[2])})`;
+
+// Perceived brightness (ITU-R BT.601) decides whether the train name is drawn
+// light or dark so it stays readable across the whole ramp.
+const isLightColor = (rgb: Rgb) => (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255 > 0.6;
+
+export const getTrainBallColors = (
+    delayMinutes: number,
+    category: TrainGroup,
+): { ball: string; text: string } => {
+    const safeDelay = Number.isFinite(delayMinutes) ? delayMinutes : 0;
+    const amount = safeDelay / DELAY_FULL_COLOR_MINUTES;
+    const stops = category === "commuter" ? COMMUTER_COLOR_STOPS : LONG_DISTANCE_COLOR_STOPS;
+    const rgb = interpolateStops(stops, amount);
+
+    return { ball: toCssColor(rgb), text: isLightColor(rgb) ? "#1a1a1a" : "#ffffff" };
 };

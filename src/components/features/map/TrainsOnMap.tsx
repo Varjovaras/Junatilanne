@@ -4,8 +4,9 @@ import type { FeatureCollection, Feature, Point } from "geojson";
 import type { SymbolLayerSpecification } from "maplibre-gl";
 import type { MapTrain } from "@/lib/types/trainTypes";
 import { updateTrainHeadingCache } from "@/lib/utils/trainDirection";
-import { getTrainDelayColor } from "@/lib/utils/trainDelay";
-import { getTrainId } from "@/lib/utils/trainDisplay";
+import { getTrainBallColors } from "@/lib/utils/trainDelay";
+import { getTrainCategory } from "@/lib/utils/trainClassification";
+import { getTrainDisplayName, getTrainId } from "@/lib/utils/trainDisplay";
 import {
     TRAIN_ICON_ARROW_SPRITE,
     TRAIN_ICON_GLOW_SPRITE,
@@ -18,7 +19,7 @@ export const TRAIN_POINT_LAYER_ID = "train-points";
 const TRAIN_GLOW_LAYER_ID = "train-points-glow";
 const TRAIN_ARROW_LAYER_ID = "train-points-arrow";
 
-const ICON_SIZE = 1;
+const ICON_SIZE = 1.25;
 
 const trainGlowLayer = (): SymbolLayerSpecification => ({
     id: TRAIN_GLOW_LAYER_ID,
@@ -30,7 +31,7 @@ const trainGlowLayer = (): SymbolLayerSpecification => ({
         "icon-allow-overlap": true,
     },
     paint: {
-        "icon-color": ["get", "delayColor"],
+        "icon-color": ["get", "ballColor"],
         "icon-opacity": 0.25,
     },
 });
@@ -49,14 +50,17 @@ const trainLayer = (): SymbolLayerSpecification => ({
         "text-size": 10,
         "text-font": ["Noto Sans Bold"],
         "text-anchor": "center",
-        "text-allow-overlap": false,
+        "text-max-width": 4.5,
+        "text-line-height": 0.95,
+        "text-allow-overlap": true,
+        "text-ignore-placement": true,
         "text-optional": true,
     },
     paint: {
-        "icon-color": ["get", "delayColor"],
+        "icon-color": ["get", "ballColor"],
         "icon-halo-color": "#ffffff",
         "icon-halo-width": 2,
-        "text-color": "#ffffff",
+        "text-color": ["get", "textColor"],
     },
 });
 
@@ -73,7 +77,7 @@ const trainArrowLayer = (): SymbolLayerSpecification => ({
         "icon-allow-overlap": true,
     },
     paint: {
-        "icon-color": "#ffffff",
+        "icon-color": ["get", "ballColor"],
     },
 });
 
@@ -81,7 +85,8 @@ type TrainFeature = Feature<Point> & {
     properties: {
         trainId: string;
         label: string;
-        delayColor: string;
+        ballColor: string;
+        textColor: string;
         heading: number;
         hasHeading: boolean;
     };
@@ -106,13 +111,15 @@ const TrainsOnMap = ({ filteredTrains, popup, setPopup, spritesReady }: TrainsOn
 
             const trainId = getTrainId(train);
             const heading = updateTrainHeadingCache(headingCache, trainId, train.trainLocations);
+            const { ball, text } = getTrainBallColors(train.delay, getTrainCategory(train));
 
             features.push({
                 type: "Feature",
                 properties: {
                     trainId,
-                    label: train.commuterLineid || train.trainNumber.toString(),
-                    delayColor: getTrainDelayColor(train.delay),
+                    label: getTrainDisplayName(train),
+                    ballColor: ball,
+                    textColor: text,
                     heading: heading ?? 0,
                     hasHeading: heading !== undefined,
                 },

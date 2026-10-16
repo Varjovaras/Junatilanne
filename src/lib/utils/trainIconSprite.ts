@@ -14,7 +14,9 @@ const toSvg = (body: string): string =>
 const circle = (radius: number): string =>
     `<circle cx="18" cy="18" r="${radius}" fill="#ffffff" />`;
 
-const arrow = `<path d="M18 6 L22 14 L18 12 L14 14 Z" fill="#ffffff" />`;
+// Points up (north) from the top rim of the ball; rotated to the train heading
+// and tinted with the ball colour so it reads as a tear-drop pointer.
+const arrow = `<path d="M18 1 L23 10 L18 8 L13 10 Z" fill="#ffffff" />`;
 
 const TRAIN_SPRITES: Record<string, string> = {
     [TRAIN_ICON_SPRITE]: toSvg(circle(14)),

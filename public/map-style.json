@@ -2025,7 +2025,7 @@
             "minzoom": 8,
             "filter": [
                 "all",
-                ["<=", ["get", "ref_length"], 6],
+                ["<=", ["coalesce", ["get", "ref_length"], 99], 6],
                 ["match", ["geometry-type"], ["LineString", "MultiLineString"], true, false],
                 [
                     "match",
@@ -2055,7 +2055,7 @@
             "minzoom": 7,
             "filter": [
                 "all",
-                ["<=", ["get", "ref_length"], 6],
+                ["<=", ["coalesce", ["get", "ref_length"], 99], 6],
                 ["match", ["geometry-type"], ["LineString", "MultiLineString"], true, false],
                 ["match", ["get", "network"], ["us-interstate"], true, false]
             ],
@@ -2079,7 +2079,7 @@
             "minzoom": 9,
             "filter": [
                 "all",
-                ["<=", ["get", "ref_length"], 6],
+                ["<=", ["coalesce", ["get", "ref_length"], 99], 6],
                 ["match", ["geometry-type"], ["LineString", "MultiLineString"], true, false],
                 ["match", ["get", "network"], ["us-highway", "us-state"], true, false]
             ],
