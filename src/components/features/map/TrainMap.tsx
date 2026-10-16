@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { setWorkerUrl } from "maplibre-gl";
+import type { GeoJSONSource } from "maplibre-gl";
 import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
+import type { Point } from "geojson";
 import MapGL, {
     GeolocateControl,
     type MapEvent,
@@ -19,7 +21,7 @@ import { ensureTrainSprites } from "@/lib/utils/trainIconSprite";
 import RailwaysOnMap from "./RailwaysOnMap";
 import StationsOnMap, { STATION_POINT_LAYER_IDS } from "./StationsOnMap";
 import TrainSelector from "./TrainSelector";
-import TrainsOnMap, { TRAIN_POINT_LAYER_ID } from "./TrainsOnMap";
+import TrainsOnMap, { TRAIN_CLUSTER_LAYER_IDS, TRAIN_POINT_LAYER_ID } from "./TrainsOnMap";
 import type { MapPopupSelection } from "./mapTypes";
 
 type TrainMapProps = {
@@ -109,6 +111,24 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
             return;
         }
 
+        if (
+            TRAIN_CLUSTER_LAYER_IDS.includes(
+                feature.layer.id as (typeof TRAIN_CLUSTER_LAYER_IDS)[number],
+            )
+        ) {
+            const clusterId = feature.properties?.cluster_id;
+            const map = mapRef.current?.getMap();
+            const source = map?.getSource("trains") as GeoJSONSource | undefined;
+
+            if (map && source && typeof clusterId === "number") {
+                const [longitude, latitude] = (feature.geometry as Point).coordinates;
+                void source.getClusterExpansionZoom(clusterId).then((zoom) => {
+                    map.easeTo({ center: [longitude, latitude], zoom, duration: 500 });
+                });
+            }
+            return;
+        }
+
         if (feature.layer.id === TRAIN_POINT_LAYER_ID) {
             const trainId = feature.properties?.trainId;
             setPopup(typeof trainId === "string" ? { type: "train", id: trainId } : null);
@@ -157,15 +177,23 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
                 initialViewState={INITIAL_VIEW_STATE}
                 mapStyle={DARK_STYLE}
                 onLoad={handleMapLoad}
-                interactiveLayerIds={[...STATION_POINT_LAYER_IDS, TRAIN_POINT_LAYER_ID]}
+                interactiveLayerIds={[
+                    ...STATION_POINT_LAYER_IDS,
+                    TRAIN_POINT_LAYER_ID,
+                    ...TRAIN_CLUSTER_LAYER_IDS,
+                ]}
                 onClick={handleMapClick}
                 onMouseMove={(event) => {
-                    const isOverTrain =
+                    const isClickable =
                         event.features?.some(
-                            (feature) => feature.layer.id === TRAIN_POINT_LAYER_ID,
+                            (feature) =>
+                                feature.layer.id === TRAIN_POINT_LAYER_ID ||
+                                TRAIN_CLUSTER_LAYER_IDS.includes(
+                                    feature.layer.id as (typeof TRAIN_CLUSTER_LAYER_IDS)[number],
+                                ),
                         ) ?? false;
                     const canvas = mapRef.current?.getCanvas();
-                    if (canvas) canvas.style.cursor = isOverTrain ? "pointer" : "";
+                    if (canvas) canvas.style.cursor = isClickable ? "pointer" : "";
                 }}
                 attributionControl={false}
                 style={{ width: "100%", height: "100%" }}

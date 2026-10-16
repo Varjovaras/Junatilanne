@@ -1,7 +1,11 @@
 import { Popup, Source, Layer } from "react-map-gl/maplibre";
 import { useMemo, useRef } from "react";
 import type { FeatureCollection, Feature, Point } from "geojson";
-import type { SymbolLayerSpecification } from "maplibre-gl";
+import type {
+    CircleLayerSpecification,
+    FilterSpecification,
+    SymbolLayerSpecification,
+} from "maplibre-gl";
 import type { MapTrain } from "@/lib/types/trainTypes";
 import { updateTrainHeadingCache } from "@/lib/utils/trainDirection";
 import { getTrainBallColors } from "@/lib/utils/trainDelay";
@@ -16,15 +20,33 @@ import type { MapPopupSelection } from "./mapTypes";
 import TrainPopupContent from "./TrainPopupContent";
 
 export const TRAIN_POINT_LAYER_ID = "train-points";
+export const TRAIN_CLUSTER_LAYER_ID = "train-clusters";
+export const TRAIN_CLUSTER_COUNT_LAYER_ID = "train-cluster-count";
+export const TRAIN_CLUSTER_LAYER_IDS = [
+    TRAIN_CLUSTER_LAYER_ID,
+    TRAIN_CLUSTER_COUNT_LAYER_ID,
+] as const;
 const TRAIN_GLOW_LAYER_ID = "train-points-glow";
 const TRAIN_ARROW_LAYER_ID = "train-points-arrow";
 
 const ICON_SIZE = 1.25;
 
+// Trains closer together than this merge into one ball showing how many are in
+// the area; above CLUSTER_MAX_ZOOM every train is drawn on its own.
+const CLUSTER_RADIUS = 45;
+const CLUSTER_MAX_ZOOM = 8;
+
+const CLUSTER_COLOR = "#334155";
+const CLUSTER_STROKE_COLOR = "#ffffff";
+
+// Hides cluster points from the individual-train layers.
+const NOT_A_CLUSTER_FILTER: FilterSpecification = ["!", ["has", "point_count"]];
+
 const trainGlowLayer = (): SymbolLayerSpecification => ({
     id: TRAIN_GLOW_LAYER_ID,
     type: "symbol",
     source: "trains",
+    filter: NOT_A_CLUSTER_FILTER,
     layout: {
         "icon-image": TRAIN_ICON_GLOW_SPRITE,
         "icon-size": ICON_SIZE,
@@ -40,6 +62,7 @@ const trainLayer = (): SymbolLayerSpecification => ({
     id: TRAIN_POINT_LAYER_ID,
     type: "symbol",
     source: "trains",
+    filter: NOT_A_CLUSTER_FILTER,
     layout: {
         "icon-image": TRAIN_ICON_SPRITE,
         "icon-size": ICON_SIZE,
@@ -68,7 +91,7 @@ const trainArrowLayer = (): SymbolLayerSpecification => ({
     id: TRAIN_ARROW_LAYER_ID,
     type: "symbol",
     source: "trains",
-    filter: ["==", ["get", "hasHeading"], true],
+    filter: ["all", NOT_A_CLUSTER_FILTER, ["==", ["get", "hasHeading"], true]],
     layout: {
         "icon-image": TRAIN_ICON_ARROW_SPRITE,
         "icon-size": ICON_SIZE,
@@ -78,6 +101,35 @@ const trainArrowLayer = (): SymbolLayerSpecification => ({
     },
     paint: {
         "icon-color": ["get", "ballColor"],
+    },
+});
+
+const clusterCircleLayer = (): CircleLayerSpecification => ({
+    id: TRAIN_CLUSTER_LAYER_ID,
+    type: "circle",
+    source: "trains",
+    filter: ["has", "point_count"],
+    paint: {
+        "circle-color": CLUSTER_COLOR,
+        "circle-radius": ["step", ["get", "point_count"], 16, 10, 20, 50, 25, 200, 31],
+        "circle-stroke-color": CLUSTER_STROKE_COLOR,
+        "circle-stroke-width": 2,
+    },
+});
+
+const clusterCountLayer = (): SymbolLayerSpecification => ({
+    id: TRAIN_CLUSTER_COUNT_LAYER_ID,
+    type: "symbol",
+    source: "trains",
+    filter: ["has", "point_count"],
+    layout: {
+        "text-field": ["get", "point_count_abbreviated"],
+        "text-font": ["Noto Sans Bold"],
+        "text-size": ["step", ["get", "point_count"], 12, 10, 13, 50, 15, 200, 17],
+        "text-allow-overlap": true,
+    },
+    paint: {
+        "text-color": "#ffffff",
     },
 });
 
@@ -140,10 +192,19 @@ const TrainsOnMap = ({ filteredTrains, popup, setPopup, spritesReady }: TrainsOn
 
     return (
         <>
-            <Source id="trains" type="geojson" data={geoJson}>
+            <Source
+                id="trains"
+                type="geojson"
+                data={geoJson}
+                cluster={true}
+                clusterRadius={CLUSTER_RADIUS}
+                clusterMaxZoom={CLUSTER_MAX_ZOOM}
+            >
                 <Layer {...trainGlowLayer()} />
                 <Layer {...trainLayer()} />
                 <Layer {...trainArrowLayer()} />
+                <Layer {...clusterCircleLayer()} />
+                <Layer {...clusterCountLayer()} />
             </Source>
             {selectedTrain && popupLocation && (
                 <Popup
