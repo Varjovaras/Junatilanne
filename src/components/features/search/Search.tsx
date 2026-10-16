@@ -4,7 +4,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useId, useRef, useState } from "react";
 import DatePicker from "@/components/common/DatePicker";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { formatDateForUrl, todayInHelsinki } from "@/lib/utils/dateUtils";
+import { formatDateForUrl, isToday, todayInHelsinki } from "@/lib/utils/dateUtils";
 import { majorStations, passengerStationCodes } from "@/lib/utils/majorStations";
 import { handleSearchError, validateDate, validateTrainNumber } from "@/lib/utils/searchUtils";
 
@@ -31,9 +31,10 @@ const Search = () => {
 
     const handleStationSelect = (code: string) => {
         clearInput();
+        const formattedDate = formatDateForUrl(date);
         navigate({
             to: `/stations/${code}`,
-            search: { date: formatDateForUrl(date) },
+            search: isToday(formattedDate) ? {} : { date: formattedDate },
         });
     };
 
