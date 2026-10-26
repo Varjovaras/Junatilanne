@@ -1,15 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import TrainTypeSelector from "@/components/features/train-lists/TrainTypeSelector";
+import { useEffect, useState } from "react";
 import Loading from "@/components/common/Loading";
+import TrainTypeSelector from "@/components/features/train-lists/TrainTypeSelector";
+import { stationScheduleByDateQueryOptions } from "@/lib/queries/queryOptions";
 import type { StationSchedule } from "@/lib/types/stationTypes";
 import { isToday, todayInHelsinki } from "@/lib/utils/dateUtils";
-import { stationScheduleByDateQueryOptions } from "@/lib/queries/queryOptions";
-import { stationScheduleFilter } from "@/lib/utils/stationScheduleFilter";
+import {
+    filterSchedulesWithUpcomingStop,
+    stationScheduleFilter,
+} from "@/lib/utils/stationScheduleFilter";
 import { filterSchedulesByCategory } from "@/lib/utils/trainClassification";
 import DailySchedule from "./DailySchedule";
 import ScheduleDaySelector from "./ScheduleDaySelector";
 import ScheduleList from "./ScheduleList";
+import ScheduleScopeSelector from "./ScheduleScopeSelector";
 import ScheduleViewSelector, { type ScheduleView } from "./ScheduleViewSelector";
 import TrackSelector from "./TrackSelector";
 
@@ -26,19 +30,25 @@ const ScheduleOverview = ({ schedules, stationId, date, onDateChange }: Schedule
     const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState("passengerCommuter");
     const [lastScheduleDate, setLastScheduleDate] = useState<string | undefined>(undefined);
+    const [showWholeDay, setShowWholeDay] = useState(false);
     const view: ScheduleView = date ? "schedule" : "upcoming";
     const today = todayInHelsinki();
     const scheduleDate = date ?? today;
+    const isTodaySchedule = isToday(scheduleDate);
 
     if (date && date !== lastScheduleDate) {
         setLastScheduleDate(date);
     }
 
+    useEffect(() => {
+        setShowWholeDay(false);
+    }, [date]);
+
     const { data: dateData, isLoading } = useQuery({
         ...stationScheduleByDateQueryOptions(stationId, scheduleDate),
-        enabled: !isToday(scheduleDate),
+        enabled: !isTodaySchedule,
     });
-    const daySchedules = isToday(scheduleDate) ? schedules : (dateData?.schedules ?? []);
+    const daySchedules = isTodaySchedule ? schedules : (dateData?.schedules ?? []);
 
     const filterByTrack = (trains: StationSchedule[]) => {
         if (!selectedTrack) return trains;
@@ -57,6 +67,10 @@ const ScheduleOverview = ({ schedules, stationId, date, onDateChange }: Schedule
         filterSchedulesByCategory(upcomingSchedules, category),
     );
     const displayedDaySchedules = filterByTrack(filterSchedulesByCategory(daySchedules, category));
+    const visibleDaySchedules =
+        isTodaySchedule && !showWholeDay
+            ? filterSchedulesWithUpcomingStop(displayedDaySchedules, stationId)
+            : displayedDaySchedules;
 
     return (
         <div className="space-y-8">
@@ -66,7 +80,7 @@ const ScheduleOverview = ({ schedules, stationId, date, onDateChange }: Schedule
             />
 
             <TrackSelector
-                schedules={schedules}
+                schedules={daySchedules}
                 stationId={stationId}
                 onTrackSelect={setSelectedTrack}
             />
@@ -77,7 +91,7 @@ const ScheduleOverview = ({ schedules, stationId, date, onDateChange }: Schedule
                     onDateChange(nextView === "upcoming" ? undefined : (lastScheduleDate ?? today))
                 }
                 upcomingCount={displayedSchedules.length}
-                scheduleCount={displayedDaySchedules.length}
+                scheduleCount={visibleDaySchedules.length}
             />
 
             {view === "upcoming" ? (
@@ -88,17 +102,29 @@ const ScheduleOverview = ({ schedules, stationId, date, onDateChange }: Schedule
                 />
             ) : (
                 <>
-                    <ScheduleDaySelector date={scheduleDate} onDateChange={onDateChange} />
+                    <div className="space-y-4">
+                        <ScheduleDaySelector date={scheduleDate} onDateChange={onDateChange} />
+                        {isTodaySchedule && (
+                            <ScheduleScopeSelector
+                                showWholeDay={showWholeDay}
+                                onChange={setShowWholeDay}
+                            />
+                        )}
+                    </div>
                     {isLoading ? (
                         <div className="flex items-center justify-center py-16">
                             <Loading />
                         </div>
                     ) : (
                         <DailySchedule
-                            key={`day-${scheduleDate}-${selectedCategory}-${selectedTrack ?? "all"}`}
-                            schedules={displayedDaySchedules}
+                            key={`day-${scheduleDate}-${selectedCategory}-${selectedTrack ?? "all"}-${
+                                showWholeDay ? "all" : "remaining"
+                            }`}
+                            schedules={visibleDaySchedules}
                             stationId={stationId}
                             date={scheduleDate}
+                            isFiltered={isTodaySchedule && !showWholeDay}
+                            hasDaySchedules={daySchedules.length > 0}
                         />
                     )}
                 </>

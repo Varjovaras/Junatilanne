@@ -1,6 +1,6 @@
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { StationSchedule } from "@/lib/types/stationTypes";
-import VirtualScheduleList from "./VirtualScheduleList";
+import ScheduleTable from "./ScheduleTable";
 
 type ScheduleListProps = {
     schedules: StationSchedule[];
@@ -15,7 +15,7 @@ const ScheduleList = ({ schedules, stationId }: ScheduleListProps) => {
             {schedules.length === 0 ? (
                 <p className="text-foreground/60 italic">{translations.noUpcomingDepartures}</p>
             ) : (
-                <VirtualScheduleList schedules={schedules} stationId={stationId} />
+                <ScheduleTable schedules={schedules} stationId={stationId} />
             )}
         </div>
     );

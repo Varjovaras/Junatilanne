@@ -144,6 +144,18 @@ export const getStationRows = (
 export const getStationRowTime = (row: StationTimeTableRow): number =>
     new Date(row.actualTime ?? row.liveEstimateTime ?? row.scheduledTime).getTime();
 
+// A journey is complete once the train has reached its final row, or once the
+// final time has passed and the train is no longer running.
+export const isJourneyCompleted = (schedule: StationSchedule, now = Date.now()): boolean => {
+    if (schedule.cancelled) return false;
+
+    const finalRow = schedule.timeTableRows[schedule.timeTableRows.length - 1];
+    if (!finalRow || finalRow.cancelled) return false;
+    if (finalRow.actualTime) return true;
+
+    return !schedule.runningCurrently && getStationRowTime(finalRow) < now;
+};
+
 export const getNextStationRow = (
     schedule: StationSchedule,
     stationId: string,
