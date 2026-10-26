@@ -6,7 +6,11 @@ import { formatTime } from "@/lib/utils/dateUtils";
 import { findStationDepartureWithId } from "@/lib/utils/scheduleUtils";
 import { getFormattedStationName } from "@/lib/utils/stationUtils";
 import { getScheduleTrainDisplayName, getScheduleTrainLink } from "@/lib/utils/trainDisplay";
-import { findStationArrivalWithId, isStationTerminus } from "@/lib/utils/trainStations";
+import {
+    findStationArrivalWithId,
+    getStationRows,
+    isStationTerminus,
+} from "@/lib/utils/trainStations";
 import ScheduleCardStatus from "./ScheduleCardStatus";
 
 type ScheduleRowProps = {
@@ -20,7 +24,7 @@ const ScheduleRow = ({ schedule, stationId }: ScheduleRowProps) => {
     const firstRow = schedule.timeTableRows[0];
     const lastRow = schedule.timeTableRows[schedule.timeTableRows.length - 1];
 
-    const stationRows = schedule.timeTableRows.filter((row) => row.stationShortCode === stationId);
+    const stationRows = getStationRows(schedule, stationId);
     const arrivesOnly = isStationTerminus(schedule, stationId);
     const track =
         departureRow?.commercialTrack ??

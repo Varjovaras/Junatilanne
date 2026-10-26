@@ -4,7 +4,7 @@ import { graphqlFetch } from "@/lib/queries/graphqlClient";
 import type { MapTrain, TrainLocation, TypeOfTrain } from "@/lib/types/trainTypes";
 
 export const MAP_CACHE_MAX_AGE_SECONDS = 5;
-export const MAP_CACHE_STALE_MAX_AGE_SECONDS = 30;
+export const MAP_CACHE_STALE_MAX_AGE_SECONDS = 120;
 
 type RawMapTrain = {
     trainNumber: number;

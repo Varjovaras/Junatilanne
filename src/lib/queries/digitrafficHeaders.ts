@@ -1,3 +1,3 @@
 export const DIGITRAFFIC_USER_HEADERS = {
-    "Digitraffic-User": "Junatilanne",
+    "Digitraffic-User": "junatilanne",
 } as const;

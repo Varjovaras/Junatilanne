@@ -1,27 +1,23 @@
 import type { StationSchedule } from "../types/stationTypes";
-import { findStationDepartureWithId } from "./scheduleUtils";
-import { findStationArrivalWithId } from "./trainStations";
+import { getNextStationRow, getStationRowTime } from "./trainStations";
 
 export const stationScheduleFilter = (
     stationSchedules: StationSchedule[],
     stationId: string,
+    now = Date.now(),
 ): StationSchedule[] => {
-    const nowTime = new Date().getTime();
-
-    // Filter schedules to only include trains that:
-    // 1. Actually stop at this station
-    // 2. Haven't departed yet (scheduled departure or arrival time is in the future)
+    // A round trip can visit the station twice. Use the next future arrival or
+    // departure instead of only the first departure, otherwise a train whose
+    // outward departure has passed but whose return arrival is still ahead is
+    // dropped from "upcoming".
     const filtered: Array<{ schedule: StationSchedule; stationTime: number }> = [];
 
     for (const schedule of stationSchedules) {
-        const stationRow =
-            findStationDepartureWithId(schedule, stationId) ??
-            findStationArrivalWithId(schedule, stationId);
-
+        const stationRow = getNextStationRow(schedule, stationId, now);
         if (!stationRow) continue;
 
-        const stationTime = new Date(stationRow.scheduledTime).getTime();
-        if (!Number.isFinite(stationTime) || stationTime < nowTime) continue;
+        const stationTime = getStationRowTime(stationRow);
+        if (!Number.isFinite(stationTime)) continue;
 
         filtered.push({ schedule, stationTime });
     }

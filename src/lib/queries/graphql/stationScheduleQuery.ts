@@ -56,7 +56,7 @@ const trainFields = `{
 
 export const getStationScheduleQuery = (stationId: string, date: string) => {
     const { startIso, endIso } = getHelsinkiDayWindow(date);
-    const windowFilter = `timeTableRows: { contains: { station: { shortCode: { equals: "${stationId}" } }, scheduledTime: { greaterThan: "${startIso}", lessThan: "${endIso}" } } }`;
+    const windowFilter = `timeTableRows: { contains: { station: { shortCode: { equals: "${stationId}" } }, trainStopping: { equals: true }, scheduledTime: { greaterThan: "${startIso}", lessThan: "${endIso}" } } }`;
     const day = (departureDate: string, alias: string) =>
         `  ${alias}: trainsByDepartureDate(departureDate: "${departureDate}", where: { ${windowFilter} }) ${trainFields}`;
 

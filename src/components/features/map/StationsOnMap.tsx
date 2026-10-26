@@ -7,8 +7,10 @@ import { useTranslations } from "@/lib/i18n/useTranslations";
 import { stationSchedulesQueryOptions } from "@/lib/queries/queryOptions";
 import type { StationMetadata } from "@/lib/types/stationTypes";
 import { formatTime } from "@/lib/utils/dateUtils";
+import { stationScheduleFilter } from "@/lib/utils/stationScheduleFilter";
 import { stationMetadataToGeoJson } from "@/lib/utils/stationMetadata";
 import { getTrainId } from "@/lib/utils/trainDisplay";
+import { getNextStationRow } from "@/lib/utils/trainStations";
 import type { MapPopupSelection } from "./mapTypes";
 
 type StationsOnMapProps = {
@@ -67,7 +69,10 @@ const StationsOnMap = ({ stations, popup, setPopup }: StationsOnMapProps) => {
         ...stationSchedulesQueryOptions(stationCode ?? ""),
         enabled: Boolean(stationCode),
     });
-    const upcomingSchedules = stationSchedules?.schedules.slice(0, 3) ?? [];
+    const upcomingSchedules = stationScheduleFilter(
+        stationSchedules?.schedules ?? [],
+        stationCode ?? "",
+    ).slice(0, 3);
 
     return (
         <>
@@ -107,11 +112,7 @@ const StationsOnMap = ({ stations, popup, setPopup }: StationsOnMapProps) => {
                                 </p>
                                 <ul className="space-y-1">
                                     {upcomingSchedules.map((schedule) => {
-                                        const stationRow = schedule.timeTableRows.find(
-                                            (row) =>
-                                                row.stationShortCode === stationCode &&
-                                                row.trainStopping,
-                                        );
+                                        const stationRow = getNextStationRow(schedule, stationCode);
                                         if (!stationRow) return null;
 
                                         const time = formatTime(stationRow.scheduledTime);

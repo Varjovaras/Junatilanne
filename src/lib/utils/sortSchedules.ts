@@ -1,13 +1,10 @@
 import type { StationSchedule } from "../types/stationTypes";
-import { findStationDepartureWithId } from "./scheduleUtils";
-import { findStationArrivalWithId } from "./trainStations";
+import { getFirstStationRow } from "./trainStations";
 
 export const sortSchedules = (schedules: StationSchedule[], stationId: string) => {
     return schedules
         .map((schedule) => {
-            const stationRow =
-                findStationDepartureWithId(schedule, stationId) ??
-                findStationArrivalWithId(schedule, stationId);
+            const stationRow = getFirstStationRow(schedule, stationId);
             const scheduledTime = stationRow?.scheduledTime;
 
             return {
@@ -15,10 +12,10 @@ export const sortSchedules = (schedules: StationSchedule[], stationId: string) =
                 stationTime: scheduledTime ? new Date(scheduledTime).getTime() : undefined,
             };
         })
-        .sort((a, b) => {
-            if (a.stationTime === undefined || b.stationTime === undefined) return 0;
-
-            return a.stationTime - b.stationTime;
-        })
+        .sort(
+            (a, b) =>
+                (a.stationTime ?? Number.POSITIVE_INFINITY) -
+                (b.stationTime ?? Number.POSITIVE_INFINITY),
+        )
         .map(({ schedule }) => schedule);
 };

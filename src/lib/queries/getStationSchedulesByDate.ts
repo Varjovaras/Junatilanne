@@ -1,3 +1,4 @@
+import { getHelsinkiDayWindow } from "../utils/dateUtils";
 import type { StationSchedule } from "../types/stationTypes";
 import { getStationScheduleQuery } from "./graphql/stationScheduleQuery";
 import type { StationScheduleGraphQLResponse } from "./graphql/stationScheduleQuery";
@@ -8,6 +9,7 @@ export const getStationSchedulesByDate = async (
     stationId: string,
     date: string,
 ): Promise<StationSchedule[]> => {
+    const window = getHelsinkiDayWindow(date);
     const response = await graphqlFetch<StationScheduleGraphQLResponse>(
         getStationScheduleQuery(stationId, date),
     );
@@ -21,5 +23,7 @@ export const getStationSchedulesByDate = async (
         return true;
     });
 
-    return unique.map((train) => adaptStationSchedule(train, stationId));
+    const schedules = unique.map((train) => adaptStationSchedule(train, stationId, window));
+
+    return schedules.filter((schedule): schedule is StationSchedule => schedule !== null);
 };
