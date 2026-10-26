@@ -9,7 +9,7 @@ export const getCachedStationSchedulesByDate = defineCachedFunction(
     async (stationId: string, date: string): Promise<StationSchedule[]> =>
         getStationSchedulesByDate(stationId, date),
     {
-        name: "station-schedules-by-date",
+        name: "station-schedules-by-date-v2",
         maxAge: STATION_SCHEDULES_BY_DATE_CACHE_MAX_AGE_SECONDS,
         swr: true,
         staleMaxAge: STATION_SCHEDULES_BY_DATE_STALE_MAX_AGE_SECONDS,

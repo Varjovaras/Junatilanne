@@ -21,5 +21,5 @@ export const getStationSchedulesByDate = async (
         return true;
     });
 
-    return unique.map(adaptStationSchedule);
+    return unique.map((train) => adaptStationSchedule(train, stationId));
 };
