@@ -29,7 +29,9 @@ const ScheduleTime = ({ row }: { row: StationTimeTableRow }) => {
                 {formatTime(row.scheduledTime)}
             </span>
             {row.cancelled ? (
-                <span className="text-xs text-red-500">{translations.cancelled}</span>
+                <span className="hidden text-xs text-red-500 md:inline">
+                    {translations.cancelled}
+                </span>
             ) : (
                 <>
                     {row.differenceInMinutes > 0 && (
