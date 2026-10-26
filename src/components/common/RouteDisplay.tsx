@@ -69,7 +69,7 @@ const RouteDisplay = ({
 
     if (isAirportLine && (variant === "list" || variant === "compact")) {
         return (
-            <div className="grid w-full max-w-md mx-auto grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-2 text-sm">
+            <div className="flex w-full max-w-md mx-auto flex-wrap items-center justify-center gap-x-2 text-xs sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-x-2 sm:text-sm">
                 <div className="min-w-0">
                     <Link
                         to="/stations/$id"

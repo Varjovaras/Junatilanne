@@ -4,9 +4,15 @@ type StatusPillProps = {
     cancelled: boolean;
     runningCurrently: boolean;
     completed?: boolean;
+    className?: string;
 };
 
-const StatusPill = ({ cancelled, runningCurrently, completed = false }: StatusPillProps) => {
+const StatusPill = ({
+    cancelled,
+    runningCurrently,
+    completed = false,
+    className = "px-2 py-1 text-sm",
+}: StatusPillProps) => {
     const { translations } = useTranslations();
 
     const statusClass = cancelled
@@ -26,7 +32,7 @@ const StatusPill = ({ cancelled, runningCurrently, completed = false }: StatusPi
             : translations.scheduled;
 
     return (
-        <span className={`px-2 py-1 rounded-full text-sm whitespace-nowrap ${statusClass}`}>
+        <span className={`rounded-full whitespace-nowrap ${statusClass} ${className}`.trim()}>
             {statusText}
         </span>
     );

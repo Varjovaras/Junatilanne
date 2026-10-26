@@ -9,7 +9,7 @@ import { getScheduleTrainDisplayName, getScheduleTrainLink } from "@/lib/utils/t
 import { getStationRows, isJourneyCompleted, isStationTerminus } from "@/lib/utils/trainStations";
 
 export const scheduleTableGridClass =
-    "grid grid-cols-[6.75rem_minmax(0,1fr)_auto] items-center gap-x-3 md:grid-cols-[8rem_minmax(7rem,0.8fr)_minmax(0,1.6fr)_4.5rem_8rem] md:gap-x-4";
+    "grid grid-cols-[6.75rem_minmax(0,1fr)_auto] items-start gap-x-3 md:grid-cols-[8rem_minmax(7rem,0.8fr)_minmax(0,1.6fr)_4.5rem_8rem] md:items-center md:gap-x-4";
 
 type ScheduleTableRowProps = {
     schedule: StationSchedule;
@@ -81,7 +81,7 @@ const ScheduleTableRow = ({ schedule, stationId, index }: ScheduleTableRowProps)
     return (
         <div
             role="row"
-            className={`${scheduleTableGridClass} border-b border-border-subtle px-3 py-2.5 transition-colors hover:bg-surface-hover/40 md:px-4 ${
+            className={`${scheduleTableGridClass} grid-rows-[auto_auto] gap-y-1 border-b border-border-subtle px-3 py-2.5 transition-colors hover:bg-surface-hover/40 md:grid-rows-none md:px-4 ${
                 index % 2 === 1 ? "bg-surface-muted/25" : ""
             }`}
         >
@@ -100,7 +100,7 @@ const ScheduleTableRow = ({ schedule, stationId, index }: ScheduleTableRowProps)
                         {getScheduleTrainDisplayName(schedule)}
                     </Link>
                     {arrivesOnly && (
-                        <span className="rounded-full bg-blue-500/10 px-1.5 py-0.5 text-xs text-blue-500">
+                        <span className="hidden whitespace-nowrap rounded-full bg-blue-500/10 px-1.5 py-0.5 text-xs text-blue-500 md:inline">
                             {translations.arrivesOnly}
                         </span>
                     )}
@@ -120,15 +120,19 @@ const ScheduleTableRow = ({ schedule, stationId, index }: ScheduleTableRowProps)
                     cancelled={schedule.cancelled}
                     runningCurrently={schedule.runningCurrently}
                     completed={isJourneyCompleted(schedule)}
+                    className="px-1.5 py-0.5 text-xs max-[359px]:px-0.5 max-[359px]:text-[10px] md:px-2 md:py-1 md:text-sm"
                 />
             </div>
 
-            <div role="cell" className="col-span-3 space-y-1 pt-1 md:hidden">
-                {route}
+            <div
+                role="cell"
+                className="col-span-3 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 md:hidden"
+            >
+                <div className="min-w-0">{route}</div>
                 {track && (
-                    <p className="text-xs text-foreground/60">
+                    <span className="whitespace-nowrap text-xs text-foreground/60">
                         {translations.track} {track}
-                    </p>
+                    </span>
                 )}
             </div>
         </div>
