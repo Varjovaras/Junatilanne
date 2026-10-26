@@ -1,8 +1,7 @@
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { StationSchedule } from "@/lib/types/stationTypes";
 import { formatDate, isToday } from "@/lib/utils/dateUtils";
-import { getTrainId } from "@/lib/utils/trainDisplay";
-import ScheduleRow from "./ScheduleRow";
+import VirtualScheduleList from "./VirtualScheduleList";
 
 type DailyScheduleProps = {
     schedules: StationSchedule[];
@@ -25,15 +24,7 @@ const DailySchedule = ({ schedules, stationId, date }: DailyScheduleProps) => {
                         : translations.noTrainsToday}
                 </p>
             ) : (
-                <div className="space-y-2 w-full max-w-3xl mx-auto">
-                    {schedules.map((schedule) => (
-                        <ScheduleRow
-                            key={getTrainId(schedule)}
-                            schedule={schedule}
-                            stationId={stationId}
-                        />
-                    ))}
-                </div>
+                <VirtualScheduleList schedules={schedules} stationId={stationId} />
             )}
         </div>
     );

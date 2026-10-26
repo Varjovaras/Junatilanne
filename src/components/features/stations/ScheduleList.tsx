@@ -1,7 +1,6 @@
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { StationSchedule } from "@/lib/types/stationTypes";
-import { getTrainId } from "@/lib/utils/trainDisplay";
-import ScheduleCard from "./ScheduleCard";
+import VirtualScheduleList from "./VirtualScheduleList";
 
 type ScheduleListProps = {
     schedules: StationSchedule[];
@@ -16,15 +15,7 @@ const ScheduleList = ({ schedules, stationId }: ScheduleListProps) => {
             {schedules.length === 0 ? (
                 <p className="text-foreground/60 italic">{translations.noUpcomingDepartures}</p>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {schedules.map((schedule) => (
-                        <ScheduleCard
-                            key={getTrainId(schedule)}
-                            schedule={schedule}
-                            stationId={stationId}
-                        />
-                    ))}
-                </div>
+                <VirtualScheduleList schedules={schedules} stationId={stationId} />
             )}
         </div>
     );

@@ -81,7 +81,11 @@ const ScheduleOverview = ({ schedules, stationId, date, onDateChange }: Schedule
             />
 
             {view === "upcoming" ? (
-                <ScheduleList schedules={displayedSchedules} stationId={stationId} />
+                <ScheduleList
+                    key={`upcoming-${selectedCategory}-${selectedTrack ?? "all"}`}
+                    schedules={displayedSchedules}
+                    stationId={stationId}
+                />
             ) : (
                 <>
                     <ScheduleDaySelector date={scheduleDate} onDateChange={onDateChange} />
@@ -91,6 +95,7 @@ const ScheduleOverview = ({ schedules, stationId, date, onDateChange }: Schedule
                         </div>
                     ) : (
                         <DailySchedule
+                            key={`day-${scheduleDate}-${selectedCategory}-${selectedTrack ?? "all"}`}
                             schedules={displayedDaySchedules}
                             stationId={stationId}
                             date={scheduleDate}
