@@ -26,7 +26,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
                 name: "description",
                 content: "Real-time Finnish train situation / Reaaliaikainen junatilanne",
             },
-            { name: "style-src-elem", content: "self" },
         ],
         scripts: [
             {
@@ -58,7 +57,7 @@ function RootLayout() {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <html lang="en" suppressHydrationWarning>
+            <html lang="fi" suppressHydrationWarning>
                 <head>
                     <HeadContent />
                     <script
@@ -83,7 +82,7 @@ function RootLayout() {
                         </LanguageProvider>
                     </ThemeProvider>
                     <Scripts />
-                    <TanStackRouterDevtools />
+                    {import.meta.env.DEV && <TanStackRouterDevtools />}
                 </body>
             </html>
         </QueryClientProvider>

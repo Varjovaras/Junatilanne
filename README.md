@@ -25,7 +25,7 @@ A real-time train tracking application that shows delayed VR (Finnish Railways) 
 
 ### Prerequisites
 
-- Node.js 18.18 or later
+- Node.js 20 or later
 - npm, yarn, pnpm or bun (preferably bun)
 
 ### Installation
@@ -74,10 +74,12 @@ Open [http://localhost:5173](http://localhost:5173) with your browser to see the
 src/
 ├── app/           # TanStack file-based routes
 ├── components/    # React components
-├── lib/          # Utility functions and configurations
-│   └── i18n/     # Internationalization
-├── queries/      # GraphQL queries
-└── types/        # TypeScript type definitions
+└── lib/           # Queries, domain helpers, types and configuration
+    ├── i18n/      # Internationalization
+    ├── queries/   # GraphQL queries and server functions
+    ├── station/   # Station metadata and schedule helpers
+    ├── train/     # Train classification, delay and progress helpers
+    └── types/     # Shared TypeScript types
 ```
 
 ## Acknowledgments

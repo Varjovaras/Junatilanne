@@ -1,5 +1,5 @@
 {
     "$schema": "./node_modules/oxfmt/configuration_schema.json",
     "tabWidth": 4,
-    "ignorePatterns": ["bui/**", "src/routeTree.gen.ts", "public/finland-railways.geojson"]
+    "ignorePatterns": ["build/**", "src/routeTree.gen.ts", "public/finland-railways.geojson"]
 }

@@ -4,5 +4,4 @@ export default defineNitroConfig({
     storage: {
         "": { driver: "fs", base: "./.data/cache" },
     },
-    // plugins: ["./server/plugins/compress"],
 });
