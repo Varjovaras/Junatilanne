@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import type { TrainType } from "../../types/trainTypes";
-import { getTrainId } from "../../utils/trainDisplay";
+import { getTrainId } from "@/lib/train/display";
 import { queryKeys } from "../shared/queryKeys";
 import { fetchTrainDistances } from "./server";
 import { TRAIN_DETAILS_REFETCH_INTERVAL_MS } from "./trainDetails";

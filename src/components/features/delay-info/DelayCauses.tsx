@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
-import { hasMeaningfulCauseText } from "@/lib/utils/causeUtils";
+import { hasMeaningfulCauseText } from "@/lib/train/cause";
 import DelayCausesPanel from "./DelayCausesPanel";
 
 type DelayCausesProps = {

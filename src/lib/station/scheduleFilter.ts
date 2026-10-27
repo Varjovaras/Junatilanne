@@ -1,5 +1,5 @@
 import type { StationSchedule } from "../types/stationTypes";
-import { getNextStationRow, getStationRowTime } from "./trainStations";
+import { getNextStationRow, getStationRowTime } from "./schedule";
 
 // A schedule is still relevant while it has an arrival or departure at the
 // station ahead of it. This uses the live estimate for delayed trains, so a

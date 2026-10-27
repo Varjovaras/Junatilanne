@@ -15,12 +15,12 @@ import StatusPill from "@/components/common/StatusPill";
 import TrainDistance from "@/components/features/train-details/TrainDistance";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
-import { formatTime, getArrivalCountdown } from "@/lib/utils/dateUtils";
-import { removeAsema } from "@/lib/utils/stringUtils";
-import { getTrainCurrentDelay } from "@/lib/utils/trainDelay";
-import { getTrainDisplayName, getTrainLink } from "@/lib/utils/trainDisplay";
-import { calculateTrainProgress, getAirportStop } from "@/lib/utils/trainStations";
-import { useMounted } from "@/lib/utils/useMounted";
+import { formatTime, getArrivalCountdown } from "@/lib/utils/date";
+import { removeAsema } from "@/lib/utils/string";
+import { getTrainCurrentDelay } from "@/lib/train/delay";
+import { getTrainDisplayName, getTrainLink } from "@/lib/train/display";
+import { calculateTrainProgress, getAirportStop } from "@/lib/train/progress";
+import { useMounted } from "@/lib/hooks/useMounted";
 
 type TrainRowProps = {
     train: TrainType;

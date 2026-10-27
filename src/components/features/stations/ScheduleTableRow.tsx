@@ -3,10 +3,10 @@ import RouteDisplay from "@/components/common/RouteDisplay";
 import StatusPill from "@/components/common/StatusPill";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { StationSchedule, StationTimeTableRow } from "@/lib/types/stationTypes";
-import { formatTime } from "@/lib/utils/dateUtils";
-import { getFormattedStationName } from "@/lib/utils/stationUtils";
-import { getScheduleTrainDisplayName, getScheduleTrainLink } from "@/lib/utils/trainDisplay";
-import { getStationRows, isJourneyCompleted, isStationTerminus } from "@/lib/utils/trainStations";
+import { formatTime } from "@/lib/utils/date";
+import { getFormattedStationName } from "@/lib/station/display";
+import { getScheduleTrainDisplayName, getScheduleTrainLink } from "@/lib/train/display";
+import { getStationRows, isJourneyCompleted, isStationTerminus } from "@/lib/station/schedule";
 
 export const scheduleTableGridClass =
     "grid grid-cols-[6.75rem_minmax(0,1fr)_auto] items-start gap-x-3 md:grid-cols-[8rem_minmax(7rem,0.8fr)_minmax(0,1.6fr)_4.5rem_8rem] md:items-center md:gap-x-4";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { TrainType } from "@/lib/types/trainTypes";
-import { filterTrainsByCategory } from "@/lib/utils/trainClassification";
+import { filterTrainsByCategory } from "@/lib/train/classification";
 import TrainList from "./TrainList";
 import TrainTypeSelector from "./TrainTypeSelector";
 

@@ -1,5 +1,5 @@
 import type { StationSchedule } from "../types/stationTypes";
-import { getFirstStationRow } from "./trainStations";
+import { getFirstStationRow } from "./schedule";
 
 export const sortSchedules = (schedules: StationSchedule[], stationId: string) => {
     return schedules

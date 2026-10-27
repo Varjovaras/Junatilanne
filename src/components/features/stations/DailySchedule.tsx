@@ -1,6 +1,6 @@
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { StationSchedule } from "@/lib/types/stationTypes";
-import { isToday } from "@/lib/utils/dateUtils";
+import { isToday } from "@/lib/utils/date";
 import ScheduleTable from "./ScheduleTable";
 
 type DailyScheduleProps = {

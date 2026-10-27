@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { todayInHelsinki } from "@/lib/utils/dateUtils";
+import { todayInHelsinki } from "@/lib/utils/date";
 
 const MIN_YEAR = 2017; // VR's data starts from around this time
 const MAX_YEAR_OFFSET = 1;

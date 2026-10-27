@@ -1,6 +1,6 @@
 import type { StationSchedule } from "../types/stationTypes";
 import type { TrainType } from "../types/trainTypes";
-import { isToday } from "./dateUtils";
+import { isToday } from "@/lib/utils/date";
 
 export const getTrainDisplayName = (
     train: Pick<TrainType, "commuterLineid" | "trainNumber" | "trainType">,

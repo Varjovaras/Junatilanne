@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
-import { isToday } from "@/lib/utils/dateUtils";
+import { isToday } from "@/lib/utils/date";
 import ShowNonCommercialStopsButton from "./ShowNonCommercialStopsButton";
 import ShowStationsButton from "./ShowStationsButton";
 import TrainStations from "./TrainStations";

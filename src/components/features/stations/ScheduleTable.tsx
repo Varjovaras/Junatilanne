@@ -2,7 +2,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { useCallback, useRef } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { StationSchedule } from "@/lib/types/stationTypes";
-import { getTrainId } from "@/lib/utils/trainDisplay";
+import { getTrainId } from "@/lib/train/display";
 import ScheduleTableRow, { scheduleTableGridClass } from "./ScheduleTableRow";
 
 type ScheduleTableProps = {

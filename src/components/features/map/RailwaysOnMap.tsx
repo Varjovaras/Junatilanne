@@ -1,5 +1,5 @@
 import { Layer, Source } from "react-map-gl/maplibre";
-import { RAILWAY_GEOJSON_URL } from "@/lib/utils/railwayData";
+import { RAILWAY_GEOJSON_URL } from "@/lib/railway/data";
 
 const railwayCasingLayer = {
     id: "finland-railways-casing",

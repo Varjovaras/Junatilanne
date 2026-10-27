@@ -1,4 +1,4 @@
-import { getHelsinkiDayWindow } from "../../utils/dateUtils";
+import { getHelsinkiDayWindow } from "@/lib/utils/date";
 import type { StationSchedule } from "../../types/stationTypes";
 import { getStationScheduleQuery } from "./stationScheduleQuery";
 import type { StationScheduleGraphQLResponse } from "./stationScheduleQuery";

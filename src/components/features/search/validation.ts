@@ -1,4 +1,4 @@
-import type { Translations } from "../i18n/translations";
+import type { Translations } from "@/lib/i18n/translations";
 
 export const handleSearchError = (error: string, setError: (error: string) => void) => {
     console.error(error);

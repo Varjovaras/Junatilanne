@@ -4,12 +4,12 @@ import Loading from "@/components/common/Loading";
 import TrainTypeSelector from "@/components/features/train-lists/TrainTypeSelector";
 import { stationScheduleByDateQueryOptions } from "@/lib/queries/station/stationSchedules";
 import type { StationSchedule } from "@/lib/types/stationTypes";
-import { isToday, todayInHelsinki } from "@/lib/utils/dateUtils";
+import { isToday, todayInHelsinki } from "@/lib/utils/date";
 import {
     filterSchedulesWithUpcomingStop,
     stationScheduleFilter,
-} from "@/lib/utils/stationScheduleFilter";
-import { filterSchedulesByCategory } from "@/lib/utils/trainClassification";
+} from "@/lib/station/scheduleFilter";
+import { filterSchedulesByCategory } from "@/lib/train/classification";
 import DailySchedule from "./DailySchedule";
 import ScheduleDaySelector from "./ScheduleDaySelector";
 import ScheduleList from "./ScheduleList";

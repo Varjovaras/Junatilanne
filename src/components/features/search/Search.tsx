@@ -4,9 +4,13 @@ import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useId, useRef, useState } from "react";
 import DatePicker from "@/components/common/DatePicker";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { formatDateForUrl, isToday, todayInHelsinki } from "@/lib/utils/dateUtils";
-import { majorStations, passengerStationCodes } from "@/lib/utils/majorStations";
-import { handleSearchError, validateDate, validateTrainNumber } from "@/lib/utils/searchUtils";
+import { formatDateForUrl, isToday, todayInHelsinki } from "@/lib/utils/date";
+import { majorStations, passengerStationCodes } from "@/lib/station/majorStations";
+import {
+    handleSearchError,
+    validateDate,
+    validateTrainNumber,
+} from "@/components/features/search/validation";
 
 const Search = () => {
     const navigate = useNavigate();

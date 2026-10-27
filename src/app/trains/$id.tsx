@@ -6,7 +6,7 @@ import NoTrainFound from "@/components/features/train-details/NoTrainFound";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { trainDetailsQueryOptions } from "@/lib/queries/train/trainDetails";
 import { trainDistanceQueryOptions } from "@/lib/queries/train/trainDistance";
-import { formatDate } from "@/lib/utils/dateUtils";
+import { formatDate } from "@/lib/utils/date";
 
 export const Route = createFileRoute("/trains/$id")({
     loader: async ({ context: { queryClient }, params }) => {

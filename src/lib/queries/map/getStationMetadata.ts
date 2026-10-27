@@ -1,4 +1,4 @@
-import { normalizeStationMetadata } from "../../utils/stationMetadata";
+import { normalizeStationMetadata } from "@/lib/station/metadata";
 import { DIGITRAFFIC_USER_HEADERS } from "../shared/digitrafficHeaders";
 import type { StationMetadata } from "../../types/stationTypes";
 

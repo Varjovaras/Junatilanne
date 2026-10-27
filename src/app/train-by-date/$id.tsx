@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getTrainsRedirectResponse, toTrainsRedirect } from "@/lib/utils/redirectUtils";
+import { getTrainsRedirectResponse, toTrainsRedirect } from "@/lib/routing/redirect";
 
 export const Route = createFileRoute("/train-by-date/$id")({
     beforeLoad: ({ params }) => toTrainsRedirect(params.id),

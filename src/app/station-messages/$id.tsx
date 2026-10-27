@@ -3,8 +3,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import Loading from "@/components/common/Loading";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { stationMessagesQueryOptions } from "@/lib/queries/messages/stationMessages";
-import { formatDateTime } from "@/lib/utils/dateUtils";
-import { removeAsema } from "@/lib/utils/stringUtils";
+import { formatDateTime } from "@/lib/utils/date";
+import { removeAsema } from "@/lib/utils/string";
 
 export const Route = createFileRoute("/station-messages/$id")({
     loader: ({ context: { queryClient }, params }) => {

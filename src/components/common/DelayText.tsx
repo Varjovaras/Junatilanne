@@ -1,5 +1,5 @@
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { getDelayColorClass } from "@/lib/utils/trainDelay";
+import { getDelayColorClass } from "@/lib/train/delay";
 
 type DelayTextProps = {
     delay: number;

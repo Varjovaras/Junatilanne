@@ -1,11 +1,11 @@
 import type { TimeTableRow, TrainLocation, TrainType } from "../types/trainTypes";
-import { distanceBetweenCoordinates } from "./trainDirection";
+import { distanceBetweenCoordinates } from "@/lib/train/direction";
 import {
     getCommercialArrivalStations,
     getCommercialStations,
     getLastVisitedRowIndex,
     getNextCommercialStation,
-} from "./trainStations";
+} from "../train/progress";
 
 // Node identity is quantized to ~1 m. OSM ways that meet at a junction share
 // the exact same node coordinate, so quantizing lets separate ways connect into

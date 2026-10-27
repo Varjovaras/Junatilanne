@@ -1,4 +1,4 @@
-import type { TrainGroup } from "./trainClassification";
+import type { TrainGroup } from "@/lib/train/classification";
 import type { TrainType } from "../types/trainTypes";
 
 export const getTrainCurrentDelay = (train: TrainType): number => {

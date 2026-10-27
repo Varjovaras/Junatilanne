@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import type { StationSchedule } from "../../types/stationTypes";
-import { isToday, isTomorrow, todayInHelsinki } from "../../utils/dateUtils";
-import { sortSchedules } from "../../utils/sortSchedules";
+import { isToday, isTomorrow, todayInHelsinki } from "@/lib/utils/date";
+import { sortSchedules } from "@/lib/station/sort";
 import { normalizeStationId, queryKeys } from "../shared/queryKeys";
 import { fetchStationSchedulesByDate } from "./server";
 

@@ -4,11 +4,11 @@ import DelayText from "@/components/common/DelayText";
 import RouteDisplay from "@/components/common/RouteDisplay";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
-import { formatDate, formatTime, isToday } from "@/lib/utils/dateUtils";
-import { removeAsema } from "@/lib/utils/stringUtils";
-import { getTrainCurrentDelay } from "@/lib/utils/trainDelay";
-import { getTrainDisplayName } from "@/lib/utils/trainDisplay";
-import { getAirportStop } from "@/lib/utils/trainStations";
+import { formatDate, formatTime, isToday } from "@/lib/utils/date";
+import { removeAsema } from "@/lib/utils/string";
+import { getTrainCurrentDelay } from "@/lib/train/delay";
+import { getTrainDisplayName } from "@/lib/train/display";
+import { getAirportStop } from "@/lib/train/progress";
 import TrainDistance from "./TrainDistance";
 import TrainSpeed from "./TrainSpeed";
 

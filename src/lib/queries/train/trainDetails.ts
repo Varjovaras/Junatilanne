@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import type { TrainType } from "../../types/trainTypes";
-import { isValidTrainId } from "../../utils/urlUtils";
+import { isValidTrainId } from "@/lib/train/id";
 import { queryKeys } from "../shared/queryKeys";
 import { fetchSingleTrainData, fetchTrainByDateData } from "./server";
 import { todayTrainQueryOptions } from "./todayTrain";

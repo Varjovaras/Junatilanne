@@ -6,11 +6,11 @@ import { Layer, Popup, Source } from "react-map-gl/maplibre";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { stationSchedulesQueryOptions } from "@/lib/queries/station/stationSchedules";
 import type { StationMetadata } from "@/lib/types/stationTypes";
-import { formatTime } from "@/lib/utils/dateUtils";
-import { stationScheduleFilter } from "@/lib/utils/stationScheduleFilter";
-import { stationMetadataToGeoJson } from "@/lib/utils/stationMetadata";
-import { getTrainId } from "@/lib/utils/trainDisplay";
-import { getNextStationRow } from "@/lib/utils/trainStations";
+import { formatTime } from "@/lib/utils/date";
+import { stationScheduleFilter } from "@/lib/station/scheduleFilter";
+import { stationMetadataToGeoJson } from "@/lib/station/metadata";
+import { getTrainId } from "@/lib/train/display";
+import { getNextStationRow } from "@/lib/station/schedule";
 import type { MapPopupSelection } from "./mapTypes";
 
 type StationsOnMapProps = {

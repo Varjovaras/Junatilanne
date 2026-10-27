@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TimeTableRow } from "@/lib/types/trainTypes";
-import { formatTime } from "@/lib/utils/dateUtils";
-import { removeAsema } from "@/lib/utils/stringUtils";
+import { formatTime } from "@/lib/utils/date";
+import { removeAsema } from "@/lib/utils/string";
 import DelayDisplay from "./DelayDisplay";
 import StationIndicator from "./StationIndicator";
 import StationTime from "./StationTime";

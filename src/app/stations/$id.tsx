@@ -3,13 +3,13 @@ import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import Loading from "@/components/common/Loading";
 import ScheduleOverview from "@/components/features/stations/ScheduleOverview";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { isValidStationCode, majorStations } from "@/lib/utils/majorStations";
-import { isToday } from "@/lib/utils/dateUtils";
+import { isValidStationCode, majorStations } from "@/lib/station/majorStations";
+import { isToday } from "@/lib/utils/date";
 import {
     stationScheduleByDateQueryOptions,
     stationSchedulesQueryOptions,
 } from "@/lib/queries/station/stationSchedules";
-import { removeAsema } from "@/lib/utils/stringUtils";
+import { removeAsema } from "@/lib/utils/string";
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 

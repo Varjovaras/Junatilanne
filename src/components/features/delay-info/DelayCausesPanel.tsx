@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TimeTableRow } from "@/lib/types/trainTypes";
-import { getDelayByStation } from "@/lib/utils/trainStations";
+import { getDelayByStation } from "@/lib/train/progress";
 import DelayReasonCard from "./DelayReasonCard";
 
 type DelayCausesPanelProps = {

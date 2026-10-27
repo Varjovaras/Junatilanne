@@ -1,4 +1,4 @@
-import { getDelayColorClass } from "@/lib/utils/trainDelay";
+import { getDelayColorClass } from "@/lib/train/delay";
 
 type DelayDisplayProps = {
     delay: number;

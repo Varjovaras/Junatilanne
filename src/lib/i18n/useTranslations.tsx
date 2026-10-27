@@ -1,7 +1,7 @@
 import { createContext, useContext, useSyncExternalStore, type ReactNode } from "react";
 import type { Language } from "./config";
 import { translations } from "./translations";
-import { useMounted } from "@/lib/utils/useMounted";
+import { useMounted } from "@/lib/hooks/useMounted";
 
 type TranslationContextValue = {
     translations: (typeof translations)[Language];

@@ -1,6 +1,6 @@
 import DatePicker from "@/components/common/DatePicker";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { addDays, todayInHelsinki } from "@/lib/utils/dateUtils";
+import { addDays, todayInHelsinki } from "@/lib/utils/date";
 
 type ScheduleDaySelectorProps = {
     date: string;

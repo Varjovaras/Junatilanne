@@ -3,9 +3,9 @@ import type { SortOption } from "@/components/features/delay-info/SortSelector";
 import Selectors from "@/components/features/delay-info/Selectors";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
-import { filterTrainsByDelay } from "@/lib/utils/trainDelay";
-import { getTrainId } from "@/lib/utils/trainDisplay";
-import { sortTrains } from "@/lib/utils/trainUtils";
+import { filterTrainsByDelay } from "@/lib/train/delay";
+import { getTrainId } from "@/lib/train/display";
+import { sortTrains } from "@/lib/train/sort";
 import NoTrains from "./NoTrains";
 import TrainRow from "./TrainRow";
 

@@ -3,7 +3,7 @@ import {
     commuterTrainTypeNames,
     freightTrainTypeNames,
     longDistanceTrainTypeNames,
-} from "../types/trainNameTypes";
+} from "@/lib/data/trainNames";
 import type { TrainType } from "../types/trainTypes";
 
 export type TrainGroup = "commuter" | "longDistance" | "freight";

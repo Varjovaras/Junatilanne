@@ -1,5 +1,5 @@
-import { majorStations, type StationCode } from "./majorStations";
-import { removeAsema } from "./stringUtils";
+import { majorStations, type StationCode } from "@/lib/station/majorStations";
+import { removeAsema } from "@/lib/utils/string";
 
 export const getStationName = (shortCode: string): string => {
     if (shortCode in majorStations) {

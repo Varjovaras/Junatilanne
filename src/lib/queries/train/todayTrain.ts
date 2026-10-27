@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { todayInHelsinki } from "../../utils/dateUtils";
+import { todayInHelsinki } from "@/lib/utils/date";
 import { queryKeys } from "../shared/queryKeys";
 import { fetchTrainByDateData } from "./server";
 

@@ -3,7 +3,7 @@ import {
     getCommercialStations,
     getLatestVisitedStationName,
     getNextCommercialStation,
-} from "@/lib/utils/trainStations";
+} from "@/lib/train/progress";
 import StationRow, { type StationStatus } from "./StationRow";
 
 type TrainStationsProps = {

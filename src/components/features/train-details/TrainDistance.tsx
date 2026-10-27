@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { trainDistanceQueryOptions } from "@/lib/queries/train/trainDistance";
 import type { TrainType } from "@/lib/types/trainTypes";
-import { removeAsema } from "@/lib/utils/stringUtils";
-import { getCommercialStations, getNextCommercialStation } from "@/lib/utils/trainStations";
+import { removeAsema } from "@/lib/utils/string";
+import { getCommercialStations, getNextCommercialStation } from "@/lib/train/progress";
 
 type TrainDistanceProps = {
     train: TrainType;

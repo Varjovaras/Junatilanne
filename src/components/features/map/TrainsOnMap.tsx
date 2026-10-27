@@ -7,15 +7,15 @@ import type {
     SymbolLayerSpecification,
 } from "maplibre-gl";
 import type { MapTrain } from "@/lib/types/trainTypes";
-import { updateTrainHeadingCache } from "@/lib/utils/trainDirection";
-import { getTrainBallColors } from "@/lib/utils/trainDelay";
-import { getTrainCategory } from "@/lib/utils/trainClassification";
-import { getTrainDisplayName, getTrainId } from "@/lib/utils/trainDisplay";
+import { updateTrainHeadingCache } from "@/lib/train/direction";
+import { getTrainBallColors } from "@/lib/train/delay";
+import { getTrainCategory } from "@/lib/train/classification";
+import { getTrainDisplayName, getTrainId } from "@/lib/train/display";
 import {
     TRAIN_ICON_ARROW_SPRITE,
     TRAIN_ICON_GLOW_SPRITE,
     TRAIN_ICON_SPRITE,
-} from "@/lib/utils/trainIconSprite";
+} from "@/components/features/map/trainIconSprite";
 import type { MapPopupSelection } from "./mapTypes";
 import TrainPopupContent from "./TrainPopupContent";
 

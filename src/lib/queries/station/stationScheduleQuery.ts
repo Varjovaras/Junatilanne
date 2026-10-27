@@ -1,6 +1,6 @@
 import type { Cause } from "../../types/trainTypes";
-import { addDays, getHelsinkiDayWindow } from "../../utils/dateUtils";
-import { processGraphQLQuery } from "../../utils/queryUtils";
+import { addDays, getHelsinkiDayWindow } from "@/lib/utils/date";
+import { processGraphQLQuery } from "@/lib/queries/shared/queryUtils";
 
 const trainFields = `{
     cancelled
