@@ -32,6 +32,7 @@ const passengerQuery = `{
       type
       trainStopping
       commercialStop
+      commercialTrack
       cancelled
       scheduledTime
       actualTime

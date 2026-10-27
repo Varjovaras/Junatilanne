@@ -18,10 +18,6 @@ export const formatDateForUrl = (date: string) => {
     return formattedDate;
 };
 
-export const todayISOString = () => {
-    return new Date().toISOString().split("T")[0];
-};
-
 export const helsinkiDateKey = (date: Date): string => {
     const parts = new Intl.DateTimeFormat("en-CA", {
         timeZone: "Europe/Helsinki",

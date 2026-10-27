@@ -1,12 +1,12 @@
 import { queryOptions } from "@tanstack/react-query";
-import { formatDateForUrl, todayISOString } from "../../utils/dateUtils";
+import { todayInHelsinki } from "../../utils/dateUtils";
 import { queryKeys } from "../shared/queryKeys";
 import { fetchTrainByDateData } from "./server";
 
 export const TODAY_TRAIN_STALE_TIME_MS = 300_000;
 
 export const todayTrainQueryOptions = (trainNumber: string) => {
-    const todayTrainId = `${trainNumber}-${formatDateForUrl(todayISOString())}`;
+    const todayTrainId = `${trainNumber}-${todayInHelsinki()}`;
 
     return queryOptions({
         queryKey: queryKeys.todayTrain(todayTrainId),

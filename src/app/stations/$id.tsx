@@ -21,12 +21,14 @@ export const Route = createFileRoute("/stations/$id")({
                 : undefined;
         return date ? { date } : {};
     },
-    loader: ({ context: { queryClient }, params, location }) => {
-        queryClient.ensureQueryData(stationSchedulesQueryOptions(params.id));
+    loader: async ({ context: { queryClient }, params, location }) => {
         const date = (location.search as { date?: string }).date;
-        if (date && !isToday(date)) {
-            queryClient.ensureQueryData(stationScheduleByDateQueryOptions(params.id, date));
-        }
+        await Promise.all([
+            queryClient.ensureQueryData(stationSchedulesQueryOptions(params.id)),
+            date && !isToday(date)
+                ? queryClient.ensureQueryData(stationScheduleByDateQueryOptions(params.id, date))
+                : Promise.resolve(),
+        ]);
     },
     pendingComponent: Loading,
     component: StationRoute,
