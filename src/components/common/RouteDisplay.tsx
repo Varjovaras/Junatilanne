@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 
-export type RouteStationInfo = {
+type RouteStationInfo = {
     name: string;
     shortCode: string;
     time?: string;

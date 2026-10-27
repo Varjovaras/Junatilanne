@@ -20,8 +20,8 @@ import type { MapPopupSelection } from "./mapTypes";
 import TrainPopupContent from "./TrainPopupContent";
 
 export const TRAIN_POINT_LAYER_ID = "train-points";
-export const TRAIN_CLUSTER_LAYER_ID = "train-clusters";
-export const TRAIN_CLUSTER_COUNT_LAYER_ID = "train-cluster-count";
+const TRAIN_CLUSTER_LAYER_ID = "train-clusters";
+const TRAIN_CLUSTER_COUNT_LAYER_ID = "train-cluster-count";
 export const TRAIN_CLUSTER_LAYER_IDS = [
     TRAIN_CLUSTER_LAYER_ID,
     TRAIN_CLUSTER_COUNT_LAYER_ID,

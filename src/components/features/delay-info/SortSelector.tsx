@@ -1,8 +1,8 @@
 import { useId } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 
-export type SortField = "trainNumber" | "delay";
-export type SortDirection = "asc" | "desc";
+type SortField = "trainNumber" | "delay";
+type SortDirection = "asc" | "desc";
 
 export type SortOption = {
     field: SortField;

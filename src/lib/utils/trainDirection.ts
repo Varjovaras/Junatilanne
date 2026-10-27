@@ -1,7 +1,7 @@
 import type { TrainLocation } from "../types/trainTypes";
 
 const EARTH_RADIUS_METERS = 6_371_000;
-export const MIN_HEADING_DISTANCE_METERS = 20;
+const MIN_HEADING_DISTANCE_METERS = 20;
 
 const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
 const toDegrees = (radians: number) => (radians * 180) / Math.PI;
@@ -21,10 +21,7 @@ export const distanceBetweenCoordinates = (
     return 2 * EARTH_RADIUS_METERS * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine));
 };
 
-export const calculateBearing = (
-    previous: TrainLocation,
-    latest: TrainLocation,
-): number | undefined => {
+const calculateBearing = (previous: TrainLocation, latest: TrainLocation): number | undefined => {
     const previousTimestamp = Date.parse(previous.timestamp);
     const latestTimestamp = Date.parse(latest.timestamp);
 
@@ -55,7 +52,7 @@ export const calculateBearing = (
     return (bearing + 360) % 360;
 };
 
-export const getLatestTrainHeading = (locations: TrainLocation[]): number | undefined => {
+const getLatestTrainHeading = (locations: TrainLocation[]): number | undefined => {
     const latest = locations[0];
     const previous = locations[1];
 

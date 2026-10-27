@@ -1,7 +1,8 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import Loading from "@/components/common/Loading";
 import ScheduleOverview from "@/components/features/stations/ScheduleOverview";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import { isValidStationCode, majorStations } from "@/lib/utils/majorStations";
 import { isToday } from "@/lib/utils/dateUtils";
 import {
@@ -37,6 +38,7 @@ function StationRoute() {
     const navigate = useNavigate();
     const { data } = useSuspenseQuery(stationSchedulesQueryOptions(id));
     const { stationId, schedules } = data;
+    const { translations } = useTranslations();
     const stationName = isValidStationCode(stationId) ? majorStations[stationId] : stationId;
 
     const handleDateChange = (newDate?: string) => {
@@ -49,9 +51,18 @@ function StationRoute() {
 
     return (
         <div className="mx-auto max-w-7xl p-4">
-            <h2 className="text-3xl font-bold mb-8 text-center text-green-500">
+            <h2 className="text-3xl font-bold mb-2 text-center text-green-500">
                 {removeAsema(stationName)}
             </h2>
+            <div className="mb-8 text-center">
+                <Link
+                    to="/station-messages/$id"
+                    params={{ id: stationId }}
+                    className="text-sm text-foreground/60 hover:text-foreground hover:underline"
+                >
+                    {translations.messagesForStation.replace("{station}", removeAsema(stationName))}
+                </Link>
+            </div>
             <ScheduleOverview
                 schedules={schedules}
                 stationId={stationId}

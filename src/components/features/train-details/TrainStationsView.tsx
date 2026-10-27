@@ -1,4 +1,3 @@
-import { useLocation } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
@@ -13,8 +12,7 @@ type TrainStationsViewProps = {
 
 const TrainStationsView = ({ train }: TrainStationsViewProps) => {
     const { translations, isLoading } = useTranslations();
-    const pathname = useLocation({ select: (location) => location.pathname });
-    const [userShowAllStations, setUserShowAllStations] = useState(pathname.startsWith("/trains/"));
+    const [userShowAllStations, setUserShowAllStations] = useState(true);
     const [showNonCommercialStops, setShowNonCommercialStops] = useState(false);
     const showAllStations = userShowAllStations;
 

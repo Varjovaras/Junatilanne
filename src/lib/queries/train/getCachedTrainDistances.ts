@@ -5,8 +5,8 @@ import type { Coordinate, TrackDistances } from "../../utils/trackDistance";
 import { getTrackDistancesForLines } from "../../utils/trackDistance";
 import { getTrainByDateData } from "./getTrainByDateData";
 
-export const TRAIN_DISTANCES_CACHE_MAX_AGE_SECONDS = 5;
-export const TRAIN_DISTANCES_CACHE_STALE_MAX_AGE_SECONDS = 30;
+const TRAIN_DISTANCES_CACHE_MAX_AGE_SECONDS = 5;
+const TRAIN_DISTANCES_CACHE_STALE_MAX_AGE_SECONDS = 30;
 
 // The railway network is static per deploy, so the parsed lines live for the
 // process lifetime. The track graph and the station-pair segment cache inside

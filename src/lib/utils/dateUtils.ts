@@ -117,12 +117,6 @@ export const isTomorrow = (date: string) => {
     return helsinkiDateKey(tomorrow) === helsinkiDateKey(new Date(date));
 };
 
-export const getDateDisplay = (date: string, translations: Translations) => {
-    if (isToday(date)) return translations.today;
-    if (isTomorrow(date)) return translations.tomorrow;
-    return formatDate(date);
-};
-
 export const getArrivalCountdown = (arrivalTime: Date, translations: Translations): string => {
     const now = new Date();
     const minutesUntilArrival = Math.round((arrivalTime.getTime() - now.getTime()) / (1000 * 60));

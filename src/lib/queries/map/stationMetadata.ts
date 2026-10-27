@@ -2,7 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { queryKeys } from "../shared/queryKeys";
 import { fetchStationMetadata } from "./server";
 
-export const STATION_METADATA_STALE_TIME_MS = 86_400_000;
+const STATION_METADATA_STALE_TIME_MS = 86_400_000;
 
 export const stationMetadataQueryOptions = () =>
     queryOptions({

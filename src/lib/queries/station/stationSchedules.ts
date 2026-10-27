@@ -5,7 +5,7 @@ import { sortSchedules } from "../../utils/sortSchedules";
 import { normalizeStationId, queryKeys } from "../shared/queryKeys";
 import { fetchStationSchedulesByDate } from "./server";
 
-export const STATION_SCHEDULES_REFETCH_INTERVAL_MS = 60_000;
+const STATION_SCHEDULES_REFETCH_INTERVAL_MS = 60_000;
 
 export const stationSchedulesQueryOptions = (stationId: string) => {
     const normalizedStationId = normalizeStationId(stationId);

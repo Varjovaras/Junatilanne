@@ -5,13 +5,11 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import "@/app/globals.css";
 import favicon from "@/favicon.ico?url";
 import geistMono from "@/app/fonts/GeistMonoVF.woff?url";
-import ErrorPopup from "@/components/common/ErrorPopup";
 import NotFoundComponent from "@/components/common/NotFoundComponent";
 import RootErrorComponent from "@/components/common/RootErrorComponent";
 import Footer from "@/components/layout/Footer";
 import Title from "@/components/layout/Title";
 import TopBar from "@/components/layout/TopBar";
-import { ErrorProvider } from "@/components/providers/ErrorProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LanguageProvider } from "@/lib/i18n/useTranslations";
 
@@ -72,19 +70,16 @@ function RootLayout() {
                 <body className="antialiased min-h-screen">
                     <ThemeProvider>
                         <LanguageProvider>
-                            <ErrorProvider>
-                                <div className="font-(family-name:--font-geist-mono) min-h-screen flex flex-col">
-                                    <TopBar />
-                                    <div className="flex-1 py-20 px-4 mt-4 flex flex-col items-center max-w-7xl mx-auto w-full">
-                                        <Title />
-                                        <main className="flex-1 w-full">
-                                            <Outlet />
-                                        </main>
-                                        <Footer />
-                                    </div>
+                            <div className="font-(family-name:--font-geist-mono) min-h-screen flex flex-col">
+                                <TopBar />
+                                <div className="flex-1 py-20 px-4 mt-4 flex flex-col items-center max-w-7xl mx-auto w-full">
+                                    <Title />
+                                    <main className="flex-1 w-full">
+                                        <Outlet />
+                                    </main>
+                                    <Footer />
                                 </div>
-                                <ErrorPopup />
-                            </ErrorProvider>
+                            </div>
                         </LanguageProvider>
                     </ThemeProvider>
                     <Scripts />

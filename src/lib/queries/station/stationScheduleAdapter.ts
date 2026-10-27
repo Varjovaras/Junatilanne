@@ -15,7 +15,7 @@ const hasStation = (
     station: NonNullable<StationScheduleGraphQLRow["station"]>;
 } => row.station !== null;
 
-export type StationScheduleWindow = {
+type StationScheduleWindow = {
     startMs: number;
     endMs: number;
 };

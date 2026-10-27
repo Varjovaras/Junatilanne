@@ -7,7 +7,7 @@ import { todayTrainQueryOptions } from "./todayTrain";
 
 export const TRAIN_DETAILS_REFETCH_INTERVAL_MS = 60_000;
 
-export type TrainDetailsQueryData = {
+type TrainDetailsQueryData = {
     kind: "invalid" | "date" | "live";
     train: TrainType | null;
 };

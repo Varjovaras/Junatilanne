@@ -3,8 +3,8 @@ import { getMapQuery } from "./mapQuery";
 import { graphqlFetch } from "../shared/graphqlClient";
 import type { MapTrain, TrainLocation, TypeOfTrain } from "@/lib/types/trainTypes";
 
-export const MAP_CACHE_MAX_AGE_SECONDS = 5;
-export const MAP_CACHE_STALE_MAX_AGE_SECONDS = 120;
+const MAP_CACHE_MAX_AGE_SECONDS = 5;
+const MAP_CACHE_STALE_MAX_AGE_SECONDS = 120;
 
 type RawMapTrain = {
     trainNumber: number;

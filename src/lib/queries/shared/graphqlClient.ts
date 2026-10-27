@@ -1,6 +1,6 @@
 import { DIGITRAFFIC_USER_HEADERS } from "./digitrafficHeaders";
 
-export const GRAPHQL_ENDPOINT = "https://rata.digitraffic.fi/api/v2/graphql/graphql";
+const GRAPHQL_ENDPOINT = "https://rata.digitraffic.fi/api/v2/graphql/graphql";
 
 const MAX_ATTEMPTS = 3;
 const BASE_RETRY_DELAY_MS = 1_000;

@@ -9,11 +9,6 @@ export type TrainType = {
     trainLocations: TrainLocation[];
 };
 
-export type TrainNameAndCategory = {
-    name: string;
-    trainCategory: TrainCategory;
-};
-
 export type TrainCategory = {
     name: string;
 };
@@ -62,12 +57,6 @@ export type DifferentDayTrainResponse = {
     };
 };
 
-export type StationResponse = {
-    data: {
-        station: StationToStationResponse[];
-    };
-};
-
 export type TimeTableRow = {
     type: TimeTableType;
     trainStopping: boolean;
@@ -86,28 +75,17 @@ export type TimeTableType = "ARRIVAL" | "DEPARTURE";
 
 export type CommercialStop = true | null;
 
-export type StationToTrain = {
+type StationToTrain = {
     passengerTraffic: boolean;
     countryCode: string;
-    location: Location;
+    location: [number, number];
     name: string;
     shortCode: string;
     uicCode: number;
     type: StationType;
 };
 
-export type StationToStationResponse = {
-    passengerTraffic: boolean;
-    countryCode: string;
-    location: Location;
-    name: string;
-    shortCode: string;
-    uicCode: number;
-    type: StationType;
-};
-
-export type Location = [number, number];
-export type StationType = "STATION" | "STOPPING_POINT";
+type StationType = "STATION" | "STOPPING_POINT";
 
 export type Causes = Cause[] | null;
 

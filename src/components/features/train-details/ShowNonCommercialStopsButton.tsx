@@ -1,4 +1,3 @@
-import { useLocation } from "@tanstack/react-router";
 import type { Dispatch, SetStateAction } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 
@@ -12,11 +11,6 @@ const ShowNonCommercialStopsButton = ({
     setShowNonCommercialStops,
 }: ShowNonCommercialStopsButtonProps) => {
     const { translations } = useTranslations();
-    const pathname = useLocation({ select: (location) => location.pathname });
-
-    if (!pathname.startsWith("/trains/")) {
-        return null;
-    }
 
     return (
         <button

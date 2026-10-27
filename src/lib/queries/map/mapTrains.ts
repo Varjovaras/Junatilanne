@@ -2,7 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { queryKeys } from "../shared/queryKeys";
 import { getMapData } from "./getMapData";
 
-export const MAP_REFETCH_INTERVAL_MS = 10_000;
+const MAP_REFETCH_INTERVAL_MS = 10_000;
 
 export const mapTrainsQueryOptions = () =>
     queryOptions({
