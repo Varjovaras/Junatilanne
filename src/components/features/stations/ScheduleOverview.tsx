@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import Loading from "@/components/common/Loading";
-import TrainTypeSelector from "@/components/features/train/shared/TrainTypeSelector";
+import TrainTypeSelector from "@/components/common/TrainTypeSelector";
 import { stationScheduleByDateQueryOptions } from "@/lib/queries/station/stationSchedules";
 import type { StationSchedule } from "@/lib/types/stationTypes";
 import { isToday, todayInHelsinki } from "@/lib/utils/date";

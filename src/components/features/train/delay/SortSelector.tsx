@@ -1,13 +1,6 @@
 import { useId } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-
-type SortField = "trainNumber" | "delay";
-type SortDirection = "asc" | "desc";
-
-export type SortOption = {
-    field: SortField;
-    direction: SortDirection;
-};
+import type { SortOption } from "@/lib/train/sort";
 
 type SortSelectorProps = {
     currentSort: SortOption;
@@ -30,8 +23,8 @@ const SortSelector = ({ currentSort, onSortChange }: SortSelectorProps) => {
                 value={`${currentSort.field}-${currentSort.direction}`}
                 onChange={(e) => {
                     const [field, direction] = e.target.value.split("-") as [
-                        SortField,
-                        SortDirection,
+                        SortOption["field"],
+                        SortOption["direction"],
                     ];
                     onSortChange({ field, direction });
                 }}

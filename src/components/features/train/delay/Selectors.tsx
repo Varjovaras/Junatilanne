@@ -1,6 +1,7 @@
 import type { Dispatch, SetStateAction } from "react";
+import type { SortOption } from "@/lib/train/sort";
 import DelayThresholdSelector from "./DelayThresholdSelector";
-import SortSelector, { type SortOption } from "./SortSelector";
+import SortSelector from "./SortSelector";
 
 type SelectorsProps = {
     delayThreshold: number;

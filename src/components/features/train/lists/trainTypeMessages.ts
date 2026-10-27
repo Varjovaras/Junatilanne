@@ -1,6 +1,7 @@
 import type { Translations } from "@/lib/i18n/translations";
+import type { TrainCategoryFilter } from "@/lib/train/classification";
 
-export type TrainTypeFilter = "commuter" | "longDistance" | "freight" | "all";
+export type TrainTypeFilter = TrainCategoryFilter;
 
 export const getLateTrainsTitle = (
     trainType: TrainTypeFilter,

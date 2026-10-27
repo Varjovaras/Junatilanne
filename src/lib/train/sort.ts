@@ -1,6 +1,13 @@
-import type { SortOption } from "@/components/features/train/delay/SortSelector";
 import type { TrainType } from "@/lib/types/trainTypes";
 import { getTrainCurrentDelay } from "@/lib/train/delay";
+
+type SortField = "trainNumber" | "delay";
+type SortDirection = "asc" | "desc";
+
+export type SortOption = {
+    field: SortField;
+    direction: SortDirection;
+};
 
 export const sortTrains = (trains: TrainType[], sortOption: SortOption) => {
     const multiplier = sortOption.direction === "asc" ? 1 : -1;

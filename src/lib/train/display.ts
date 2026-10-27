@@ -31,7 +31,7 @@ export const getScheduleTrainLink = (schedule: StationSchedule): string => {
     if (schedule.runningCurrently && isToday(schedule.departureDate)) {
         return `/trains/${schedule.trainNumber}`;
     }
-    return `/trains/${schedule.trainNumber}-${schedule.departureDate}`;
+    return `/trains/${schedule.trainNumber}-${getDatePart(schedule.departureDate)}`;
 };
 
 export const getTrainId = (train: {

@@ -1,11 +1,10 @@
 import { useState } from "react";
-import type { SortOption } from "@/components/features/train/delay/SortSelector";
 import Selectors from "@/components/features/train/delay/Selectors";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
 import { filterTrainsByDelay } from "@/lib/train/delay";
 import { getTrainId } from "@/lib/train/display";
-import { sortTrains } from "@/lib/train/sort";
+import { sortTrains, type SortOption } from "@/lib/train/sort";
 import NoTrains from "./NoTrains";
 import TrainRow from "./TrainRow";
 import { getLateTrainsTitle, type TrainTypeFilter } from "./trainTypeMessages";
