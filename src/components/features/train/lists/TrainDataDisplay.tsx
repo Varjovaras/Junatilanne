@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { TrainType } from "@/lib/types/trainTypes";
 import { filterTrainsByCategory } from "@/lib/train/classification";
 import TrainList from "./TrainList";
-import TrainTypeSelector from "./TrainTypeSelector";
+import TrainTypeSelector from "../shared/TrainTypeSelector";
 
 type TrainDataProps = {
     trains: TrainType[];

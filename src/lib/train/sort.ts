@@ -1,4 +1,4 @@
-import type { SortOption } from "@/components/features/delay-info/SortSelector";
+import type { SortOption } from "@/components/features/train/delay/SortSelector";
 import type { TrainType } from "@/lib/types/trainTypes";
 import { getTrainCurrentDelay } from "@/lib/train/delay";
 

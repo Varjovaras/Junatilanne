@@ -1,8 +1,8 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import Loading from "@/components/common/Loading";
-import LiveTrainPage from "@/components/features/train-details/LiveTrainPage";
-import NoTrainFound from "@/components/features/train-details/NoTrainFound";
+import LiveTrainPage from "@/components/features/train/details/LiveTrainPage";
+import NoTrainFound from "@/components/features/train/details/NoTrainFound";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { trainDetailsQueryOptions } from "@/lib/queries/train/trainDetails";
 import { trainDistanceQueryOptions } from "@/lib/queries/train/trainDistance";

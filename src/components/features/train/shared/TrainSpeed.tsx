@@ -1,6 +1,6 @@
 import { faGaugeHigh } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { TrainType } from "@/lib/types/trainTypes";
+import TrainChip from "./TrainChip";
 
 type TrainSpeedProps = {
     train: TrainType;
@@ -17,14 +17,9 @@ const TrainSpeed = ({ train, chip = false }: TrainSpeedProps) => {
 
     if (chip) {
         return (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-muted text-sm">
-                <FontAwesomeIcon
-                    icon={faGaugeHigh}
-                    aria-hidden="true"
-                    className="h-3.5 w-3.5 text-foreground/60"
-                />
+            <TrainChip icon={faGaugeHigh}>
                 <span className="font-medium">{currentSpeed} km/h</span>
-            </span>
+            </TrainChip>
         );
     }
 

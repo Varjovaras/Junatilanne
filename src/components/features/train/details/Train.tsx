@@ -1,5 +1,5 @@
 import type { TrainType } from "@/lib/types/trainTypes";
-import TrainStationsView from "./TrainStationsView";
+import TrainStationsView from "../stations/TrainStationsView";
 
 type TrainProps = {
     train: TrainType;

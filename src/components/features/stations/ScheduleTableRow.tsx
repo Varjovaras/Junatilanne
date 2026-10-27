@@ -6,6 +6,7 @@ import type { StationSchedule, StationTimeTableRow } from "@/lib/types/stationTy
 import { formatTime } from "@/lib/utils/date";
 import { getFormattedStationName } from "@/lib/station/display";
 import { getScheduleTrainDisplayName, getScheduleTrainLink } from "@/lib/train/display";
+import { isAirportLine } from "@/lib/train/display";
 import { getStationRows, isJourneyCompleted, isStationTerminus } from "@/lib/station/schedule";
 
 export const scheduleTableGridClass =
@@ -68,7 +69,7 @@ const ScheduleTableRow = ({ schedule, stationId, index }: ScheduleTableRowProps)
     const route = (
         <RouteDisplay
             variant="compact"
-            isAirportLine={schedule.commuterLineID === "P" || schedule.commuterLineID === "I"}
+            isAirportLine={isAirportLine(schedule.commuterLineID)}
             start={{
                 name: getFormattedStationName(firstRow.stationShortCode),
                 shortCode: firstRow.stationShortCode,

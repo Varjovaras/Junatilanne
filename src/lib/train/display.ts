@@ -2,6 +2,9 @@ import type { StationSchedule } from "../types/stationTypes";
 import type { TrainType } from "../types/trainTypes";
 import { isToday } from "@/lib/utils/date";
 
+export const isAirportLine = (commuterLineId: string): boolean =>
+    commuterLineId === "P" || commuterLineId === "I";
+
 export const getTrainDisplayName = (
     train: Pick<TrainType, "commuterLineid" | "trainNumber" | "trainType">,
 ): string => {

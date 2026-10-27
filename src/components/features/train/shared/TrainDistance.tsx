@@ -1,11 +1,11 @@
 import { faLocationDot, faRoute } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { trainDistanceQueryOptions } from "@/lib/queries/train/trainDistance";
 import type { TrainType } from "@/lib/types/trainTypes";
 import { removeAsema } from "@/lib/utils/string";
 import { getCommercialStations, getNextCommercialStation } from "@/lib/train/progress";
+import TrainChip from "./TrainChip";
 
 type TrainDistanceProps = {
     train: TrainType;
@@ -56,26 +56,8 @@ const TrainDistance = ({
     if (chip) {
         return (
             <div className="flex flex-wrap items-center justify-center gap-2">
-                {nextStationText && (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-muted text-sm">
-                        <FontAwesomeIcon
-                            icon={faLocationDot}
-                            aria-hidden="true"
-                            className="h-3.5 w-3.5 text-foreground/60"
-                        />
-                        <span>{nextStationText}</span>
-                    </span>
-                )}
-                {destinationText && (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-muted text-sm">
-                        <FontAwesomeIcon
-                            icon={faRoute}
-                            aria-hidden="true"
-                            className="h-3.5 w-3.5 text-foreground/60"
-                        />
-                        <span>{destinationText}</span>
-                    </span>
-                )}
+                {nextStationText && <TrainChip icon={faLocationDot}>{nextStationText}</TrainChip>}
+                {destinationText && <TrainChip icon={faRoute}>{destinationText}</TrainChip>}
             </div>
         );
     }

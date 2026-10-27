@@ -10,16 +10,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import DelayText from "@/components/common/DelayText";
-import RouteDisplay from "@/components/common/RouteDisplay";
 import StatusPill from "@/components/common/StatusPill";
-import TrainDistance from "@/components/features/train-details/TrainDistance";
+import TrainChip from "@/components/features/train/shared/TrainChip";
+import TrainDistance from "@/components/features/train/shared/TrainDistance";
+import TrainRoute from "@/components/features/train/shared/TrainRoute";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
 import { formatTime, getArrivalCountdown } from "@/lib/utils/date";
 import { removeAsema } from "@/lib/utils/string";
 import { getTrainCurrentDelay } from "@/lib/train/delay";
 import { getTrainDisplayName, getTrainLink } from "@/lib/train/display";
-import { calculateTrainProgress, getAirportStop } from "@/lib/train/progress";
+import { calculateTrainProgress } from "@/lib/train/progress";
 import { useMounted } from "@/lib/hooks/useMounted";
 
 type TrainRowProps = {
@@ -33,10 +34,6 @@ const TrainRow = ({ train }: TrainRowProps) => {
 
     const currentDelay = getTrainCurrentDelay(train);
     const progress = calculateTrainProgress(train);
-
-    const firstRow = train.timeTableRows[0];
-    const lastRow = train.timeTableRows[train.timeTableRows.length - 1];
-    const airportStop = getAirportStop(train);
 
     const lastStop = progress.lastCompletedStop;
     const nextStop = progress.nextStop;
@@ -86,25 +83,7 @@ const TrainRow = ({ train }: TrainRowProps) => {
                 </div>
 
                 <div className="min-w-0 lg:flex-1 flex justify-center">
-                    <RouteDisplay
-                        variant="list"
-                        isAirportLine={train.commuterLineid === "P" || train.commuterLineid === "I"}
-                        start={{
-                            name: removeAsema(firstRow.station.name),
-                            shortCode: firstRow.station.shortCode,
-                            time: formatTime(firstRow.scheduledTime),
-                        }}
-                        airport={{
-                            name: translations.airport,
-                            shortCode: "LEN",
-                            time: airportStop ? formatTime(airportStop.scheduledTime) : undefined,
-                        }}
-                        end={{
-                            name: removeAsema(lastRow.station.name),
-                            shortCode: lastRow.station.shortCode,
-                            time: formatTime(lastRow.scheduledTime),
-                        }}
-                    />
+                    <TrainRoute train={train} variant="list" />
                 </div>
 
                 <div className="lg:ml-auto flex items-center gap-3">
@@ -264,26 +243,16 @@ const TrainRow = ({ train }: TrainRowProps) => {
 
                         <div className="flex flex-wrap items-center gap-2 mt-4">
                             {currentSpeed !== null && currentSpeed > 0 && (
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-muted text-sm">
-                                    <FontAwesomeIcon
-                                        icon={faGaugeHigh}
-                                        aria-hidden="true"
-                                        className="h-3.5 w-3.5 text-foreground/60"
-                                    />
+                                <TrainChip icon={faGaugeHigh}>
                                     <span className="font-medium">{currentSpeed} km/h</span>
-                                </span>
+                                </TrainChip>
                             )}
                             {track && (
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-muted text-sm">
-                                    <FontAwesomeIcon
-                                        icon={faDiamondTurnRight}
-                                        aria-hidden="true"
-                                        className="h-3.5 w-3.5 text-foreground/60"
-                                    />
+                                <TrainChip icon={faDiamondTurnRight}>
                                     <span className="font-medium">
                                         {translations.track} {track}
                                     </span>
-                                </span>
+                                </TrainChip>
                             )}
                             <Link
                                 to="/trains/$id"

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { SortOption } from "@/components/features/delay-info/SortSelector";
-import Selectors from "@/components/features/delay-info/Selectors";
+import type { SortOption } from "@/components/features/train/delay/SortSelector";
+import Selectors from "@/components/features/train/delay/Selectors";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
 import { filterTrainsByDelay } from "@/lib/train/delay";
@@ -8,10 +8,11 @@ import { getTrainId } from "@/lib/train/display";
 import { sortTrains } from "@/lib/train/sort";
 import NoTrains from "./NoTrains";
 import TrainRow from "./TrainRow";
+import { getLateTrainsTitle, type TrainTypeFilter } from "./trainTypeMessages";
 
 type TrainListProps = {
     trains: TrainType[];
-    trainType: "commuter" | "longDistance" | "freight" | "all";
+    trainType: TrainTypeFilter;
 };
 
 const TrainList = ({ trains, trainType }: TrainListProps) => {
@@ -25,24 +26,13 @@ const TrainList = ({ trains, trainType }: TrainListProps) => {
     const filteredTrains = filterTrainsByDelay(trains, delayThreshold);
     const sortedTrains = sortTrains(filteredTrains, sortOption);
 
-    const getTitle = () => {
-        if (delayThreshold === 0) return translations.allTrains;
-        switch (trainType) {
-            case "commuter":
-                return translations.lateCommuter;
-            case "longDistance":
-                return translations.lateLongDistance;
-            case "freight":
-                return translations.lateFreight;
-            default:
-                return translations.lateTrains;
-        }
-    };
+    const title =
+        delayThreshold === 0 ? translations.allTrains : getLateTrainsTitle(trainType, translations);
 
     return (
         <div className={`p-2 space-y-4 w-full ${isLoading ? "fade-out" : "fade-in"}`}>
             <h2 className="text-left text-2xl">
-                {getTitle()}
+                {title}
                 {delayThreshold > 0 ? (
                     <>
                         {" "}

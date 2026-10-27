@@ -1,3 +1,4 @@
+import SegmentedControl from "@/components/common/SegmentedControl";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 
 export type ScheduleView = "upcoming" | "schedule";
@@ -19,30 +20,20 @@ const ScheduleViewSelector = ({
 
     return (
         <div className={`flex justify-center my-4 px-2 ${isLoading ? "fade-out" : "fade-in"}`}>
-            <div className="inline-flex flex-wrap justify-center gap-2 md:gap-0 md:flex-nowrap rounded-md border border-border overflow-hidden">
-                <button
-                    type="button"
-                    onClick={() => onViewChange("upcoming")}
-                    className={`px-3 py-2 text-sm md:text-base ${
-                        view === "upcoming"
-                            ? "bg-foreground text-background"
-                            : "hover:bg-surface-hover"
-                    }`}
-                >
-                    {translations.futureTrains} ({upcomingCount})
-                </button>
-                <button
-                    type="button"
-                    onClick={() => onViewChange("schedule")}
-                    className={`px-3 py-2 text-sm md:text-base md:border-l border-border ${
-                        view === "schedule"
-                            ? "bg-foreground text-background"
-                            : "hover:bg-surface-hover"
-                    }`}
-                >
-                    {translations.schedule} ({scheduleCount})
-                </button>
-            </div>
+            <SegmentedControl
+                value={view}
+                onChange={onViewChange}
+                options={[
+                    {
+                        value: "upcoming",
+                        label: `${translations.futureTrains} (${upcomingCount})`,
+                    },
+                    {
+                        value: "schedule",
+                        label: `${translations.schedule} (${scheduleCount})`,
+                    },
+                ]}
+            />
         </div>
     );
 };
