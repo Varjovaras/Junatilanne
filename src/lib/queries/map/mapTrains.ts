@@ -1,16 +1,14 @@
 import { queryOptions } from "@tanstack/react-query";
 import { queryKeys } from "../shared/queryKeys";
-import { getMapData } from "./getMapData";
+import { fetchMapTrains } from "./server";
 
 const MAP_REFETCH_INTERVAL_MS = 10_000;
 
 export const mapTrainsQueryOptions = () =>
     queryOptions({
         queryKey: queryKeys.mapTrains,
-        queryFn: ({ signal }) => getMapData({ signal }),
+        queryFn: () => fetchMapTrains(),
         refetchInterval: MAP_REFETCH_INTERVAL_MS,
-        select: (response) =>
-            response.data.currentlyRunningTrains.filter(
-                (train) => train.trainLocations && train.trainLocations.length > 0,
-            ),
+        select: (trains) =>
+            trains.filter((train) => train.trainLocations && train.trainLocations.length > 0),
     });

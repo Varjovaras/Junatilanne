@@ -39,12 +39,6 @@ export type MapTrain = {
     delay: number;
 };
 
-export type MapTrainsResponse = {
-    data: {
-        currentlyRunningTrains: MapTrain[];
-    };
-};
-
 export type SingleTrainResponse = {
     data: {
         currentlyRunningTrains: TrainType[];
