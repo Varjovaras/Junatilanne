@@ -1,6 +1,6 @@
-import type { SingleTrainResponse } from "../types/trainTypes";
-import { graphqlFetch } from "./graphqlClient";
-import { getSingleTrainQuery } from "./graphql/singleTrainQuery";
+import type { SingleTrainResponse } from "../../types/trainTypes";
+import { graphqlFetch } from "../shared/graphqlClient";
+import { getSingleTrainQuery } from "./singleTrainQuery";
 
 export const getSingleTrainData = async (
     trainNumber: string,

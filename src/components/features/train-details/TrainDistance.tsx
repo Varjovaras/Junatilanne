@@ -2,7 +2,7 @@ import { faLocationDot, faRoute } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { trainDistanceQueryOptions } from "@/lib/queries/queryOptions";
+import { trainDistanceQueryOptions } from "@/lib/queries/train/trainDistance";
 import type { TrainType } from "@/lib/types/trainTypes";
 import { removeAsema } from "@/lib/utils/stringUtils";
 import { getCommercialStations, getNextCommercialStation } from "@/lib/utils/trainStations";

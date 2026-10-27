@@ -4,7 +4,8 @@ import Loading from "@/components/common/Loading";
 import LiveTrainPage from "@/components/features/train-details/LiveTrainPage";
 import NoTrainFound from "@/components/features/train-details/NoTrainFound";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { trainDetailsQueryOptions, trainDistanceQueryOptions } from "@/lib/queries/queryOptions";
+import { trainDetailsQueryOptions } from "@/lib/queries/train/trainDetails";
+import { trainDistanceQueryOptions } from "@/lib/queries/train/trainDistance";
 import { formatDate } from "@/lib/utils/dateUtils";
 
 export const Route = createFileRoute("/trains/$id")({

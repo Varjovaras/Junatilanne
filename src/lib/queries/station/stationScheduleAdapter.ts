@@ -1,8 +1,8 @@
-import type { StationSchedule, StationTimeTableRow } from "../types/stationTypes";
+import type { StationSchedule, StationTimeTableRow } from "../../types/stationTypes";
 import type {
     StationScheduleGraphQLRow,
     StationScheduleGraphQLTrain,
-} from "./graphql/stationScheduleQuery";
+} from "./stationScheduleQuery";
 
 const toDateString = (date: Date | string): string => {
     if (date instanceof Date) return date.toISOString();

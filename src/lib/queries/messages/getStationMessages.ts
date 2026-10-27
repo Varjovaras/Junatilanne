@@ -1,5 +1,5 @@
-import type { StationMessage, StationMessagesResult } from "../types/stationMessageTypes";
-import { DIGITRAFFIC_USER_HEADERS } from "./digitrafficHeaders";
+import type { StationMessage, StationMessagesResult } from "../../types/stationMessageTypes";
+import { DIGITRAFFIC_USER_HEADERS } from "../shared/digitrafficHeaders";
 
 const REST_ENDPOINT = "https://rata.digitraffic.fi/api/v1/passenger-information/active?station=";
 

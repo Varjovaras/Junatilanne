@@ -1,6 +1,6 @@
 import { defineCachedFunction } from "nitro/cache";
-import { getMapQuery } from "@/lib/queries/graphql/mapQuery";
-import { graphqlFetch } from "@/lib/queries/graphqlClient";
+import { getMapQuery } from "./mapQuery";
+import { graphqlFetch } from "../shared/graphqlClient";
 import type { MapTrain, TrainLocation, TypeOfTrain } from "@/lib/types/trainTypes";
 
 export const MAP_CACHE_MAX_AGE_SECONDS = 5;

@@ -4,7 +4,7 @@ import type { CircleLayerSpecification } from "maplibre-gl";
 import { useMemo } from "react";
 import { Layer, Popup, Source } from "react-map-gl/maplibre";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { stationSchedulesQueryOptions } from "@/lib/queries/queryOptions";
+import { stationSchedulesQueryOptions } from "@/lib/queries/station/stationSchedules";
 import type { StationMetadata } from "@/lib/types/stationTypes";
 import { formatTime } from "@/lib/utils/dateUtils";
 import { stationScheduleFilter } from "@/lib/utils/stationScheduleFilter";

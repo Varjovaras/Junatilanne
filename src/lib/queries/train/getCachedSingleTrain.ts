@@ -1,5 +1,5 @@
 import { defineCachedFunction } from "nitro/cache";
-import type { SingleTrainResponse } from "../types/trainTypes";
+import type { SingleTrainResponse } from "../../types/trainTypes";
 import { getSingleTrainData } from "./getSingleTrainData";
 
 export const SINGLE_TRAIN_CACHE_MAX_AGE_SECONDS = 60;

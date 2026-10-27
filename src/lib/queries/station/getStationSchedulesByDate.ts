@@ -1,8 +1,8 @@
-import { getHelsinkiDayWindow } from "../utils/dateUtils";
-import type { StationSchedule } from "../types/stationTypes";
-import { getStationScheduleQuery } from "./graphql/stationScheduleQuery";
-import type { StationScheduleGraphQLResponse } from "./graphql/stationScheduleQuery";
-import { graphqlFetch } from "./graphqlClient";
+import { getHelsinkiDayWindow } from "../../utils/dateUtils";
+import type { StationSchedule } from "../../types/stationTypes";
+import { getStationScheduleQuery } from "./stationScheduleQuery";
+import type { StationScheduleGraphQLResponse } from "./stationScheduleQuery";
+import { graphqlFetch } from "../shared/graphqlClient";
 import { adaptStationSchedule } from "./stationScheduleAdapter";
 
 export const getStationSchedulesByDate = async (

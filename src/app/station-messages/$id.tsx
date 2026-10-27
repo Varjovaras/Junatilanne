@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import Loading from "@/components/common/Loading";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { stationMessagesQueryOptions } from "@/lib/queries/queryOptions";
+import { stationMessagesQueryOptions } from "@/lib/queries/messages/stationMessages";
 import { formatDateTime } from "@/lib/utils/dateUtils";
 import { removeAsema } from "@/lib/utils/stringUtils";
 

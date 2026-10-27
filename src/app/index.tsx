@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { ClientOnly, createFileRoute } from "@tanstack/react-router";
 import Loading from "@/components/common/Loading";
 import TrainDataDisplay from "@/components/features/train-lists/TrainDataDisplay";
-import { homeTrainsQueryOptions } from "@/lib/queries/queryOptions";
+import { homeTrainsQueryOptions } from "@/lib/queries/home/homeTrains";
 
 export const Route = createFileRoute("/")({
     component: Home,

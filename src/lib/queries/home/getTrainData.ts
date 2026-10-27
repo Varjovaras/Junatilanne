@@ -1,6 +1,6 @@
-import type { CurrentlyRunningTrainResponse } from "../types/trainTypes";
-import { graphqlFetch } from "./graphqlClient";
-import { getPassengerQuery } from "./graphql/passengerQuery";
+import type { CurrentlyRunningTrainResponse } from "../../types/trainTypes";
+import { graphqlFetch } from "../shared/graphqlClient";
+import { getPassengerQuery } from "./passengerQuery";
 
 export const getTrainData = async ({
     signal,

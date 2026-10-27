@@ -1,5 +1,5 @@
 import { defineCachedFunction } from "nitro/cache";
-import type { CurrentlyRunningTrainResponse } from "../types/trainTypes";
+import type { CurrentlyRunningTrainResponse } from "../../types/trainTypes";
 import { getTrainData } from "./getTrainData";
 
 export const HOME_TRAINS_CACHE_MAX_AGE_SECONDS = 5;

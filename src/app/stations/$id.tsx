@@ -7,7 +7,7 @@ import { isToday } from "@/lib/utils/dateUtils";
 import {
     stationScheduleByDateQueryOptions,
     stationSchedulesQueryOptions,
-} from "@/lib/queries/queryOptions";
+} from "@/lib/queries/station/stationSchedules";
 import { removeAsema } from "@/lib/utils/stringUtils";
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;

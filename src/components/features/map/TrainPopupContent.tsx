@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { trainDetailsQueryOptions } from "@/lib/queries/queryOptions";
+import { trainDetailsQueryOptions } from "@/lib/queries/train/trainDetails";
 import type { MapTrain } from "@/lib/types/trainTypes";
 import { getTrainCurrentDelay } from "@/lib/utils/trainDelay";
 import { getTrainDisplayName } from "@/lib/utils/trainDisplay";

@@ -1,5 +1,5 @@
 import { defineCachedFunction } from "nitro/cache";
-import type { StationSchedule } from "../types/stationTypes";
+import type { StationSchedule } from "../../types/stationTypes";
 import { getStationSchedulesByDate } from "./getStationSchedulesByDate";
 
 export const STATION_SCHEDULES_BY_DATE_CACHE_MAX_AGE_SECONDS = 60;

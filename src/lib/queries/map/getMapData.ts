@@ -1,4 +1,4 @@
-import type { MapTrainsResponse } from "../types/trainTypes";
+import type { MapTrainsResponse } from "../../types/trainTypes";
 
 export const getMapData = async ({
     signal,

@@ -1,6 +1,6 @@
-import { normalizeStationMetadata } from "../utils/stationMetadata";
-import { DIGITRAFFIC_USER_HEADERS } from "./digitrafficHeaders";
-import type { StationMetadata } from "../types/stationTypes";
+import { normalizeStationMetadata } from "../../utils/stationMetadata";
+import { DIGITRAFFIC_USER_HEADERS } from "../shared/digitrafficHeaders";
+import type { StationMetadata } from "../../types/stationTypes";
 
 const STATION_METADATA_ENDPOINT = "https://rata.digitraffic.fi/api/v1/metadata/stations";
 

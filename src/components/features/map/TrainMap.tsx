@@ -14,7 +14,8 @@ import MapGL, {
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./TrainMap.css";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { mapTrainsQueryOptions, stationMetadataQueryOptions } from "@/lib/queries/queryOptions";
+import { mapTrainsQueryOptions } from "@/lib/queries/map/mapTrains";
+import { stationMetadataQueryOptions } from "@/lib/queries/map/stationMetadata";
 import type { TrainCategory } from "@/lib/types/trainTypes";
 import { getTrainCategory } from "@/lib/utils/trainClassification";
 import { ensureTrainSprites } from "@/lib/utils/trainIconSprite";

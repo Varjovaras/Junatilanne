@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getCachedMapTrains } from "@/lib/queries/getCachedMapTrains";
+import { getCachedMapTrains } from "@/lib/queries/map/getCachedMapTrains";
 
 export const Route = createFileRoute("/api/trains")({
     server: {

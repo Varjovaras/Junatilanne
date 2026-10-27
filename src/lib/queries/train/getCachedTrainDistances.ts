@@ -1,8 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { defineCachedFunction } from "nitro/cache";
-import type { Coordinate, TrackDistances } from "../utils/trackDistance";
-import { getTrackDistancesForLines } from "../utils/trackDistance";
+import type { Coordinate, TrackDistances } from "../../utils/trackDistance";
+import { getTrackDistancesForLines } from "../../utils/trackDistance";
 import { getTrainByDateData } from "./getTrainByDateData";
 
 export const TRAIN_DISTANCES_CACHE_MAX_AGE_SECONDS = 5;
