@@ -1,3 +1,4 @@
+import type { Cause } from "../../types/trainTypes";
 import { addDays, getHelsinkiDayWindow } from "../../utils/dateUtils";
 import { processGraphQLQuery } from "../../utils/queryUtils";
 
@@ -7,8 +8,6 @@ const trainFields = `{
     departureDate
     runningCurrently
     trainNumber
-    version
-    timetableType
     trainType {
         name
         trainCategory {
@@ -25,7 +24,6 @@ const trainFields = `{
         actualTime
         differenceInMinutes
         liveEstimateTime
-        estimateSourceType
         station {
             countryCode
             shortCode
@@ -56,26 +54,60 @@ const trainFields = `{
 
 export const getStationScheduleQuery = (stationId: string, date: string) => {
     const { startIso, endIso } = getHelsinkiDayWindow(date);
-    const windowFilter = `timeTableRows: { contains: { station: { shortCode: { equals: "${stationId}" } }, trainStopping: { equals: true }, scheduledTime: { greaterThan: "${startIso}", lessThan: "${endIso}" } } }`;
-    const day = (departureDate: string, alias: string) =>
-        `  ${alias}: trainsByDepartureDate(departureDate: "${departureDate}", where: { ${windowFilter} }) ${trainFields}`;
 
     // Night trains are keyed by their journey start date, so query the previous
     // day too and union the results.
-    return processGraphQLQuery(`{
-        ${day(addDays(date, -1), "previousDay")}
-        ${day(date, "selectedDay")}
-    }`);
+    return {
+        query: processGraphQLQuery(`
+query StationSchedule(
+    $stationId: String!
+    $previousDate: Date!
+    $selectedDate: Date!
+    $startIso: DateTime!
+    $endIso: DateTime!
+) {
+    previousDay: trainsByDepartureDate(
+        departureDate: $previousDate
+        where: {
+            timeTableRows: {
+                contains: {
+                    station: { shortCode: { equals: $stationId } }
+                    trainStopping: { equals: true }
+                    scheduledTime: { greaterThan: $startIso, lessThan: $endIso }
+                }
+            }
+        }
+    ) ${trainFields}
+    selectedDay: trainsByDepartureDate(
+        departureDate: $selectedDate
+        where: {
+            timeTableRows: {
+                contains: {
+                    station: { shortCode: { equals: $stationId } }
+                    trainStopping: { equals: true }
+                    scheduledTime: { greaterThan: $startIso, lessThan: $endIso }
+                }
+            }
+        }
+    ) ${trainFields}
+}
+`),
+        variables: {
+            stationId,
+            previousDate: addDays(date, -1),
+            selectedDate: date,
+            startIso,
+            endIso,
+        },
+    };
 };
 
 export type StationScheduleGraphQLTrain = {
     cancelled: boolean;
     commuterLineid: string;
-    departureDate: Date;
+    departureDate: string;
     runningCurrently: boolean;
     trainNumber: number;
-    version: number;
-    timetableType: string;
     trainType: {
         name: string;
         trainCategory: {
@@ -91,24 +123,17 @@ export type StationScheduleGraphQLRow = {
     commercialStop: boolean | null;
     commercialTrack: string;
     cancelled: boolean;
-    scheduledTime: Date | string;
-    actualTime?: Date | string | null;
+    scheduledTime: string;
+    actualTime: string | null;
     differenceInMinutes: number;
-    liveEstimateTime?: Date | string | null;
-    estimateSourceType?: string;
+    liveEstimateTime: string | null;
     station: {
         countryCode: string;
         shortCode: string;
         uicCode: number;
     } | null;
-    causes: Causes | null;
+    causes: Cause[] | null;
 };
-
-export type Causes = Array<{
-    categoryCode: { code: string; name: string; validFrom: string; validTo: string | null };
-    detailedCategoryCode: { code: string; name: string; validFrom: string; validTo: string | null };
-    thirdCategoryCode: { code: string; name: string; validFrom: string; validTo: string | null };
-}>;
 
 export type StationScheduleGraphQLResponse = {
     data: {

@@ -8,7 +8,7 @@ const MAP_CACHE_STALE_MAX_AGE_SECONDS = 120;
 
 type RawMapTrain = {
     trainNumber: number;
-    departureDate: Date;
+    departureDate: string;
     commuterLineid: string;
     trainType: TypeOfTrain;
     trainLocations: TrainLocation[];

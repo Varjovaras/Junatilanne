@@ -10,9 +10,8 @@ export const getStationSchedulesByDate = async (
     date: string,
 ): Promise<StationSchedule[]> => {
     const window = getHelsinkiDayWindow(date);
-    const response = await graphqlFetch<StationScheduleGraphQLResponse>(
-        getStationScheduleQuery(stationId, date),
-    );
+    const { query, variables } = getStationScheduleQuery(stationId, date);
+    const response = await graphqlFetch<StationScheduleGraphQLResponse>(query, { variables });
 
     const trains = [...response.data.previousDay, ...response.data.selectedDay];
     const seen = new Set<string>();

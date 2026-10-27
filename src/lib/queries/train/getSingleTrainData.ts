@@ -10,10 +10,8 @@ export const getSingleTrainData = async (
         throw new Error("Not a valid train number");
     }
 
-    const trainResponse = await graphqlFetch<SingleTrainResponse>(
-        getSingleTrainQuery(trainNumber),
-        { signal },
-    );
+    const { query, variables } = getSingleTrainQuery(trainNumber);
+    const trainResponse = await graphqlFetch<SingleTrainResponse>(query, { signal, variables });
 
     if (trainResponse.data.currentlyRunningTrains.length > 1) {
         throw new Error("Got multiple trains from singleTrainQuery");

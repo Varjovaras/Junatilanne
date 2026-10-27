@@ -1,3 +1,8 @@
+export type GraphQLRequest = {
+    query: string;
+    variables?: Record<string, unknown>;
+};
+
 export const processGraphQLQuery = (query: string): string => {
     return query
         .replace(/#[^\n]*/g, "") // Remove GraphQL comments first

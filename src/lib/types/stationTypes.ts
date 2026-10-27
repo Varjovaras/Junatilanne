@@ -1,3 +1,5 @@
+import type { Cause } from "./trainTypes";
+
 export type StationMetadataType = "STATION" | "STOPPING_POINT";
 
 export type StationMetadata = {
@@ -14,16 +16,11 @@ export type StationMetadata = {
 export type StationSchedule = {
     trainNumber: number;
     departureDate: string;
-    operatorUICCode: number;
-    operatorShortCode: string;
     trainType: string;
     trainCategory: string;
     commuterLineID: string;
     runningCurrently: boolean;
     cancelled: boolean;
-    version: number;
-    timetableType: string;
-    timetableAcceptanceDate: string;
     timeTableRows: StationTimeTableRow[];
 };
 
@@ -39,10 +36,8 @@ export type StationTimeTableRow = {
     scheduledTime: string;
     actualTime?: string;
     liveEstimateTime?: string;
-    estimateSource?: string;
     differenceInMinutes: number;
-    // biome-ignore lint/suspicious/noExplicitAny: not sure of all the types digitraffic data returns
-    causes: any[];
+    causes: Cause[];
     trainReady?: {
         source: string;
         accepted: boolean;

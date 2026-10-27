@@ -1,110 +1,76 @@
 import { processGraphQLQuery } from "../../utils/queryUtils";
 
 export const getDifferentDateTrain = (id: string) => {
-    const url = id.split("-");
-    const trainNumber = url[0];
-    const date = `"${url[1]}-${url[2]}-${url[3]}"`;
+    const [trainNumber, year, month, day] = id.split("-");
 
-    return processGraphQLQuery(
-        differentDateQuery
-            .replace("TRAIN_NUMBER", trainNumber.toString())
-            .replace("DEPARTURE_DATE", date),
-    );
+    return {
+        query: processGraphQLQuery(differentDateQuery),
+        variables: {
+            trainNumber: Number(trainNumber),
+            departureDate: `${year}-${month}-${day}`,
+        },
+    };
 };
 
-const differentDateQuery = `{
-  train(trainNumber: TRAIN_NUMBER, departureDate: DEPARTURE_DATE) {
-  cancelled
-      commuterLineid
-      departureDate
-      runningCurrently
-      trainNumber
-      timetableType
-      trainType {
+const differentDateQuery = `
+query TrainByDate($trainNumber: Int!, $departureDate: Date!) {
+  train(trainNumber: $trainNumber, departureDate: $departureDate) {
+    cancelled
+    commuterLineid
+    departureDate
+    runningCurrently
+    trainNumber
+    trainType {
+      name
+      trainCategory {
         name
-        trainCategory {
-          name
-        }
       }
-      trainLocations(orderBy: { timestamp: DESCENDING }, take: 1) {
-        speed
+    }
+    trainLocations(orderBy: { timestamp: DESCENDING }, take: 1) {
+      speed
+      timestamp
+      location
+    }
+    timeTableRows {
+      type
+      trainStopping
+      commercialStop
+      commercialTrack
+      cancelled
+      scheduledTime
+      actualTime
+      differenceInMinutes
+      liveEstimateTime
+      station {
+        passengerTraffic
+        countryCode
         location
-      }
-      trainTrackingMessages(take: 1) {
-        timestamp
-        trackSectionCode
-        nextTrackSectionCode
-        previousTrackSectionCode
+        name
+        shortCode
+        uicCode
         type
-        station {
-          passengerTraffic
-          countryCode
-          location
-          name
-          shortCode
-          uicCode
-          type
-        }
-        nextStation {
-          passengerTraffic
-          countryCode
-          location
-          name
-          shortCode
-          uicCode
-          type
-        }
-        previousStation {
-          passengerTraffic
-          countryCode
-          location
-          name
-          shortCode
-          uicCode
-          type
-        }
       }
-      timeTableRows {
-        type
-        trainStopping
-        commercialStop
-        commercialTrack
-        cancelled
-        scheduledTime
-        actualTime
-        differenceInMinutes
-        liveEstimateTime
-        estimateSourceType
-        unknownDelay
-        station {
-          passengerTraffic
-          countryCode
-          location
+      causes {
+        categoryCode {
+          code
           name
-          shortCode
-          uicCode
-          type
+          validFrom
+          validTo
         }
-        causes {
-          categoryCode {
-            code
-            name
-            validFrom
-            validTo
-          }
-          detailedCategoryCode {
-            code
-            name
-            validFrom
-            validTo
-          }
-          thirdCategoryCode {
-            code
-            name
-            validFrom
-            validTo
-          }
+        detailedCategoryCode {
+          code
+          name
+          validFrom
+          validTo
+        }
+        thirdCategoryCode {
+          code
+          name
+          validFrom
+          validTo
         }
       }
     }
-  }`;
+  }
+}
+`;

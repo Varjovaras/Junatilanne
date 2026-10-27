@@ -1,7 +1,7 @@
 export type TrainType = {
     cancelled: boolean;
     commuterLineid: string;
-    departureDate: Date;
+    departureDate: string;
     runningCurrently: boolean;
     trainNumber: number;
     trainType: TypeOfTrain;
@@ -32,7 +32,7 @@ export type CurrentlyRunningTrainResponse = {
 
 export type MapTrain = {
     trainNumber: number;
-    departureDate: Date;
+    departureDate: string;
     commuterLineid: string;
     trainType: TypeOfTrain;
     trainLocations: TrainLocation[];
@@ -63,10 +63,10 @@ export type TimeTableRow = {
     commercialStop: CommercialStop;
     commercialTrack: string;
     cancelled: boolean;
-    scheduledTime: Date;
-    actualTime: Date;
+    scheduledTime: string;
+    actualTime: string | null;
     differenceInMinutes: number;
-    liveEstimateTime: Date;
+    liveEstimateTime: string | null;
     station: StationToTrain;
     causes: Causes;
 };

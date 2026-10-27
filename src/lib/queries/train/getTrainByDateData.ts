@@ -6,8 +6,7 @@ export const getTrainByDateData = async (
     trainId: string,
     { signal }: { signal?: AbortSignal } = {},
 ): Promise<TrainType | null> => {
-    const data = await graphqlFetch<DifferentDayTrainResponse>(getDifferentDateTrain(trainId), {
-        signal,
-    });
+    const { query, variables } = getDifferentDateTrain(trainId);
+    const data = await graphqlFetch<DifferentDayTrainResponse>(query, { signal, variables });
     return data.data.train[0] ?? null;
 };

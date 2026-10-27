@@ -16,10 +16,7 @@ const TrainStationsView = ({ train }: TrainStationsViewProps) => {
     const [showNonCommercialStops, setShowNonCommercialStops] = useState(false);
     const showAllStations = userShowAllStations;
 
-    const departureDate =
-        train.departureDate instanceof Date
-            ? train.departureDate.toISOString().slice(0, 10)
-            : String(train.departureDate).slice(0, 10);
+    const departureDate = train.departureDate.slice(0, 10);
 
     return (
         <div

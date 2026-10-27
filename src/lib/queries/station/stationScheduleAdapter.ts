@@ -4,11 +4,6 @@ import type {
     StationScheduleGraphQLTrain,
 } from "./stationScheduleQuery";
 
-const toDateString = (date: Date | string): string => {
-    if (date instanceof Date) return date.toISOString();
-    return String(date);
-};
-
 const hasStation = (
     row: StationScheduleGraphQLRow,
 ): row is StationScheduleGraphQLRow & {
@@ -40,10 +35,9 @@ export const adaptStationSchedule = (
             commercialStop: Boolean(row.commercialStop),
             commercialTrack: row.commercialTrack,
             cancelled: row.cancelled,
-            scheduledTime: toDateString(row.scheduledTime),
-            actualTime: row.actualTime ? toDateString(row.actualTime) : undefined,
-            liveEstimateTime: row.liveEstimateTime ? toDateString(row.liveEstimateTime) : undefined,
-            estimateSource: row.estimateSourceType,
+            scheduledTime: row.scheduledTime,
+            actualTime: row.actualTime ?? undefined,
+            liveEstimateTime: row.liveEstimateTime ?? undefined,
             differenceInMinutes: row.differenceInMinutes,
             causes: row.causes ?? [],
         }),
@@ -78,17 +72,12 @@ export const adaptStationSchedule = (
 
     return {
         trainNumber: train.trainNumber,
-        departureDate: toDateString(train.departureDate).slice(0, 10),
-        operatorUICCode: 0,
-        operatorShortCode: "",
+        departureDate: train.departureDate.slice(0, 10),
         trainType: train.trainType.name,
         trainCategory: train.trainType.trainCategory.name,
         commuterLineID: train.commuterLineid ?? "",
         runningCurrently: train.runningCurrently,
         cancelled: train.cancelled,
-        version: train.version,
-        timetableType: train.timetableType,
-        timetableAcceptanceDate: "",
         timeTableRows,
     };
 };

@@ -57,7 +57,7 @@ const getRetryDelayMs = (response: Response, attempt: number): number => {
 
 export const graphqlFetch = async <T>(
     query: string,
-    { signal }: { signal?: AbortSignal } = {},
+    { signal, variables }: { signal?: AbortSignal; variables?: Record<string, unknown> } = {},
 ): Promise<T> => {
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
         await waitForCooldown(signal);
@@ -71,7 +71,7 @@ export const graphqlFetch = async <T>(
                     "Accept-Encoding": "gzip",
                     ...DIGITRAFFIC_USER_HEADERS,
                 },
-                body: JSON.stringify({ query }),
+                body: JSON.stringify({ query, variables }),
                 cache: "no-store",
                 signal,
             });
