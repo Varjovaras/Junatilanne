@@ -244,7 +244,9 @@ const TrainRow = ({ train }: TrainRowProps) => {
                         <div className="flex flex-wrap items-center gap-2 mt-4">
                             {currentSpeed !== null && currentSpeed > 0 && (
                                 <TrainChip icon={faGaugeHigh}>
-                                    <span className="font-medium">{currentSpeed} km/h</span>
+                                    <span className="font-medium">
+                                        {currentSpeed} {translations.speedUnit}
+                                    </span>
                                 </TrainChip>
                             )}
                             {track && (

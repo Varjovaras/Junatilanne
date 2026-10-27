@@ -17,7 +17,7 @@ const ScheduleDaySelector = ({ date, onDateChange }: ScheduleDaySelectorProps) =
         <div className={`space-y-3 w-full max-w-xs mx-auto ${isLoading ? "fade-out" : "fade-in"}`}>
             <div className="flex justify-center">
                 <SegmentedControl
-                    value={date === tomorrow ? "tomorrow" : "today"}
+                    value={date === today ? "today" : date === tomorrow ? "tomorrow" : ""}
                     onChange={(value) => onDateChange(value === "tomorrow" ? tomorrow : today)}
                     options={[
                         { value: "today", label: translations.today },

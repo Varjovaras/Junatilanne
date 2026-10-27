@@ -27,6 +27,10 @@ export const trainDetailsQueryOptions = (trainId: string) =>
                 };
             }
 
+            if (!/^\d+$/.test(trainId)) {
+                return { kind: "invalid", train: null };
+            }
+
             let liveTrain: TrainType | null = null;
 
             try {

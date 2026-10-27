@@ -1,7 +1,7 @@
 import type { TimeTableRow, TrainType } from "@/lib/types/trainTypes";
 import {
     getCommercialStations,
-    getLatestVisitedStationName,
+    getLatestVisitedStationCode,
     getNextCommercialStation,
 } from "@/lib/train/progress";
 import StationRow, { type StationStatus } from "./StationRow";
@@ -25,7 +25,7 @@ const TrainStations = ({ train, showAllStations, showNonCommercialStops }: Train
         return null;
     }
 
-    const currentStation = getLatestVisitedStationName(train);
+    const currentStationCode = getLatestVisitedStationCode(train);
     const nextStationRow = getNextCommercialStation(train);
 
     // Only include firstDeparture when showing all stations
@@ -34,27 +34,27 @@ const TrainStations = ({ train, showAllStations, showNonCommercialStops }: Train
         : passengerStationArrivals.filter((station) => {
               // Check if this is either the current station (including departure station)
               const isCurrentStation =
-                  station.station.name === currentStation ||
-                  (station.station.name === firstDeparture.station.name &&
-                      currentStation === firstDeparture.station.name);
+                  station.station.shortCode === currentStationCode ||
+                  (station.station.shortCode === firstDeparture.station.shortCode &&
+                      currentStationCode === firstDeparture.station.shortCode);
 
               // Check if this is the next station
-              const isNextStation = station.station.name === nextStationRow?.station.name;
+              const isNextStation = station.station.shortCode === nextStationRow?.station.shortCode;
 
               return isCurrentStation || isNextStation;
           });
 
     const currentStationIndex = stationsToShow.findIndex(
         (station) =>
-            station.station.name === currentStation ||
-            (station.station.name === firstDeparture.station.name &&
-                currentStation === firstDeparture.station.name),
+            station.station.shortCode === currentStationCode ||
+            (station.station.shortCode === firstDeparture.station.shortCode &&
+                currentStationCode === firstDeparture.station.shortCode),
     );
 
     const getStationStatus = (station: TimeTableRow, index: number): StationStatus => {
         if (showAllStations && index === 0) return "departure";
-        if (station.station.name === currentStation) return "current";
-        if (station.station.name === nextStationRow?.station.name) return "next";
+        if (station.station.shortCode === currentStationCode) return "current";
+        if (station.station.shortCode === nextStationRow?.station.shortCode) return "next";
         return index > currentStationIndex ? "future" : "past";
     };
 

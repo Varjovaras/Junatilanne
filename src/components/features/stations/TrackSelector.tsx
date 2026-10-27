@@ -1,15 +1,19 @@
-import { useState } from "react";
 import type { StationSchedule } from "@/lib/types/stationTypes";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 
 interface TrackSelectorProps {
     schedules: StationSchedule[];
     stationId: string;
+    selectedTrack: string | null;
     onTrackSelect: (track: string | null) => void;
 }
 
-const TrackSelector = ({ schedules, stationId, onTrackSelect }: TrackSelectorProps) => {
-    const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
+const TrackSelector = ({
+    schedules,
+    stationId,
+    selectedTrack,
+    onTrackSelect,
+}: TrackSelectorProps) => {
     const { translations } = useTranslations();
     const tracks = Array.from(
         new Set(
@@ -29,7 +33,6 @@ const TrackSelector = ({ schedules, stationId, onTrackSelect }: TrackSelectorPro
     const handleTrackChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
         const track = value === "all" ? null : value;
-        setSelectedTrack(track);
         onTrackSelect(track);
     };
 

@@ -37,7 +37,9 @@ const TrainPopupContent = ({ train }: TrainPopupContentProps) => {
                 <p>
                     {translations.currentSpeed}:{" "}
                     <span className="font-medium text-foreground">
-                        {speed === undefined ? translations.noCurrentSpeed : `${speed} km/h`}
+                        {speed === undefined
+                            ? translations.noCurrentSpeed
+                            : `${speed} ${translations.speedUnit}`}
                     </span>
                 </p>
                 <p>{train.trainType.trainCategory?.name || train.trainType.name}</p>

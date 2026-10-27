@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Loading from "@/components/common/Loading";
 import TrainTypeSelector from "@/components/features/train/shared/TrainTypeSelector";
 import { stationScheduleByDateQueryOptions } from "@/lib/queries/station/stationSchedules";
@@ -9,7 +9,7 @@ import {
     filterSchedulesWithUpcomingStop,
     stationScheduleFilter,
 } from "@/lib/station/scheduleFilter";
-import { filterSchedulesByCategory } from "@/lib/train/classification";
+import { filterSchedulesByCategory, type TrainCategoryFilter } from "@/lib/train/classification";
 import DailySchedule from "./DailySchedule";
 import ScheduleDaySelector from "./ScheduleDaySelector";
 import ScheduleList from "./ScheduleList";
@@ -24,23 +24,20 @@ type ScheduleOverviewProps = {
     onDateChange: (date?: string) => void;
 };
 
-const CATEGORIES = ["all", "commuter", "longDistance", "freight", "passengerCommuter"] as const;
-
 const ScheduleOverview = ({ schedules, stationId, date, onDateChange }: ScheduleOverviewProps) => {
     const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
-    const [selectedCategory, setSelectedCategory] = useState("passengerCommuter");
-    const [lastScheduleDate, setLastScheduleDate] = useState<string | undefined>(undefined);
+    const [selectedCategory, setSelectedCategory] = useState<TrainCategoryFilter>("all");
+    const lastScheduleDateRef = useRef(date);
     const [showWholeDay, setShowWholeDay] = useState(false);
     const view: ScheduleView = date ? "schedule" : "upcoming";
     const today = todayInHelsinki();
     const scheduleDate = date ?? today;
     const isTodaySchedule = isToday(scheduleDate);
 
-    if (date && date !== lastScheduleDate) {
-        setLastScheduleDate(date);
-    }
-
     useEffect(() => {
+        if (date) {
+            lastScheduleDateRef.current = date;
+        }
         setShowWholeDay(false);
     }, [date]);
 
@@ -60,13 +57,13 @@ const ScheduleOverview = ({ schedules, stationId, date, onDateChange }: Schedule
         );
     };
 
-    const category = selectedCategory as (typeof CATEGORIES)[number];
-
     const upcomingSchedules = stationScheduleFilter(schedules, stationId);
     const displayedSchedules = filterByTrack(
-        filterSchedulesByCategory(upcomingSchedules, category),
+        filterSchedulesByCategory(upcomingSchedules, selectedCategory),
     );
-    const displayedDaySchedules = filterByTrack(filterSchedulesByCategory(daySchedules, category));
+    const displayedDaySchedules = filterByTrack(
+        filterSchedulesByCategory(daySchedules, selectedCategory),
+    );
     const visibleDaySchedules =
         isTodaySchedule && !showWholeDay
             ? filterSchedulesWithUpcomingStop(displayedDaySchedules, stationId)
@@ -82,13 +79,18 @@ const ScheduleOverview = ({ schedules, stationId, date, onDateChange }: Schedule
             <TrackSelector
                 schedules={daySchedules}
                 stationId={stationId}
+                selectedTrack={selectedTrack}
                 onTrackSelect={setSelectedTrack}
             />
 
             <ScheduleViewSelector
                 view={view}
                 onViewChange={(nextView) =>
-                    onDateChange(nextView === "upcoming" ? undefined : (lastScheduleDate ?? today))
+                    onDateChange(
+                        nextView === "upcoming"
+                            ? undefined
+                            : (lastScheduleDateRef.current ?? today),
+                    )
                 }
                 upcomingCount={displayedSchedules.length}
                 scheduleCount={visibleDaySchedules.length}

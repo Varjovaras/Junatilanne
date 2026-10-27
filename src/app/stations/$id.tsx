@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import Loading from "@/components/common/Loading";
 import ScheduleOverview from "@/components/features/stations/ScheduleOverview";
@@ -23,12 +23,13 @@ export const Route = createFileRoute("/stations/$id")({
     },
     loader: async ({ context: { queryClient }, params, location }) => {
         const date = (location.search as { date?: string }).date;
-        await Promise.all([
-            queryClient.ensureQueryData(stationSchedulesQueryOptions(params.id)),
-            date && !isToday(date)
-                ? queryClient.ensureQueryData(stationScheduleByDateQueryOptions(params.id, date))
-                : Promise.resolve(),
-        ]);
+
+        if (date && !isToday(date)) {
+            await queryClient.ensureQueryData(stationScheduleByDateQueryOptions(params.id, date));
+            return;
+        }
+
+        await queryClient.ensureQueryData(stationSchedulesQueryOptions(params.id));
     },
     pendingComponent: Loading,
     component: StationRoute,
@@ -38,8 +39,12 @@ function StationRoute() {
     const { id } = Route.useParams();
     const { date } = Route.useSearch();
     const navigate = useNavigate();
-    const { data } = useSuspenseQuery(stationSchedulesQueryOptions(id));
-    const { stationId, schedules } = data;
+    const { data } = useQuery({
+        ...stationSchedulesQueryOptions(id),
+        enabled: !date || isToday(date),
+    });
+    const stationId = data?.stationId ?? id.toUpperCase();
+    const schedules = data?.schedules ?? [];
     const { translations } = useTranslations();
     const stationName = isValidStationCode(stationId) ? majorStations[stationId] : stationId;
 

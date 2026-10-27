@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { TrainType } from "@/lib/types/trainTypes";
-import { filterTrainsByCategory } from "@/lib/train/classification";
+import { filterTrainsByCategory, type TrainCategoryFilter } from "@/lib/train/classification";
 import TrainList from "./TrainList";
 import TrainTypeSelector from "../shared/TrainTypeSelector";
 
@@ -9,12 +9,9 @@ type TrainDataProps = {
 };
 
 const TrainDataDisplay = ({ trains }: TrainDataProps) => {
-    const [selectedCategory, setSelectedCategory] = useState("longDistance");
+    const [selectedCategory, setSelectedCategory] = useState<TrainCategoryFilter>("longDistance");
 
-    const filteredTrains = filterTrainsByCategory(
-        trains,
-        selectedCategory as "all" | "commuter" | "longDistance" | "freight",
-    );
+    const filteredTrains = filterTrainsByCategory(trains, selectedCategory);
 
     return (
         <div className="w-full">

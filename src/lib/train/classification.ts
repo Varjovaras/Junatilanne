@@ -7,6 +7,7 @@ import {
 import type { TrainType } from "../types/trainTypes";
 
 export type TrainGroup = "commuter" | "longDistance" | "freight";
+export type TrainCategoryFilter = "all" | TrainGroup;
 
 type TrainClassificationInput = {
     commuterLineid: string;
@@ -57,7 +58,7 @@ export const getStationScheduleCategory = (schedule: StationSchedule): TrainGrou
 
 export const filterTrainsByCategory = (
     trains: TrainType[],
-    category: "all" | TrainGroup,
+    category: TrainCategoryFilter,
 ): TrainType[] => {
     if (category === "all") return trains;
 
@@ -69,16 +70,9 @@ export const filterTrainsByCategory = (
 
 export const filterSchedulesByCategory = (
     schedules: StationSchedule[],
-    category: "all" | TrainGroup | "passengerCommuter",
+    category: TrainCategoryFilter,
 ): StationSchedule[] => {
     if (category === "all") return schedules;
-
-    if (category === "passengerCommuter") {
-        const passengerTrains = schedules.filter(
-            (schedule) => getStationScheduleCategory(schedule) !== "freight",
-        );
-        return passengerTrains.length > 0 ? passengerTrains : schedules;
-    }
 
     return schedules.filter((schedule) => getStationScheduleCategory(schedule) === category);
 };

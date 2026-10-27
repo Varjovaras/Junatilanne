@@ -103,7 +103,7 @@ export const calculateTrainProgress = (train: TrainType) => {
         }
     }
 
-    const total = commercialStops.length;
+    const total = commercialStops.filter((stop) => !stop.cancelled).length;
     const progressPercentage = total > 0 ? (completed / total) * 100 : 0;
 
     return {
@@ -113,6 +113,29 @@ export const calculateTrainProgress = (train: TrainType) => {
         lastCompletedStop,
         nextStop,
     };
+};
+
+export const getLatestVisitedStationCode = (train: TrainType): string | null => {
+    const visitedStations = getVisitedStations(train.timeTableRows, true);
+
+    if (visitedStations.length === 0) {
+        const firstDeparture = train.timeTableRows.find(
+            (row) => row.trainStopping && row.commercialStop === true && row.type === "DEPARTURE",
+        );
+        return firstDeparture?.station.shortCode ?? null;
+    }
+
+    const lastVisitedStation = visitedStations[visitedStations.length - 1];
+    const departureStation = train.timeTableRows[0].station.shortCode;
+
+    if (
+        lastVisitedStation.station.shortCode === departureStation &&
+        lastVisitedStation.type === "DEPARTURE"
+    ) {
+        return departureStation;
+    }
+
+    return lastVisitedStation.station.shortCode;
 };
 
 export const getAirportStop = (train: TrainType): TimeTableRow | undefined => {
