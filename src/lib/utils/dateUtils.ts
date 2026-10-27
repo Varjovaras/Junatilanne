@@ -108,9 +108,7 @@ export const isToday = (date: string) => {
 };
 
 export const isTomorrow = (date: string) => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    return helsinkiDateKey(tomorrow) === helsinkiDateKey(new Date(date));
+    return addDays(todayInHelsinki(), 1) === date.slice(0, 10);
 };
 
 export const getArrivalCountdown = (arrivalTime: Date, translations: Translations): string => {

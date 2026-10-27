@@ -1,33 +1,25 @@
 export const isValidTrainId = (id: string) => {
-    const url = id.split("-");
+    const [trainNumber, year, month, day, ...rest] = id.split("-");
 
-    if (url.length !== 4) {
-        throw new Error("Wrong url");
+    if (!trainNumber || !year || !month || !day || rest.length > 0) {
+        return false;
     }
-    const trainNumber = url[0];
 
-    const [year, month, day] = [url[1], url[2], url[3]];
+    const trainNumberValue = Number(trainNumber);
+    const yearValue = Number(year);
+    const monthValue = Number(month);
+    const dayValue = Number(day);
 
-    if (!Number.isInteger(Number(trainNumber))) {
-        throw new Error(`Train number ${trainNumber} is not integer`);
-    }
-    if (!Number.isInteger(Number(year))) {
-        throw new Error(`Year ${year} is not integer`);
-    }
-    if (year.length !== 4) {
-        throw new Error(`Year ${year} is not suitable length`);
-    }
-    if (!Number.isInteger(Number(month))) {
-        throw new Error(`Month ${month} is not integer`);
-    }
-    if (month.length > 2) {
-        throw new Error(`Month ${month} is not suitable length`);
-    }
-    if (!Number.isInteger(Number(day))) {
-        throw new Error(`Day ${day} is not integer`);
-    }
-    if (day.length > 2) {
-        throw new Error(`Day ${day} is not suitable length`);
-    }
-    return true;
+    return (
+        Number.isInteger(trainNumberValue) &&
+        trainNumberValue > 0 &&
+        /^\d{4}$/.test(year) &&
+        Number.isInteger(yearValue) &&
+        Number.isInteger(monthValue) &&
+        monthValue >= 1 &&
+        monthValue <= 12 &&
+        Number.isInteger(dayValue) &&
+        dayValue >= 1 &&
+        dayValue <= 31
+    );
 };

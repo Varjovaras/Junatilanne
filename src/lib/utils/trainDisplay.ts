@@ -8,9 +8,14 @@ export const getTrainDisplayName = (
     return train.commuterLineid || `${train.trainType.name} ${train.trainNumber}`;
 };
 
+const getDatePart = (departureDate: string | Date): string =>
+    departureDate instanceof Date
+        ? departureDate.toISOString().slice(0, 10)
+        : departureDate.slice(0, 10);
+
 export const getTrainLink = (train: TrainType, includeDate = false): string => {
     if (includeDate) {
-        return `/trains/${train.trainNumber}-${train.departureDate}`;
+        return `/trains/${train.trainNumber}-${getDatePart(train.departureDate)}`;
     }
     return `/trains/${train.trainNumber}`;
 };
@@ -30,5 +35,5 @@ export const getTrainId = (train: {
     trainNumber: number;
     departureDate: string | Date;
 }): string => {
-    return `${train.trainNumber}-${train.departureDate}`;
+    return `${train.trainNumber}-${getDatePart(train.departureDate)}`;
 };

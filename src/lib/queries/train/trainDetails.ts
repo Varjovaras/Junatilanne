@@ -17,9 +17,7 @@ export const trainDetailsQueryOptions = (trainId: string) =>
         queryKey: queryKeys.trainDetails(trainId),
         queryFn: async ({ client }): Promise<TrainDetailsQueryData> => {
             if (trainId.includes("-")) {
-                try {
-                    isValidTrainId(trainId);
-                } catch {
+                if (!isValidTrainId(trainId)) {
                     return { kind: "invalid", train: null };
                 }
 
