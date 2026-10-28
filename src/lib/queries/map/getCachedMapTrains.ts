@@ -4,7 +4,9 @@ import { graphqlFetch } from "../shared/graphqlClient";
 import type { MapTrain, TrainLocation, TypeOfTrain } from "@/lib/types/trainTypes";
 
 const MAP_CACHE_MAX_AGE_SECONDS = 5;
-const MAP_CACHE_STALE_MAX_AGE_SECONDS = 120;
+// Keep map data servable while the scheduled warmer refreshes it, so the first
+// visitor after an idle period does not wait for a cold fetch.
+const MAP_CACHE_STALE_MAX_AGE_SECONDS = 900;
 
 type RawMapTrain = {
     trainNumber: number;
