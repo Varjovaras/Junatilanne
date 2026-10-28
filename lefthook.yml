@@ -7,3 +7,10 @@ pre-commit:
         lint:
             glob: "*.{ts,tsx,js,jsx}"
             run: bunx oxlint {staged_files}
+pre-push:
+    parallel: true
+    commands:
+        build:
+            run: bun run build
+        typecheck:
+            run: bunx tsc --noEmit
