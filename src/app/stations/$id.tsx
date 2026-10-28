@@ -6,14 +6,13 @@ import type { ScheduleView } from "@/components/features/stations/ScheduleViewSe
 // import { useTranslations } from "@/lib/i18n/useTranslations";
 import { isValidStationCode, majorStations } from "@/lib/station/majorStations";
 import type { StationRowType } from "@/lib/station/schedule";
-import { isToday } from "@/lib/utils/date";
+import { isToday, isValidDate } from "@/lib/utils/date";
 import {
     stationScheduleByDateQueryOptions,
     stationSchedulesQueryOptions,
 } from "@/lib/queries/station/stationSchedules";
 import { removeAsema } from "@/lib/utils/string";
 
-const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const VIEW_VALUES = ["arrivals", "departures"] as const;
 
 type StationView = (typeof VIEW_VALUES)[number];
@@ -28,10 +27,7 @@ const isStationView = (value: unknown): value is StationView =>
 
 export const Route = createFileRoute("/stations/$id")({
     validateSearch: (search: Record<string, unknown>): StationSearch => {
-        const date =
-            typeof search.date === "string" && DATE_PATTERN.test(search.date)
-                ? search.date
-                : undefined;
+        const date = isValidDate(search.date) ? search.date : undefined;
         const view = isStationView(search.view) ? search.view : undefined;
 
         return {

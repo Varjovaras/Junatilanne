@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import type { TrainType } from "../../types/trainTypes";
-import { isValidTrainId } from "@/lib/train/id";
+import { isValidDatedTrainId, isValidTrainNumber } from "@/lib/train/id";
 import { queryKeys } from "../shared/queryKeys";
 import { fetchSingleTrainData, fetchTrainByDateData } from "./server";
 import { todayTrainQueryOptions } from "./todayTrain";
@@ -17,7 +17,7 @@ export const trainDetailsQueryOptions = (trainId: string) =>
         queryKey: queryKeys.trainDetails(trainId),
         queryFn: async ({ client }): Promise<TrainDetailsQueryData> => {
             if (trainId.includes("-")) {
-                if (!isValidTrainId(trainId)) {
+                if (!isValidDatedTrainId(trainId)) {
                     return { kind: "invalid", train: null };
                 }
 
@@ -27,7 +27,7 @@ export const trainDetailsQueryOptions = (trainId: string) =>
                 };
             }
 
-            if (!/^\d+$/.test(trainId)) {
+            if (!isValidTrainNumber(trainId)) {
                 return { kind: "invalid", train: null };
             }
 

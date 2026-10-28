@@ -18,6 +18,30 @@ export const formatDateForUrl = (date: string) => {
     return formattedDate;
 };
 
+const DATE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+const isLeapYear = (year: number) => (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+
+const daysInMonth = (year: number, month: number) => {
+    if (month === 2) return isLeapYear(year) ? 29 : 28;
+    return [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+};
+
+export const isValidDate = (value: unknown): value is string => {
+    if (typeof value !== "string") return false;
+
+    const match = DATE_PATTERN.exec(value);
+    if (!match) return false;
+
+    const year = Number(match[1]);
+    const month = Number(match[2]);
+    const day = Number(match[3]);
+
+    if (month < 1 || month > 12 || day < 1) return false;
+
+    return day <= daysInMonth(year, month);
+};
+
 export const helsinkiDateKey = (date: Date): string => {
     const parts = new Intl.DateTimeFormat("en-CA", {
         timeZone: "Europe/Helsinki",

@@ -787,3 +787,5 @@ export const passengerStationCodes: ReadonlySet<string> = new Set([
 export const isValidStationCode = (code: string): code is StationCode => {
     return code in majorStations;
 };
+
+export { isValidStationCodeShape, normalizeStationCode } from "./code";
