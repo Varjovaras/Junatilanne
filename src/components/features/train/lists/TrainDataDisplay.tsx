@@ -26,7 +26,9 @@ const TrainDataDisplay = ({ trains }: TrainDataProps) => {
                         ? "commuter"
                         : selectedCategory === "freight"
                           ? "freight"
-                          : "longDistance"
+                          : selectedCategory === "other"
+                            ? "other"
+                            : "longDistance"
                 }
             />
         </div>

@@ -14,6 +14,8 @@ export const getLateTrainsTitle = (
             return translations.lateLongDistance;
         case "freight":
             return translations.lateFreight;
+        case "other":
+            return translations.lateOther;
         default:
             return translations.lateTrains;
     }
@@ -30,6 +32,8 @@ export const getNoTrainsMessage = (
             return translations.noLongDistanceTrainsLate;
         case "freight":
             return translations.noFreightTrainsLate;
+        case "other":
+            return translations.noOtherTrainsLate;
         default:
             return translations.noTrainsLate;
     }

@@ -99,6 +99,8 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
                     return getTrainCategory(train) === "longDistance";
                 case "freight":
                     return getTrainCategory(train) === "freight";
+                case "other":
+                    return getTrainCategory(train) === "other";
                 default:
                     return true;
             }

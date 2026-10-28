@@ -15,6 +15,7 @@ const TrainTypeSelector = ({ selectedCategory, onCategoryChange }: TrainTypeSele
         { value: "longDistance", label: translations.longDistanceTrains },
         { value: "commuter", label: translations.commuterTrains },
         { value: "freight", label: translations.freightTrains },
+        { value: "other", label: translations.otherTrains },
     ] as const;
 
     return (

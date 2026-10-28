@@ -1,4 +1,10 @@
-import { faMap, faTrain, faTrainSubway, faTruck } from "@fortawesome/free-solid-svg-icons";
+import {
+    faMap,
+    faTrain,
+    faTrainSubway,
+    faTruck,
+    faWrench,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { Dispatch, SetStateAction } from "react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
@@ -13,6 +19,7 @@ const categories = [
     { name: "longDistance", icon: faTrain },
     { name: "commuter", icon: faTrainSubway },
     { name: "freight", icon: faTruck },
+    { name: "other", icon: faWrench },
     { name: "all", icon: faMap },
 ] as const;
 
@@ -23,6 +30,7 @@ const TrainSelector = ({ category, setCategory }: TrainSelectorProps) => {
         longDistance: translations.longDistanceTrains,
         commuter: translations.commuterTrains,
         freight: translations.freightTrains,
+        other: translations.otherTrains,
         all: translations.allTrains,
     };
 
