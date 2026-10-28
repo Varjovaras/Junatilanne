@@ -1,5 +1,7 @@
 import type { StationSchedule, StationTimeTableRow } from "../types/stationTypes";
 
+export type StationRowType = StationTimeTableRow["type"];
+
 export const findStationTimeTableRow = (
     schedule: StationSchedule,
     stationId: string,
@@ -40,15 +42,29 @@ export const isJourneyCompleted = (schedule: StationSchedule, now = Date.now()):
     return !schedule.runningCurrently && getStationRowTime(finalRow) < now;
 };
 
+const isUpcomingRow = (row: StationTimeTableRow, now: number): boolean => {
+    const time = getStationRowTime(row);
+    return Number.isFinite(time) && time >= now;
+};
+
 export const getNextStationRow = (
     schedule: StationSchedule,
     stationId: string,
     now = Date.now(),
 ): StationTimeTableRow | undefined =>
     getStationRows(schedule, stationId)
-        .map((row) => ({ row, time: getStationRowTime(row) }))
-        .filter(({ time }) => Number.isFinite(time) && time >= now)
-        .sort((a, b) => a.time - b.time)[0]?.row;
+        .filter((row) => isUpcomingRow(row, now))
+        .sort((a, b) => getStationRowTime(a) - getStationRowTime(b))[0];
+
+export const getNextStationRowOfType = (
+    schedule: StationSchedule,
+    stationId: string,
+    type: StationRowType,
+    now = Date.now(),
+): StationTimeTableRow | undefined =>
+    getStationRows(schedule, stationId)
+        .filter((row) => row.type === type && isUpcomingRow(row, now))
+        .sort((a, b) => getStationRowTime(a) - getStationRowTime(b))[0];
 
 export const getFirstStationRow = (
     schedule: StationSchedule,

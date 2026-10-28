@@ -1,21 +1,27 @@
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import type { StationSchedule } from "@/lib/types/stationTypes";
+import type { StationScheduleEntry } from "@/lib/station/scheduleFilter";
+import type { StationRowType } from "@/lib/station/schedule";
 import ScheduleTable from "./ScheduleTable";
 
 type ScheduleListProps = {
-    schedules: StationSchedule[];
+    entries: StationScheduleEntry[];
     stationId: string;
+    eventType: StationRowType;
 };
 
-const ScheduleList = ({ schedules, stationId }: ScheduleListProps) => {
+const ScheduleList = ({ entries, stationId, eventType }: ScheduleListProps) => {
     const { translations } = useTranslations();
 
     return (
         <div>
-            {schedules.length === 0 ? (
-                <p className="text-foreground/60 italic">{translations.noUpcomingDepartures}</p>
+            {entries.length === 0 ? (
+                <p className="text-foreground/60 italic">
+                    {eventType === "ARRIVAL"
+                        ? translations.noUpcomingArrivals
+                        : translations.noUpcomingDepartures}
+                </p>
             ) : (
-                <ScheduleTable schedules={schedules} stationId={stationId} />
+                <ScheduleTable entries={entries} stationId={stationId} />
             )}
         </div>
     );

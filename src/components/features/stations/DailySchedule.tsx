@@ -1,37 +1,47 @@
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import type { StationSchedule } from "@/lib/types/stationTypes";
+import type { StationScheduleEntry } from "@/lib/station/scheduleFilter";
+import type { StationRowType } from "@/lib/station/schedule";
 import { isToday } from "@/lib/utils/date";
 import ScheduleTable from "./ScheduleTable";
 
 type DailyScheduleProps = {
-    schedules: StationSchedule[];
+    entries: StationScheduleEntry[];
     stationId: string;
+    eventType: StationRowType;
     date?: string;
     isFiltered?: boolean;
     hasDaySchedules?: boolean;
 };
 
 const DailySchedule = ({
-    schedules,
+    entries,
     stationId,
+    eventType,
     date,
     isFiltered = false,
     hasDaySchedules = false,
 }: DailyScheduleProps) => {
     const { translations } = useTranslations();
+    const isArrival = eventType === "ARRIVAL";
 
     const emptyMessage =
         isFiltered && hasDaySchedules
-            ? translations.noRemainingTrains
+            ? isArrival
+                ? translations.noRemainingArrivals
+                : translations.noRemainingDepartures
             : date && !isToday(date)
-              ? translations.noTrainsOnDate
-              : translations.noTrainsToday;
+              ? isArrival
+                  ? translations.noArrivalsOnDate
+                  : translations.noDeparturesOnDate
+              : isArrival
+                ? translations.noArrivalsToday
+                : translations.noDeparturesToday;
 
-    if (schedules.length === 0) {
+    if (entries.length === 0) {
         return <p className="text-foreground/60 italic">{emptyMessage}</p>;
     }
 
-    return <ScheduleTable schedules={schedules} stationId={stationId} />;
+    return <ScheduleTable entries={entries} stationId={stationId} />;
 };
 
 export default DailySchedule;

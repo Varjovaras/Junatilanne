@@ -2,18 +2,19 @@ import { Link } from "@tanstack/react-router";
 import RouteDisplay from "@/components/common/RouteDisplay";
 import StatusPill from "@/components/common/StatusPill";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import type { StationSchedule, StationTimeTableRow } from "@/lib/types/stationTypes";
+import type { StationScheduleEntry } from "@/lib/station/scheduleFilter";
+import type { StationTimeTableRow } from "@/lib/types/stationTypes";
 import { formatTime } from "@/lib/utils/date";
 import { getFormattedStationName } from "@/lib/station/display";
 import { getScheduleTrainDisplayName, getScheduleTrainLink } from "@/lib/train/display";
 import { isAirportLine } from "@/lib/train/display";
-import { getStationRows, isJourneyCompleted, isStationTerminus } from "@/lib/station/schedule";
+import { isJourneyCompleted, isStationTerminus } from "@/lib/station/schedule";
 
 export const scheduleTableGridClass =
     "grid grid-cols-[6.75rem_minmax(0,1fr)_auto] items-start gap-x-3 md:grid-cols-[8rem_minmax(7rem,0.8fr)_minmax(0,1.6fr)_4.5rem_8rem] md:items-center md:gap-x-4";
 
 type ScheduleTableRowProps = {
-    schedule: StationSchedule;
+    entry: StationScheduleEntry;
     stationId: string;
     index: number;
 };
@@ -55,16 +56,14 @@ const ScheduleTime = ({ row }: { row: StationTimeTableRow }) => {
     );
 };
 
-const ScheduleTableRow = ({ schedule, stationId, index }: ScheduleTableRowProps) => {
+const ScheduleTableRow = ({ entry, stationId, index }: ScheduleTableRowProps) => {
     const { translations } = useTranslations();
+    const { schedule, row } = entry;
 
     const firstRow = schedule.timeTableRows[0];
     const lastRow = schedule.timeTableRows[schedule.timeTableRows.length - 1];
-    const stationRows = getStationRows(schedule, stationId);
-    const arrivalRow = stationRows.find((row) => row.type === "ARRIVAL");
-    const departureRow = stationRows.find((row) => row.type === "DEPARTURE");
-    const track = departureRow?.commercialTrack || arrivalRow?.commercialTrack;
-    const arrivesOnly = isStationTerminus(schedule, stationId);
+    const track = row.commercialTrack;
+    const arrivesOnly = row.type === "ARRIVAL" && isStationTerminus(schedule, stationId);
 
     const route = (
         <RouteDisplay
@@ -89,9 +88,7 @@ const ScheduleTableRow = ({ schedule, stationId, index }: ScheduleTableRowProps)
             }`}
         >
             <div role="cell" className="space-y-1">
-                {stationRows.map((row) => (
-                    <ScheduleTime key={`${row.type}-${row.scheduledTime}`} row={row} />
-                ))}
+                <ScheduleTime row={row} />
             </div>
 
             <div role="cell" className="min-w-0">

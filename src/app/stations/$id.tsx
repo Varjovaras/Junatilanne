@@ -1,10 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import Loading from "@/components/common/Loading";
 import ScheduleOverview from "@/components/features/stations/ScheduleOverview";
+import type { ScheduleView } from "@/components/features/stations/ScheduleViewSelector";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { isValidStationCode, majorStations } from "@/lib/station/majorStations";
-import { isToday } from "@/lib/utils/date";
+import type { StationRowType } from "@/lib/station/schedule";
+import { isToday, todayInHelsinki } from "@/lib/utils/date";
 import {
     stationScheduleByDateQueryOptions,
     stationSchedulesQueryOptions,
@@ -12,14 +15,30 @@ import {
 import { removeAsema } from "@/lib/utils/string";
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+const VIEW_VALUES = ["arrivals", "departures"] as const;
+
+type StationView = (typeof VIEW_VALUES)[number];
+
+type StationSearch = {
+    date?: string;
+    view?: StationView;
+};
+
+const isStationView = (value: unknown): value is StationView =>
+    VIEW_VALUES.some((view) => view === value);
 
 export const Route = createFileRoute("/stations/$id")({
-    validateSearch: (search: Record<string, unknown>): { date?: string } => {
+    validateSearch: (search: Record<string, unknown>): StationSearch => {
         const date =
             typeof search.date === "string" && DATE_PATTERN.test(search.date)
                 ? search.date
                 : undefined;
-        return date ? { date } : {};
+        const view = isStationView(search.view) ? search.view : undefined;
+
+        return {
+            ...(date ? { date } : {}),
+            ...(view ? { view } : {}),
+        };
     },
     loader: async ({ context: { queryClient }, params, location }) => {
         const date = (location.search as { date?: string }).date;
@@ -37,8 +56,10 @@ export const Route = createFileRoute("/stations/$id")({
 
 function StationRoute() {
     const { id } = Route.useParams();
-    const { date } = Route.useSearch();
+    const { date, view: viewParam } = Route.useSearch();
     const navigate = useNavigate();
+    const lastScheduleDateRef = useRef(date);
+    const today = todayInHelsinki();
     const { data } = useQuery({
         ...stationSchedulesQueryOptions(id),
         enabled: !date || isToday(date),
@@ -48,12 +69,48 @@ function StationRoute() {
     const { translations } = useTranslations();
     const stationName = isValidStationCode(stationId) ? majorStations[stationId] : stationId;
 
-    const handleDateChange = (newDate?: string) => {
+    const eventType: StationRowType = viewParam === "arrivals" ? "ARRIVAL" : "DEPARTURE";
+    const view: ScheduleView = date
+        ? "schedule"
+        : eventType === "ARRIVAL"
+          ? "arrivals"
+          : "departures";
+
+    useEffect(() => {
+        if (date) {
+            lastScheduleDateRef.current = date;
+        }
+    }, [date]);
+
+    const toViewParam = (type: StationRowType): StationView =>
+        type === "ARRIVAL" ? "arrivals" : "departures";
+
+    const navigateTo = (search: StationSearch) => {
         navigate({
             to: "/stations/$id",
             params: { id: stationId },
-            search: newDate ? { date: newDate } : {},
+            search,
         });
+    };
+
+    const handleDateChange = (newDate?: string) => {
+        navigateTo({ date: newDate, view: toViewParam(eventType) });
+    };
+
+    const handleViewChange = (nextView: ScheduleView) => {
+        if (nextView === "schedule") {
+            navigateTo({
+                date: lastScheduleDateRef.current ?? today,
+                view: toViewParam(eventType),
+            });
+            return;
+        }
+
+        navigateTo({ view: nextView });
+    };
+
+    const handleEventTypeChange = (nextEventType: StationRowType) => {
+        navigateTo({ date, view: toViewParam(nextEventType) });
     };
 
     return (
@@ -74,7 +131,11 @@ function StationRoute() {
                 schedules={schedules}
                 stationId={stationId}
                 date={date}
+                eventType={eventType}
+                view={view}
                 onDateChange={handleDateChange}
+                onViewChange={handleViewChange}
+                onEventTypeChange={handleEventTypeChange}
             />
         </div>
     );

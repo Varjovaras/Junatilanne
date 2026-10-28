@@ -1,19 +1,21 @@
 import SegmentedControl from "@/components/common/SegmentedControl";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 
-export type ScheduleView = "upcoming" | "schedule";
+export type ScheduleView = "arrivals" | "departures" | "schedule";
 
 type ScheduleViewSelectorProps = {
     view: ScheduleView;
     onViewChange: (view: ScheduleView) => void;
-    upcomingCount: number;
+    arrivalCount: number;
+    departureCount: number;
     scheduleCount: number;
 };
 
 const ScheduleViewSelector = ({
     view,
     onViewChange,
-    upcomingCount,
+    arrivalCount,
+    departureCount,
     scheduleCount,
 }: ScheduleViewSelectorProps) => {
     const { translations, isLoading } = useTranslations();
@@ -25,8 +27,12 @@ const ScheduleViewSelector = ({
                 onChange={onViewChange}
                 options={[
                     {
-                        value: "upcoming",
-                        label: `${translations.futureTrains} (${upcomingCount})`,
+                        value: "arrivals",
+                        label: `${translations.arrivals} (${arrivalCount})`,
+                    },
+                    {
+                        value: "departures",
+                        label: `${translations.departures} (${departureCount})`,
                     },
                     {
                         value: "schedule",

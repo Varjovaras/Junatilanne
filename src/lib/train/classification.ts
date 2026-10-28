@@ -85,3 +85,12 @@ export const filterSchedulesByCategory = (
 
     return schedules.filter((schedule) => getStationScheduleCategory(schedule) === category);
 };
+
+export const filterScheduleEntriesByCategory = <T extends { schedule: StationSchedule }>(
+    entries: T[],
+    category: TrainCategoryFilter,
+): T[] => {
+    if (category === "all") return entries;
+
+    return entries.filter((entry) => getStationScheduleCategory(entry.schedule) === category);
+};
