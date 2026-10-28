@@ -73,12 +73,12 @@ const ScheduleOverview = ({
 
     return (
         <div className="space-y-8">
-            <TrainTypeSelector
-                selectedCategory={selectedCategory}
-                onCategoryChange={setSelectedCategory}
-            />
-
             <div className="flex flex-wrap items-center justify-center gap-2">
+                <TrainTypeSelector
+                    selectedCategory={selectedCategory}
+                    onCategoryChange={setSelectedCategory}
+                    variant="select"
+                />
                 <TrackSelector
                     schedules={daySchedules}
                     stationId={stationId}
