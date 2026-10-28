@@ -8,8 +8,6 @@ export const queryKeys = {
         ["station", "schedules", normalizeStationId(stationId)] as const,
     stationSchedulesByDate: (stationId: string, date: string) =>
         ["station", "schedules", normalizeStationId(stationId), "date", date] as const,
-    stationMessages: (stationId: string) =>
-        ["station", "messages", normalizeStationId(stationId)] as const,
     trainDetails: (trainId: string) => ["train", "details", trainId] as const,
     todayTrain: (trainId: string) => ["train", "today", trainId] as const,
     trainDistance: (trainNumber: string, locationTimestamp: string) =>

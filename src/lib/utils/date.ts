@@ -97,12 +97,6 @@ export const formatDate = (date: Date | string) => {
     });
 };
 
-export const formatDateTime = (date: Date | string) => {
-    return new Date(date).toLocaleString("fi-FI", {
-        timeZone: "Europe/Helsinki",
-    });
-};
-
 export const isToday = (date: string) => {
     return helsinkiDateKey(new Date()) === helsinkiDateKey(new Date(date));
 };

@@ -95,15 +95,6 @@ function StationRoute() {
             <h2 className="text-3xl font-bold mb-8 text-center text-green-500">
                 {removeAsema(stationName)}
             </h2>
-            {/*<div className="mb-8 text-center">
-                <Link
-                    to="/station-messages/$id"
-                    params={{ id: stationId }}
-                    className="text-sm text-foreground/60 hover:text-foreground hover:underline"
-                >
-                    {translations.messagesForStation.replace("{station}", removeAsema(stationName))}
-                </Link>
-            </div>*/}
             <ScheduleOverview
                 schedules={schedules}
                 stationId={stationId}
