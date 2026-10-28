@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Loading from "@/components/common/Loading";
 import TrainTypeSelector from "@/components/common/TrainTypeSelector";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import { stationScheduleByDateQueryOptions } from "@/lib/queries/station/stationSchedules";
 import type { StationSchedule } from "@/lib/types/stationTypes";
 import { isToday, todayInHelsinki } from "@/lib/utils/date";
@@ -20,6 +21,7 @@ import ScheduleDaySelector from "./ScheduleDaySelector";
 import ScheduleEventTypeSelector from "./ScheduleEventTypeSelector";
 import ScheduleList from "./ScheduleList";
 import ScheduleScopeSelector from "./ScheduleScopeSelector";
+import ScheduleSettingsDialog from "./ScheduleSettingsDialog";
 import ScheduleViewSelector, { type ScheduleView } from "./ScheduleViewSelector";
 import TrackSelector from "./TrackSelector";
 
@@ -47,6 +49,9 @@ const ScheduleOverview = ({
     const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<TrainCategoryFilter>("all");
     const [showWholeDay, setShowWholeDay] = useState(false);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const scheduleButtonRef = useRef<HTMLButtonElement>(null);
+    const { translations } = useTranslations();
     const today = todayInHelsinki();
     const scheduleDate = date ?? today;
     const isTodaySchedule = isToday(scheduleDate);
@@ -82,6 +87,21 @@ const ScheduleOverview = ({
             ? dayEntries.filter((entry) => entry.time >= now)
             : dayEntries;
 
+    const closeSettings = useCallback(() => setIsSettingsOpen(false), []);
+
+    const handleViewChange = (nextView: ScheduleView) => {
+        if (nextView === "schedule") {
+            setIsSettingsOpen(true);
+            if (view !== "schedule") {
+                onViewChange(nextView);
+            }
+            return;
+        }
+
+        setIsSettingsOpen(false);
+        onViewChange(nextView);
+    };
+
     return (
         <div className="space-y-8">
             <TrainTypeSelector
@@ -98,15 +118,21 @@ const ScheduleOverview = ({
 
             <ScheduleViewSelector
                 view={view}
-                onViewChange={onViewChange}
+                onViewChange={handleViewChange}
                 arrivalCount={arrivalEntries.length}
                 departureCount={departureEntries.length}
                 scheduleCount={visibleDayEntries.length}
+                scheduleButtonRef={scheduleButtonRef}
             />
 
             {view === "schedule" ? (
                 <>
-                    <div className="space-y-4">
+                    <ScheduleSettingsDialog
+                        open={isSettingsOpen}
+                        anchorRef={scheduleButtonRef}
+                        ariaLabel={translations.schedule}
+                        onClose={closeSettings}
+                    >
                         <ScheduleEventTypeSelector
                             eventType={eventType}
                             onChange={onEventTypeChange}
@@ -118,7 +144,7 @@ const ScheduleOverview = ({
                                 onChange={setShowWholeDay}
                             />
                         )}
-                    </div>
+                    </ScheduleSettingsDialog>
                     {isLoading ? (
                         <div className="flex items-center justify-center py-16">
                             <Loading />

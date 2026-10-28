@@ -1,8 +1,9 @@
-import type { ReactNode } from "react";
+import type { ReactNode, Ref } from "react";
 
 type SegmentedControlOption<T extends string> = {
     value: T;
     label: ReactNode;
+    buttonRef?: Ref<HTMLButtonElement>;
 };
 
 type SegmentedControlProps<T extends string> = {
@@ -26,6 +27,7 @@ const SegmentedControl = <T extends string>({
         {options.map((option, index) => (
             <button
                 key={option.value}
+                ref={option.buttonRef}
                 type="button"
                 onClick={() => onChange(option.value)}
                 aria-pressed={value === option.value}

@@ -1,3 +1,4 @@
+import type { Ref } from "react";
 import SegmentedControl from "@/components/common/SegmentedControl";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 
@@ -9,6 +10,7 @@ type ScheduleViewSelectorProps = {
     arrivalCount: number;
     departureCount: number;
     scheduleCount: number;
+    scheduleButtonRef?: Ref<HTMLButtonElement>;
 };
 
 const ScheduleViewSelector = ({
@@ -17,6 +19,7 @@ const ScheduleViewSelector = ({
     arrivalCount,
     departureCount,
     scheduleCount,
+    scheduleButtonRef,
 }: ScheduleViewSelectorProps) => {
     const { translations, isLoading } = useTranslations();
 
@@ -37,6 +40,7 @@ const ScheduleViewSelector = ({
                     {
                         value: "schedule",
                         label: `${translations.schedule} (${scheduleCount})`,
+                        buttonRef: scheduleButtonRef,
                     },
                 ]}
             />
