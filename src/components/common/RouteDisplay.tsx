@@ -39,6 +39,7 @@ const RouteStationLink = ({
         params={{ id: displayShortCode ?? station.shortCode }}
         className={`${colorClass}${className ? ` ${className}` : ""}`}
         preload={preload}
+        onClick={(event) => event.stopPropagation()}
     >
         {displayName ?? station.name}
     </Link>

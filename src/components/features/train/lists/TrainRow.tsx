@@ -60,6 +60,7 @@ const TrainRow = ({ train }: TrainRowProps) => {
                 tabIndex={0}
                 onClick={toggle}
                 onKeyDown={(event) => {
+                    if (event.target !== event.currentTarget) return;
                     if (event.key === "Enter" || event.key === " ") {
                         event.preventDefault();
                         toggle();
