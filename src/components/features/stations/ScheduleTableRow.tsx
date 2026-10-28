@@ -11,7 +11,7 @@ import { isAirportLine } from "@/lib/train/display";
 import { isJourneyCompleted, isStationTerminus } from "@/lib/station/schedule";
 
 export const scheduleTableGridClass =
-    "grid grid-cols-[6.75rem_minmax(0,1fr)_auto] items-start gap-x-3 md:grid-cols-[8rem_minmax(7rem,0.8fr)_minmax(0,1.6fr)_4.5rem_8rem] md:items-center md:gap-x-4";
+    "grid grid-cols-[5.25rem_minmax(0,1fr)_auto] items-start gap-x-3 md:grid-cols-[8rem_minmax(7rem,0.8fr)_minmax(0,1.6fr)_4.5rem_8rem] md:items-center md:gap-x-4";
 
 type ScheduleTableRowProps = {
     entry: StationScheduleEntry;
@@ -24,7 +24,7 @@ const ScheduleTime = ({ row }: { row: StationTimeTableRow }) => {
 
     return (
         <div className="flex flex-wrap items-baseline gap-x-1.5 leading-tight">
-            <span className="text-xs uppercase tracking-wide text-foreground/60">
+            <span className="hidden text-xs uppercase tracking-wide text-foreground/60 md:inline">
                 {row.type === "ARRIVAL" ? translations.arrives : translations.departs}
             </span>
             <span className="text-sm font-semibold tabular-nums">
@@ -126,9 +126,9 @@ const ScheduleTableRow = ({ entry, stationId, index }: ScheduleTableRowProps) =>
 
             <div
                 role="cell"
-                className="col-span-3 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 md:hidden"
+                className="col-span-3 flex min-w-0 flex-col gap-y-0.5 md:hidden"
             >
-                <div className="min-w-0">{route}</div>
+                <div className="w-full min-w-0">{route}</div>
                 {track && (
                     <span className="whitespace-nowrap text-xs text-foreground/60">
                         {translations.track} {track}
