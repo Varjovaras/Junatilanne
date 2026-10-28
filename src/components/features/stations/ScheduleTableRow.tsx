@@ -124,10 +124,7 @@ const ScheduleTableRow = ({ entry, stationId, index }: ScheduleTableRowProps) =>
                 />
             </div>
 
-            <div
-                role="cell"
-                className="col-span-3 flex min-w-0 flex-col gap-y-0.5 md:hidden"
-            >
+            <div role="cell" className="col-span-3 flex min-w-0 flex-col gap-y-0.5 md:hidden">
                 <div className="w-full min-w-0">{route}</div>
                 {track && (
                     <span className="whitespace-nowrap text-xs text-foreground/60">

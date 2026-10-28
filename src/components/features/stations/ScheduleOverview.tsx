@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Loading from "@/components/common/Loading";
 import TrainTypeSelector from "@/components/common/TrainTypeSelector";
-import { useTranslations } from "@/lib/i18n/useTranslations";
 import { stationScheduleByDateQueryOptions } from "@/lib/queries/station/stationSchedules";
 import type { StationSchedule } from "@/lib/types/stationTypes";
 import { isToday, todayInHelsinki } from "@/lib/utils/date";
@@ -16,13 +15,9 @@ import {
     filterScheduleEntriesByCategory,
     type TrainCategoryFilter,
 } from "@/lib/train/classification";
-import DailySchedule from "./DailySchedule";
-import ScheduleDaySelector from "./ScheduleDaySelector";
-import ScheduleEventTypeSelector from "./ScheduleEventTypeSelector";
 import ScheduleList from "./ScheduleList";
-import ScheduleScopeSelector from "./ScheduleScopeSelector";
-import ScheduleSettingsDialog from "./ScheduleSettingsDialog";
 import ScheduleViewSelector, { type ScheduleView } from "./ScheduleViewSelector";
+import StationDateSelector from "./StationDateSelector";
 import TrackSelector from "./TrackSelector";
 
 type ScheduleOverviewProps = {
@@ -31,9 +26,8 @@ type ScheduleOverviewProps = {
     date?: string;
     eventType: StationRowType;
     view: ScheduleView;
-    onDateChange: (date?: string) => void;
+    onDateChange: (date: string) => void;
     onViewChange: (view: ScheduleView) => void;
-    onEventTypeChange: (eventType: StationRowType) => void;
 };
 
 const ScheduleOverview = ({
@@ -44,22 +38,13 @@ const ScheduleOverview = ({
     view,
     onDateChange,
     onViewChange,
-    onEventTypeChange,
 }: ScheduleOverviewProps) => {
     const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<TrainCategoryFilter>("all");
-    const [showWholeDay, setShowWholeDay] = useState(false);
-    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const scheduleButtonRef = useRef<HTMLButtonElement>(null);
-    const { translations } = useTranslations();
     const today = todayInHelsinki();
     const scheduleDate = date ?? today;
     const isTodaySchedule = isToday(scheduleDate);
     const now = Date.now();
-
-    useEffect(() => {
-        setShowWholeDay(false);
-    }, [date]);
 
     const { data: dateData, isLoading } = useQuery({
         ...stationScheduleByDateQueryOptions(stationId, scheduleDate),
@@ -75,32 +60,16 @@ const ScheduleOverview = ({
     const filterEntries = (entries: StationScheduleEntry[]) =>
         filterByTrack(filterScheduleEntriesByCategory(entries, selectedCategory));
 
-    const arrivalEntries = filterEntries(
-        getUpcomingStationEntries(schedules, stationId, "ARRIVAL", now),
-    );
-    const departureEntries = filterEntries(
-        getUpcomingStationEntries(schedules, stationId, "DEPARTURE", now),
-    );
-    const dayEntries = filterEntries(getStationDayEntries(daySchedules, stationId, eventType));
-    const visibleDayEntries =
-        isTodaySchedule && !showWholeDay
-            ? dayEntries.filter((entry) => entry.time >= now)
-            : dayEntries;
+    const getEntries = (type: StationRowType) =>
+        filterEntries(
+            isTodaySchedule
+                ? getUpcomingStationEntries(schedules, stationId, type, now)
+                : getStationDayEntries(daySchedules, stationId, type),
+        );
 
-    const closeSettings = useCallback(() => setIsSettingsOpen(false), []);
-
-    const handleViewChange = (nextView: ScheduleView) => {
-        if (nextView === "schedule") {
-            setIsSettingsOpen(true);
-            if (view !== "schedule") {
-                onViewChange(nextView);
-            }
-            return;
-        }
-
-        setIsSettingsOpen(false);
-        onViewChange(nextView);
-    };
+    const arrivalEntries = getEntries("ARRIVAL");
+    const departureEntries = getEntries("DEPARTURE");
+    const entries = view === "arrivals" ? arrivalEntries : departureEntries;
 
     return (
         <div className="space-y-8">
@@ -109,66 +78,34 @@ const ScheduleOverview = ({
                 onCategoryChange={setSelectedCategory}
             />
 
-            <TrackSelector
-                schedules={daySchedules}
-                stationId={stationId}
-                selectedTrack={selectedTrack}
-                onTrackSelect={setSelectedTrack}
-            />
+            <div className="flex flex-wrap items-center justify-center gap-2">
+                <TrackSelector
+                    schedules={daySchedules}
+                    stationId={stationId}
+                    selectedTrack={selectedTrack}
+                    onTrackSelect={setSelectedTrack}
+                />
+                <StationDateSelector date={scheduleDate} onDateChange={onDateChange} />
+            </div>
 
             <ScheduleViewSelector
                 view={view}
-                onViewChange={handleViewChange}
+                onViewChange={onViewChange}
                 arrivalCount={arrivalEntries.length}
                 departureCount={departureEntries.length}
-                scheduleCount={visibleDayEntries.length}
-                scheduleButtonRef={scheduleButtonRef}
             />
 
-            {view === "schedule" ? (
-                <>
-                    <ScheduleSettingsDialog
-                        open={isSettingsOpen}
-                        anchorRef={scheduleButtonRef}
-                        ariaLabel={translations.schedule}
-                        onClose={closeSettings}
-                    >
-                        <ScheduleEventTypeSelector
-                            eventType={eventType}
-                            onChange={onEventTypeChange}
-                        />
-                        <ScheduleDaySelector date={scheduleDate} onDateChange={onDateChange} />
-                        {isTodaySchedule && (
-                            <ScheduleScopeSelector
-                                showWholeDay={showWholeDay}
-                                onChange={setShowWholeDay}
-                            />
-                        )}
-                    </ScheduleSettingsDialog>
-                    {isLoading ? (
-                        <div className="flex items-center justify-center py-16">
-                            <Loading />
-                        </div>
-                    ) : (
-                        <DailySchedule
-                            key={`day-${scheduleDate}-${eventType}-${selectedCategory}-${
-                                selectedTrack ?? "all"
-                            }-${showWholeDay ? "all" : "remaining"}`}
-                            entries={visibleDayEntries}
-                            stationId={stationId}
-                            eventType={eventType}
-                            date={scheduleDate}
-                            isFiltered={isTodaySchedule && !showWholeDay}
-                            hasDaySchedules={daySchedules.length > 0}
-                        />
-                    )}
-                </>
+            {isLoading ? (
+                <div className="flex items-center justify-center py-16">
+                    <Loading />
+                </div>
             ) : (
                 <ScheduleList
-                    key={`${view}-${eventType}-${selectedCategory}-${selectedTrack ?? "all"}`}
-                    entries={view === "arrivals" ? arrivalEntries : departureEntries}
+                    key={`${scheduleDate}-${view}-${selectedCategory}-${selectedTrack ?? "all"}`}
+                    entries={entries}
                     stationId={stationId}
                     eventType={eventType}
+                    date={scheduleDate}
                 />
             )}
         </div>
