@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import Loading from "@/components/common/Loading";
 import ScheduleOverview from "@/components/features/stations/ScheduleOverview";
 import type { ScheduleView } from "@/components/features/stations/ScheduleViewSelector";
-import { useTranslations } from "@/lib/i18n/useTranslations";
+// import { useTranslations } from "@/lib/i18n/useTranslations";
 import { isValidStationCode, majorStations } from "@/lib/station/majorStations";
 import type { StationRowType } from "@/lib/station/schedule";
 import { isToday } from "@/lib/utils/date";
@@ -63,7 +63,7 @@ function StationRoute() {
     });
     const stationId = data?.stationId ?? id.toUpperCase();
     const schedules = data?.schedules ?? [];
-    const { translations } = useTranslations();
+    // const { translations } = useTranslations();
     const stationName = isValidStationCode(stationId) ? majorStations[stationId] : stationId;
 
     const view: ScheduleView = viewParam ?? "departures";
@@ -92,10 +92,10 @@ function StationRoute() {
 
     return (
         <div className="mx-auto max-w-7xl p-4">
-            <h2 className="text-3xl font-bold mb-2 text-center text-green-500">
+            <h2 className="text-3xl font-bold mb-8 text-center text-green-500">
                 {removeAsema(stationName)}
             </h2>
-            <div className="mb-8 text-center">
+            {/*<div className="mb-8 text-center">
                 <Link
                     to="/station-messages/$id"
                     params={{ id: stationId }}
@@ -103,7 +103,7 @@ function StationRoute() {
                 >
                     {translations.messagesForStation.replace("{station}", removeAsema(stationName))}
                 </Link>
-            </div>
+            </div>*/}
             <ScheduleOverview
                 schedules={schedules}
                 stationId={stationId}
