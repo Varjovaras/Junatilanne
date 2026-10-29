@@ -18,9 +18,7 @@ type RawMapTrain = {
 };
 
 type RawMapResponse = {
-    data: {
-        currentlyRunningTrains: RawMapTrain[];
-    };
+    currentlyRunningTrains: RawMapTrain[];
 };
 
 const toMapTrain = (train: RawMapTrain): MapTrain => ({
@@ -35,7 +33,7 @@ const toMapTrain = (train: RawMapTrain): MapTrain => ({
 export const getCachedMapTrains = defineCachedFunction(
     async (): Promise<MapTrain[]> => {
         const data = await graphqlFetch<RawMapResponse>(getMapQuery());
-        return data.data.currentlyRunningTrains.map(toMapTrain);
+        return data.currentlyRunningTrains.map(toMapTrain);
     },
     {
         name: "map-trains",

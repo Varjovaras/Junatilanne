@@ -10,6 +10,7 @@
         "start": "NITRO_PORT=5173 bun .output/server/index.mjs",
         "lint": "oxlint",
         "lint:fix": "oxlint --fix",
+        "test": "bun test",
         "format": "bun fmt",
         "fmt": "oxfmt",
         "fmt:check": "oxfmt --check"

@@ -13,11 +13,11 @@ export const getSingleTrainData = async (
     const { query, variables } = getSingleTrainQuery(trainNumber);
     const trainResponse = await graphqlFetch<SingleTrainResponse>(query, { signal, variables });
 
-    if (trainResponse.data.currentlyRunningTrains.length > 1) {
+    if (trainResponse.currentlyRunningTrains.length > 1) {
         throw new Error("Got multiple trains from singleTrainQuery");
     }
 
-    if (trainResponse.data.currentlyRunningTrains.length === 0) {
+    if (trainResponse.currentlyRunningTrains.length === 0) {
         throw new Error(`No train found currently running for number ${trainNumber}`);
     }
 

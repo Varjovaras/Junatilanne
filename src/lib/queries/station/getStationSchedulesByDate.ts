@@ -13,7 +13,7 @@ export const getStationSchedulesByDate = async (
     const { query, variables } = getStationScheduleQuery(stationId, date);
     const response = await graphqlFetch<StationScheduleGraphQLResponse>(query, { variables });
 
-    const trains = [...response.data.previousDay, ...response.data.selectedDay];
+    const trains = [...response.previousDay, ...response.selectedDay];
     const seen = new Set<string>();
     const unique = trains.filter((train) => {
         const key = `${train.trainNumber}-${String(train.departureDate).slice(0, 10)}`;

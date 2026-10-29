@@ -25,7 +25,7 @@ export const getTrainDetailsData = async (trainId: string): Promise<TrainDetails
 
     try {
         const response = await getCachedSingleTrain(trainId);
-        liveTrain = response.data.currentlyRunningTrains[0] ?? null;
+        liveTrain = response.currentlyRunningTrains[0] ?? null;
     } catch {
         liveTrain = null;
     }

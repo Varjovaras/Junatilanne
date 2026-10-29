@@ -8,5 +8,5 @@ export const getTrainByDateData = async (
 ): Promise<TrainType | null> => {
     const { query, variables } = getDifferentDateTrain(trainId);
     const data = await graphqlFetch<DifferentDayTrainResponse>(query, { signal, variables });
-    return data.data.train[0] ?? null;
+    return data.train[0] ?? null;
 };

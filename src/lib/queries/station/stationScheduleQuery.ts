@@ -136,8 +136,6 @@ export type StationScheduleGraphQLRow = {
 };
 
 export type StationScheduleGraphQLResponse = {
-    data: {
-        previousDay: StationScheduleGraphQLTrain[];
-        selectedDay: StationScheduleGraphQLTrain[];
-    };
+    previousDay: StationScheduleGraphQLTrain[];
+    selectedDay: StationScheduleGraphQLTrain[];
 };

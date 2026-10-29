@@ -25,9 +25,7 @@ export type TypeOfTrain = {
 };
 
 export type CurrentlyRunningTrainResponse = {
-    data: {
-        currentlyRunningTrains: TrainType[];
-    };
+    currentlyRunningTrains: TrainType[];
 };
 
 export type MapTrain = {
@@ -40,15 +38,11 @@ export type MapTrain = {
 };
 
 export type SingleTrainResponse = {
-    data: {
-        currentlyRunningTrains: TrainType[];
-    };
+    currentlyRunningTrains: TrainType[];
 };
 
 export type DifferentDayTrainResponse = {
-    data: {
-        train: TrainType[];
-    };
+    train: TrainType[];
 };
 
 export type TimeTableRow = {

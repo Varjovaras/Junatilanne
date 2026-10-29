@@ -12,5 +12,5 @@ export const homeTrainsQueryOptions = () =>
         queryFn: () => fetchTrainData(),
         refetchInterval: HOME_TRAINS_REFETCH_INTERVAL_MS,
         staleTime: HOME_TRAINS_STALE_TIME_MS,
-        select: (response) => response.data.currentlyRunningTrains as TrainType[],
+        select: (response) => response.currentlyRunningTrains as TrainType[],
     });
