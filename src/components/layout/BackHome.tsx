@@ -19,6 +19,8 @@ const BackHome = () => {
         <Link
             type="button"
             to="/"
+            // Keep the home filters when refreshing the data from the home page.
+            search={isHomePage ? true : undefined}
             replace={isHomePage}
             onClick={() => {
                 if (isHomePage) {

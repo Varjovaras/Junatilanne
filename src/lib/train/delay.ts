@@ -1,6 +1,25 @@
 import type { TrainGroup } from "@/lib/train/classification";
 import type { TrainType } from "../types/trainTypes";
 
+export const DELAY_THRESHOLDS = [0, 3, 5, 10, 15, 30] as const;
+
+export type DelayThreshold = (typeof DELAY_THRESHOLDS)[number];
+
+export const DEFAULT_DELAY_THRESHOLD: DelayThreshold = 0;
+
+export const parseDelayThreshold = (value: unknown): DelayThreshold | undefined => {
+    const threshold =
+        typeof value === "number"
+            ? value
+            : typeof value === "string" && value.trim() !== ""
+              ? Number(value)
+              : Number.NaN;
+
+    return (DELAY_THRESHOLDS as readonly number[]).includes(threshold)
+        ? (threshold as DelayThreshold)
+        : undefined;
+};
+
 export const getTrainCurrentDelay = (train: TrainType): number => {
     for (let index = train.timeTableRows.length - 1; index >= 0; index -= 1) {
         const row = train.timeTableRows[index];

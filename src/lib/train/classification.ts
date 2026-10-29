@@ -10,6 +10,19 @@ import type { TrainType } from "../types/trainTypes";
 export type TrainGroup = "commuter" | "longDistance" | "freight" | "other";
 export type TrainCategoryFilter = "all" | TrainGroup;
 
+export const TRAIN_CATEGORY_FILTERS: readonly TrainCategoryFilter[] = [
+    "all",
+    "longDistance",
+    "commuter",
+    "freight",
+    "other",
+];
+
+export const DEFAULT_TRAIN_CATEGORY: TrainCategoryFilter = "longDistance";
+
+export const isTrainCategoryFilter = (value: unknown): value is TrainCategoryFilter =>
+    (TRAIN_CATEGORY_FILTERS as readonly unknown[]).includes(value);
+
 type TrainClassificationInput = {
     commuterLineid: string;
     trainTypeName: string;

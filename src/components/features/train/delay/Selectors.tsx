@@ -1,28 +1,27 @@
-import type { Dispatch, SetStateAction } from "react";
 import type { SortOption } from "@/lib/train/sort";
 import DelayThresholdSelector from "./DelayThresholdSelector";
 import SortSelector from "./SortSelector";
 
 type SelectorsProps = {
     delayThreshold: number;
-    setDelayThreshold: Dispatch<SetStateAction<number>>;
+    onDelayThresholdChange: (threshold: number) => void;
     sortOption: SortOption;
-    setSortOption: Dispatch<SetStateAction<SortOption>>;
+    onSortChange: (sort: SortOption) => void;
 };
 
 const Selectors = ({
     delayThreshold,
-    setDelayThreshold,
+    onDelayThresholdChange,
     sortOption,
-    setSortOption,
+    onSortChange,
 }: SelectorsProps) => {
     return (
         <div className="flex flex-col gap-4 py-4 p-2">
             <DelayThresholdSelector
                 currentThreshold={delayThreshold}
-                onThresholdChange={setDelayThreshold}
+                onThresholdChange={onDelayThresholdChange}
             />
-            <SortSelector currentSort={sortOption} onSortChange={setSortOption} />
+            <SortSelector currentSort={sortOption} onSortChange={onSortChange} />
         </div>
     );
 };

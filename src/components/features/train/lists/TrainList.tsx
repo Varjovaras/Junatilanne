@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Selectors from "@/components/features/train/delay/Selectors";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import type { TrainType } from "@/lib/types/trainTypes";
@@ -12,15 +11,21 @@ import { getLateTrainsTitle, type TrainTypeFilter } from "./trainTypeMessages";
 type TrainListProps = {
     trains: TrainType[];
     trainType: TrainTypeFilter;
+    delayThreshold: number;
+    onDelayThresholdChange: (threshold: number) => void;
+    sortOption: SortOption;
+    onSortChange: (sort: SortOption) => void;
 };
 
-const TrainList = ({ trains, trainType }: TrainListProps) => {
+const TrainList = ({
+    trains,
+    trainType,
+    delayThreshold,
+    onDelayThresholdChange,
+    sortOption,
+    onSortChange,
+}: TrainListProps) => {
     const { translations, isLoading } = useTranslations();
-    const [delayThreshold, setDelayThreshold] = useState(0);
-    const [sortOption, setSortOption] = useState<SortOption>({
-        field: "delay",
-        direction: "desc",
-    });
 
     const filteredTrains = filterTrainsByDelay(trains, delayThreshold);
     const sortedTrains = sortTrains(filteredTrains, sortOption);
@@ -46,15 +51,15 @@ const TrainList = ({ trains, trainType }: TrainListProps) => {
                     <NoTrains
                         trainType={trainType}
                         delayThreshold={delayThreshold}
-                        setDelayThreshold={setDelayThreshold}
+                        onDelayThresholdChange={onDelayThresholdChange}
                     />
                 ) : (
                     <>
                         <Selectors
                             delayThreshold={delayThreshold}
-                            setDelayThreshold={setDelayThreshold}
+                            onDelayThresholdChange={onDelayThresholdChange}
                             sortOption={sortOption}
-                            setSortOption={setSortOption}
+                            onSortChange={onSortChange}
                         />
                         <div className="space-y-2 w-full">
                             {sortedTrains.map((train) => (
