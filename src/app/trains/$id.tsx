@@ -7,24 +7,14 @@ import { createRouteErrorComponent } from "@/components/common/RouteErrorCompone
 import LiveTrainPage from "@/components/features/train/details/LiveTrainPage";
 import NoTrainFound from "@/components/features/train/details/NoTrainFound";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { trainDetailsQueryOptions } from "@/lib/queries/train/trainDetails";
-import { trainDistanceQueryOptions } from "@/lib/queries/train/trainDistance";
+import { trainPageQueryOptions } from "@/lib/queries/train/trainDetails";
 import { formatDate } from "@/lib/utils/date";
 
 const TrainErrorComponent = createRouteErrorComponent("errorLoadingTrain");
 
 export const Route = createFileRoute("/trains/$id")({
-    loader: async ({ context: { queryClient }, params }) => {
-        const details = await queryClient.ensureQueryData(trainDetailsQueryOptions(params.id));
-
-        // Preload the distance data during SSR so the "X km to next station"
-        // chips arrive in the initial HTML instead of after a client fetch.
-        if (details.train) {
-            await queryClient.ensureQueryData(trainDistanceQueryOptions(details.train));
-        }
-
-        return details;
-    },
+    loader: async ({ context: { queryClient }, params }) =>
+        queryClient.ensureQueryData(trainPageQueryOptions(params.id)),
     pendingComponent: Loading,
     component: TrainRoute,
     errorComponent: TrainErrorComponent,
@@ -33,9 +23,9 @@ export const Route = createFileRoute("/trains/$id")({
 function TrainRoute() {
     const { id } = Route.useParams();
     const { data, isError, isFetching, dataUpdatedAt, refetch } = useSuspenseQuery(
-        trainDetailsQueryOptions(id),
+        trainPageQueryOptions(id),
     );
-    const { kind, train } = data;
+    const { kind, train, distance } = data;
     const { translations } = useTranslations();
 
     let content: ReactNode;
@@ -43,7 +33,7 @@ function TrainRoute() {
     if (kind === "invalid") {
         content = <div>{translations.invalidTrainId}</div>;
     } else if (train) {
-        content = <LiveTrainPage train={train} />;
+        content = <LiveTrainPage train={train} distance={distance} />;
     } else if (kind === "date") {
         const [trainNumber, year, month, day] = id.split("-");
         const formattedDate = formatDate(`${year}-${month}-${day}`);

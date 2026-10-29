@@ -1,59 +1,30 @@
 import { queryOptions } from "@tanstack/react-query";
-import type { TrainType } from "../../types/trainTypes";
-import { isValidDatedTrainId, isValidTrainNumber } from "@/lib/train/id";
 import { queryKeys } from "../shared/queryKeys";
-import { fetchSingleTrainData, fetchTrainByDateData } from "./server";
-import { todayTrainQueryOptions } from "./todayTrain";
+import { fetchTrainDetailsData, fetchTrainPageData } from "./server";
+import type { TrainDetailsData, TrainPageData } from "./trainDataTypes";
 
 export const TRAIN_DETAILS_REFETCH_INTERVAL_MS = 60_000;
 
-type TrainDetailsQueryData = {
-    kind: "invalid" | "date" | "live";
-    train: TrainType | null;
+type TrainQueryData = TrainDetailsData | TrainPageData;
+
+const getRefetchInterval = (query: { state: { data?: TrainQueryData } }) => {
+    const data = query.state.data;
+    if (data?.kind !== "live" || !data.train?.runningCurrently) {
+        return false;
+    }
+    return TRAIN_DETAILS_REFETCH_INTERVAL_MS;
 };
 
 export const trainDetailsQueryOptions = (trainId: string) =>
     queryOptions({
         queryKey: queryKeys.trainDetails(trainId),
-        queryFn: async ({ client }): Promise<TrainDetailsQueryData> => {
-            if (trainId.includes("-")) {
-                if (!isValidDatedTrainId(trainId)) {
-                    return { kind: "invalid", train: null };
-                }
+        queryFn: () => fetchTrainDetailsData({ data: trainId }),
+        refetchInterval: getRefetchInterval,
+    });
 
-                return {
-                    kind: "date",
-                    train: await fetchTrainByDateData({ data: trainId }),
-                };
-            }
-
-            if (!isValidTrainNumber(trainId)) {
-                return { kind: "invalid", train: null };
-            }
-
-            let liveTrain: TrainType | null = null;
-
-            try {
-                const response = await fetchSingleTrainData({ data: trainId });
-                liveTrain = response.data.currentlyRunningTrains[0] ?? null;
-            } catch {
-                liveTrain = null;
-            }
-
-            if (liveTrain) {
-                return { kind: "live", train: liveTrain };
-            }
-
-            return {
-                kind: "live",
-                train: await client.fetchQuery(todayTrainQueryOptions(trainId)),
-            };
-        },
-        refetchInterval: (query) => {
-            const data = query.state.data;
-            if (data?.kind !== "live" || !data.train?.runningCurrently) {
-                return false;
-            }
-            return TRAIN_DETAILS_REFETCH_INTERVAL_MS;
-        },
+export const trainPageQueryOptions = (trainId: string) =>
+    queryOptions({
+        queryKey: queryKeys.trainPage(trainId),
+        queryFn: () => fetchTrainPageData({ data: trainId }),
+        refetchInterval: getRefetchInterval,
     });

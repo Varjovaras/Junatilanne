@@ -1,6 +1,7 @@
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import DelayText from "@/components/common/DelayText";
 import { useTranslations } from "@/lib/i18n/useTranslations";
+import type { TrackDistances } from "@/lib/railway/graph";
 import type { TrainType } from "@/lib/types/trainTypes";
 import { formatDate, isToday } from "@/lib/utils/date";
 import { getTrainCurrentDelay } from "@/lib/train/delay";
@@ -12,8 +13,9 @@ import TrainSpeed from "../shared/TrainSpeed";
 
 type TrainHeaderProps = {
     train: TrainType;
+    distance: TrackDistances | null;
 };
-const TrainHeader = ({ train }: TrainHeaderProps) => {
+const TrainHeader = ({ train, distance }: TrainHeaderProps) => {
     const { translations } = useTranslations();
 
     const currentTimeDiff = getTrainCurrentDelay(train);
@@ -34,7 +36,7 @@ const TrainHeader = ({ train }: TrainHeaderProps) => {
                     <DelayText delay={currentTimeDiff} />
                 </TrainChip>
                 <TrainSpeed train={train} chip />
-                <TrainDistance train={train} chip />
+                <TrainDistance train={train} distance={distance} chip />
             </div>
         </div>
     );

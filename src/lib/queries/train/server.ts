@@ -1,29 +1,28 @@
 import { createServerFn } from "@tanstack/react-start";
-import { isValidDatedTrainId, isValidTrainNumber } from "@/lib/train/id";
-import { getTrainByDateData } from "./getTrainByDateData";
+import { isValidDatedTrainId } from "@/lib/train/id";
 
-export const fetchTrainByDateData = createServerFn({ method: "GET" })
-    .validator((trainId: string) => {
-        if (!isValidDatedTrainId(trainId)) {
-            throw new Error("Invalid train ID");
-        }
+const validateTrainId = (trainId: unknown): string => {
+    if (typeof trainId !== "string") {
+        throw new Error("Invalid train ID");
+    }
 
-        return trainId;
-    })
-    .handler(({ data: trainId }) => getTrainByDateData(trainId));
+    return trainId;
+};
 
-export const fetchSingleTrainData = createServerFn({ method: "GET" })
-    .validator((trainNumber: string) => {
-        if (!isValidTrainNumber(trainNumber)) {
-            throw new Error("Invalid train number");
-        }
+export const fetchTrainDetailsData = createServerFn({ method: "GET" })
+    .validator(validateTrainId)
+    .handler(async ({ data: trainId }) => {
+        const { getTrainDetailsData } = await import("./getTrainDetailsData");
 
-        return trainNumber;
-    })
-    .handler(async ({ data: trainNumber }) => {
-        const { getCachedSingleTrain } = await import("./getCachedSingleTrain");
+        return getTrainDetailsData(trainId);
+    });
 
-        return getCachedSingleTrain(trainNumber);
+export const fetchTrainPageData = createServerFn({ method: "GET" })
+    .validator(validateTrainId)
+    .handler(async ({ data: trainId }) => {
+        const { getTrainPageData } = await import("./getTrainPageData");
+
+        return getTrainPageData(trainId);
     });
 
 export const fetchTrainDistances = createServerFn({ method: "GET" })

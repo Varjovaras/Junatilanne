@@ -2,20 +2,22 @@ import { Link } from "@tanstack/react-router";
 import DelayCauses from "@/components/features/train/delay/DelayCauses";
 import TrainHeader from "@/components/features/train/details/TrainHeader";
 import { useTranslations } from "@/lib/i18n/useTranslations";
+import type { TrackDistances } from "@/lib/railway/graph";
 import type { TrainType } from "@/lib/types/trainTypes";
 import Train from "./Train";
 
 type LiveTrainPageProps = {
     train: TrainType;
+    distance: TrackDistances | null;
 };
 
-const LiveTrainPage = ({ train }: LiveTrainPageProps) => {
+const LiveTrainPage = ({ train, distance }: LiveTrainPageProps) => {
     const { translations } = useTranslations();
 
     return (
         <div className="mx-auto flex flex-col items-center max-w-6xl px-4">
             <div className="w-full flex flex-col items-center gap-2 mb-4">
-                <TrainHeader train={train} />
+                <TrainHeader train={train} distance={distance} />
                 <div className="flex items-center justify-center gap-2">
                     <Link
                         to="/map"

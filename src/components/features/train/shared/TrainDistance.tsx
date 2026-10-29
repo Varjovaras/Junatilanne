@@ -1,6 +1,7 @@
 import { faLocationDot, faRoute } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "@/lib/i18n/useTranslations";
+import type { TrackDistances } from "@/lib/railway/graph";
 import { trainDistanceQueryOptions } from "@/lib/queries/train/trainDistance";
 import type { TrainType } from "@/lib/types/trainTypes";
 import { removeAsema } from "@/lib/utils/string";
@@ -14,6 +15,9 @@ type TrainDistanceProps = {
     // When false the distance query is not run; used to keep collapsed rows on
     // the homepage from computing distances until they are expanded.
     enabled?: boolean;
+    // Precomputed distances from the detail page's combined train query. When
+    // provided, the component does not fetch them again.
+    distance?: TrackDistances | null;
 };
 
 const formatKilometers = (kilometers: number): string =>
@@ -24,32 +28,40 @@ const TrainDistance = ({
     align = "center",
     chip = false,
     enabled = true,
+    distance,
 }: TrainDistanceProps) => {
     const { translations } = useTranslations();
-    const { data } = useQuery({ ...trainDistanceQueryOptions(train), enabled });
+    const hasProvidedDistance = distance !== undefined;
+    const { data } = useQuery({
+        ...trainDistanceQueryOptions(train),
+        enabled: enabled && !hasProvidedDistance,
+    });
+    const resolvedDistance = hasProvidedDistance ? distance : data;
 
-    if (!data) return null;
+    if (!resolvedDistance) return null;
 
     // The station a distance refers to comes from the distance calculation, so
     // the label always matches the measurement even when the train is ahead of
     // the timetable.
     const nextStation =
-        train.timeTableRows.find((row) => row.station.shortCode === data.nextStationShortCode) ??
-        getNextCommercialStation(train);
+        train.timeTableRows.find(
+            (row) => row.station.shortCode === resolvedDistance.nextStationShortCode,
+        ) ?? getNextCommercialStation(train);
     const destination =
-        train.timeTableRows.find((row) => row.station.shortCode === data.destinationShortCode) ??
-        getCommercialStations(train.timeTableRows, "ARRIVAL").at(-1);
+        train.timeTableRows.find(
+            (row) => row.station.shortCode === resolvedDistance.destinationShortCode,
+        ) ?? getCommercialStations(train.timeTableRows, "ARRIVAL").at(-1);
 
     const nextStationText = nextStation
         ? translations.kmToNextStation
-              .replace("{n}", formatKilometers(data.toNextStationKm))
+              .replace("{n}", formatKilometers(resolvedDistance.toNextStationKm))
               .replace("{station}", removeAsema(nextStation.station.name))
         : null;
 
     const destinationText =
         destination && destination.station.shortCode !== nextStation?.station.shortCode
             ? translations.remainingToDestination
-                  .replace("{n}", formatKilometers(data.toDestinationKm))
+                  .replace("{n}", formatKilometers(resolvedDistance.toDestinationKm))
                   .replace("{station}", removeAsema(destination.station.name))
             : null;
 

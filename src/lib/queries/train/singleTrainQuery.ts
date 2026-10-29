@@ -41,8 +41,13 @@ query SingleTrain($trainNumber: Int!) {
       differenceInMinutes
       liveEstimateTime
       station {
+        passengerTraffic
+        countryCode
+        location
         name
         shortCode
+        uicCode
+        type
       }
       causes {
         categoryCode {

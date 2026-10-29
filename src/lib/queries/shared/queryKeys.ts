@@ -9,7 +9,7 @@ export const queryKeys = {
     stationSchedulesByDate: (stationId: string, date: string) =>
         ["station", "schedules", normalizeStationId(stationId), "date", date] as const,
     trainDetails: (trainId: string) => ["train", "details", trainId] as const,
-    todayTrain: (trainId: string) => ["train", "today", trainId] as const,
+    trainPage: (trainId: string) => ["train", "page", trainId] as const,
     trainDistance: (trainNumber: string, locationTimestamp: string) =>
         ["train", "distance", trainNumber, locationTimestamp] as const,
 };
