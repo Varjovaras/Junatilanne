@@ -1,14 +1,18 @@
 import { ClientOnly, createFileRoute } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
 import Loading from "@/components/common/Loading";
+import { createRouteErrorComponent } from "@/components/common/RouteErrorComponent";
 
 const TrainMap = lazy(() => import("@/components/features/map/TrainMap"));
+
+const MapErrorComponent = createRouteErrorComponent("errorLoadingMap");
 
 export const Route = createFileRoute("/map")({
     validateSearch: (search: Record<string, unknown>) => ({
         train: typeof search.train === "string" ? search.train : undefined,
     }),
     component: MapRoute,
+    errorComponent: MapErrorComponent,
 });
 
 function MapRoute() {

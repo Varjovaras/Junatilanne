@@ -1,7 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import DataFreshness from "@/components/common/DataFreshness";
+import ErrorState from "@/components/common/ErrorState";
 import Loading from "@/components/common/Loading";
 import TrainTypeSelector from "@/components/common/TrainTypeSelector";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import { stationScheduleByDateQueryOptions } from "@/lib/queries/station/stationSchedules";
 import type { StationSchedule } from "@/lib/types/stationTypes";
 import { isToday, todayInHelsinki } from "@/lib/utils/date";
@@ -39,6 +42,7 @@ const ScheduleOverview = ({
     onDateChange,
     onViewChange,
 }: ScheduleOverviewProps) => {
+    const { translations } = useTranslations();
     const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<TrainCategoryFilter>("all");
     const today = todayInHelsinki();
@@ -46,7 +50,14 @@ const ScheduleOverview = ({
     const isTodaySchedule = isToday(scheduleDate);
     const now = Date.now();
 
-    const { data: dateData, isLoading } = useQuery({
+    const {
+        data: dateData,
+        isLoading,
+        isError,
+        isFetching,
+        dataUpdatedAt,
+        refetch,
+    } = useQuery({
         ...stationScheduleByDateQueryOptions(stationId, scheduleDate),
         enabled: !isTodaySchedule,
     });
@@ -95,18 +106,35 @@ const ScheduleOverview = ({
                 departureCount={departureEntries.length}
             />
 
-            {isLoading ? (
+            {isError && !dateData ? (
+                <ErrorState
+                    description={translations.errorLoadingStation}
+                    onRetry={() => void refetch()}
+                />
+            ) : isLoading ? (
                 <div className="flex items-center justify-center py-16">
                     <Loading />
                 </div>
             ) : (
-                <ScheduleList
-                    key={`${scheduleDate}-${view}-${selectedCategory}-${selectedTrack ?? "all"}`}
-                    entries={entries}
-                    stationId={stationId}
-                    eventType={eventType}
-                    date={scheduleDate}
-                />
+                <>
+                    {!isTodaySchedule && (
+                        <div className="flex justify-end mb-2">
+                            <DataFreshness
+                                dataUpdatedAt={dataUpdatedAt}
+                                isFetching={isFetching}
+                                isError={isError}
+                                onRefresh={() => void refetch()}
+                            />
+                        </div>
+                    )}
+                    <ScheduleList
+                        key={`${scheduleDate}-${view}-${selectedCategory}-${selectedTrack ?? "all"}`}
+                        entries={entries}
+                        stationId={stationId}
+                        eventType={eventType}
+                        date={scheduleDate}
+                    />
+                </>
             )}
         </div>
     );

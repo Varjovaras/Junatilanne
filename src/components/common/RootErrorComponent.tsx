@@ -1,23 +1,27 @@
 import { useEffect } from "react";
-import type { ErrorComponentProps } from "@tanstack/react-router";
+import { useRouter, type ErrorComponentProps } from "@tanstack/react-router";
+import ErrorState from "@/components/common/ErrorState";
 
 const RootErrorComponent = ({ error, reset }: ErrorComponentProps) => {
+    const router = useRouter();
+
     useEffect(() => {
-        console.error(error);
+        // Keep the real error in the console for debugging, but never show
+        // implementation details to the user.
+        console.error("Unhandled application error:", error);
     }, [error]);
 
+    const retry = reset
+        ? () => {
+              reset();
+              void router.invalidate();
+          }
+        : undefined;
+
     return (
-        <div className="flex flex-col items-center gap-4 p-8">
-            <h2 className="text-xl text-red-500">
-                {error.message || "An unexpected error occurred"}
-            </h2>
-            <button
-                type="button"
-                onClick={() => reset()}
-                className="px-4 py-2 text-sm border border-foreground rounded-md hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-            >
-                Try again
-            </button>
+        <div className="flex items-center justify-center min-h-screen p-8">
+            <title>Junatilanne</title>
+            <ErrorState onRetry={retry} />
         </div>
     );
 };

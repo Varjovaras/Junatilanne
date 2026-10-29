@@ -65,6 +65,7 @@ const StationsOnMap = ({ stations, popup, setPopup }: StationsOnMapProps) => {
         data: stationSchedules,
         isError,
         isPending,
+        refetch,
     } = useQuery({
         ...stationSchedulesQueryOptions(stationCode ?? ""),
         enabled: Boolean(stationCode),
@@ -101,7 +102,18 @@ const StationsOnMap = ({ stations, popup, setPopup }: StationsOnMapProps) => {
                     </Link>
                     <div className="mt-2 space-y-1 text-sm text-foreground/70">
                         {isPending && <p>{translations.mapLoading}</p>}
-                        {isError && <p>{translations.mapStationDataError}</p>}
+                        {isError && (
+                            <div>
+                                <p>{translations.mapStationDataError}</p>
+                                <button
+                                    type="button"
+                                    onClick={() => void refetch()}
+                                    className="mt-1 font-medium underline underline-offset-2 hover:text-foreground"
+                                >
+                                    {translations.retry}
+                                </button>
+                            </div>
+                        )}
                         {!isPending && !isError && upcomingSchedules.length === 0 && (
                             <p>{translations.noUpcomingDepartures}</p>
                         )}

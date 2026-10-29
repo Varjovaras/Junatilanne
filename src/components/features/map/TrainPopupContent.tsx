@@ -13,9 +13,12 @@ type TrainPopupContentProps = {
 
 const TrainPopupContent = ({ train }: TrainPopupContentProps) => {
     const { translations } = useTranslations();
-    const { data: trainDetails, isPending } = useQuery(
-        trainDetailsQueryOptions(String(train.trainNumber)),
-    );
+    const {
+        data: trainDetails,
+        isPending,
+        isError,
+        refetch,
+    } = useQuery(trainDetailsQueryOptions(String(train.trainNumber)));
     const detailedTrain = trainDetails?.train;
     const speed = detailedTrain?.trainLocations[0]?.speed ?? train.trainLocations[0]?.speed;
     const currentStation = detailedTrain ? getLatestVisitedStationName(detailedTrain) : null;
@@ -44,6 +47,18 @@ const TrainPopupContent = ({ train }: TrainPopupContentProps) => {
                 </p>
                 <p>{train.trainType.trainCategory?.name || train.trainType.name}</p>
                 {isPending && <p>{translations.mapLoading}</p>}
+                {isError && (
+                    <div className="flex flex-wrap items-center gap-2 text-red-500">
+                        <span>{translations.trainDetailsUnavailable}</span>
+                        <button
+                            type="button"
+                            onClick={() => void refetch()}
+                            className="font-medium underline underline-offset-2 hover:text-foreground"
+                        >
+                            {translations.retry}
+                        </button>
+                    </div>
+                )}
                 {currentStation && (
                     <p>
                         {translations.latestStation} {currentStation}

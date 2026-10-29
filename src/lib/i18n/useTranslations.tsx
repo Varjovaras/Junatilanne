@@ -44,3 +44,20 @@ export const useTranslations = () => {
     }
     return context;
 };
+
+// Error boundaries above the root layout render outside the LanguageProvider.
+// This variant keeps those components localized instead of crashing.
+export const useTranslationsSafe = () => {
+    const context = useContext(TranslationContext);
+    const lang = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+    if (context) {
+        return context;
+    }
+
+    return {
+        translations: translations[lang],
+        currentLang: lang,
+        isLoading: false,
+    };
+};

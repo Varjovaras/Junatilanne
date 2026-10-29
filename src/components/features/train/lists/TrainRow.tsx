@@ -58,6 +58,7 @@ const TrainRow = ({ train }: TrainRowProps) => {
             <div
                 role="button"
                 tabIndex={0}
+                aria-expanded={expanded}
                 onClick={toggle}
                 onKeyDown={(event) => {
                     if (event.target !== event.currentTarget) return;
@@ -99,7 +100,10 @@ const TrainRow = ({ train }: TrainRowProps) => {
                             toggle();
                         }}
                         aria-expanded={expanded}
-                        aria-label={`${expanded ? "Collapse" : "Expand"} ${trainName}`}
+                        aria-label={(expanded
+                            ? translations.collapseTrain
+                            : translations.expandTrain
+                        ).replace("{train}", trainName)}
                         className="shrink-0 flex items-center justify-center w-8 h-8 rounded-full border border-border hover:bg-surface-hover transition-colors"
                     >
                         <FontAwesomeIcon

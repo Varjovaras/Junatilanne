@@ -1,9 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import DataFreshness from "@/components/common/DataFreshness";
+import ErrorState from "@/components/common/ErrorState";
 import Loading from "@/components/common/Loading";
+import { createRouteErrorComponent } from "@/components/common/RouteErrorComponent";
 import ScheduleOverview from "@/components/features/stations/ScheduleOverview";
 import type { ScheduleView } from "@/components/features/stations/ScheduleViewSelector";
-// import { useTranslations } from "@/lib/i18n/useTranslations";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import { isValidStationCode, majorStations } from "@/lib/station/majorStations";
 import type { StationRowType } from "@/lib/station/schedule";
 import { isToday, isValidDate } from "@/lib/utils/date";
@@ -24,6 +27,8 @@ type StationSearch = {
 
 const isStationView = (value: unknown): value is StationView =>
     VIEW_VALUES.some((view) => view === value);
+
+const StationErrorComponent = createRouteErrorComponent("errorLoadingStation");
 
 export const Route = createFileRoute("/stations/$id")({
     validateSearch: (search: Record<string, unknown>): StationSearch => {
@@ -47,19 +52,20 @@ export const Route = createFileRoute("/stations/$id")({
     },
     pendingComponent: Loading,
     component: StationRoute,
+    errorComponent: StationErrorComponent,
 });
 
 function StationRoute() {
     const { id } = Route.useParams();
     const { date, view: viewParam } = Route.useSearch();
     const navigate = useNavigate();
-    const { data } = useQuery({
+    const { data, isError, isFetching, dataUpdatedAt, refetch } = useQuery({
         ...stationSchedulesQueryOptions(id),
         enabled: !date || isToday(date),
     });
     const stationId = data?.stationId ?? id.toUpperCase();
     const schedules = data?.schedules ?? [];
-    // const { translations } = useTranslations();
+    const { translations } = useTranslations();
     const stationName = isValidStationCode(stationId) ? majorStations[stationId] : stationId;
 
     const view: ScheduleView = viewParam ?? "departures";
@@ -91,15 +97,32 @@ function StationRoute() {
             <h2 className="text-3xl font-bold mb-8 text-center text-green-500">
                 {removeAsema(stationName)}
             </h2>
-            <ScheduleOverview
-                schedules={schedules}
-                stationId={stationId}
-                date={date}
-                eventType={eventType}
-                view={view}
-                onDateChange={handleDateChange}
-                onViewChange={handleViewChange}
-            />
+            {(!date || isToday(date)) && (
+                <div className="flex justify-end mb-2">
+                    <DataFreshness
+                        dataUpdatedAt={dataUpdatedAt}
+                        isFetching={isFetching}
+                        isError={isError}
+                        onRefresh={() => void refetch()}
+                    />
+                </div>
+            )}
+            {isError && !data ? (
+                <ErrorState
+                    description={translations.errorLoadingStation}
+                    onRetry={() => void refetch()}
+                />
+            ) : (
+                <ScheduleOverview
+                    schedules={schedules}
+                    stationId={stationId}
+                    date={date}
+                    eventType={eventType}
+                    view={view}
+                    onDateChange={handleDateChange}
+                    onViewChange={handleViewChange}
+                />
+            )}
         </div>
     );
 }

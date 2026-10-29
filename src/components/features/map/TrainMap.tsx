@@ -13,6 +13,8 @@ import MapGL, {
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./TrainMap.css";
+import DataFreshness from "@/components/common/DataFreshness";
+import ErrorState from "@/components/common/ErrorState";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { mapTrainsQueryOptions } from "@/lib/queries/map/mapTrains";
 import { stationMetadataQueryOptions } from "@/lib/queries/map/stationMetadata";
@@ -46,8 +48,19 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
     const [spritesReady, setSpritesReady] = useState(false);
     const lastCenteredTrain = useRef<string | undefined>(undefined);
 
-    const { data: trains = [], isFetching, isPending } = useQuery(mapTrainsQueryOptions());
-    const { data: stations = [] } = useQuery(stationMetadataQueryOptions());
+    const {
+        data: trains = [],
+        isFetching,
+        isPending,
+        isError,
+        refetch,
+        dataUpdatedAt,
+    } = useQuery(mapTrainsQueryOptions());
+    const {
+        data: stations = [],
+        isError: stationsError,
+        refetch: refetchStations,
+    } = useQuery(stationMetadataQueryOptions());
 
     useEffect(() => {
         if (!popup) return;
@@ -173,6 +186,17 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
         );
     }
 
+    if (isError && trains.length === 0) {
+        return (
+            <div className="flex items-center justify-center h-full w-full bg-background">
+                <ErrorState
+                    description={translations.errorLoadingMap}
+                    onRetry={() => void refetch()}
+                />
+            </div>
+        );
+    }
+
     return (
         <div className="relative h-full w-full">
             <MapGL
@@ -213,11 +237,35 @@ const TrainMap = ({ trainNumber }: TrainMapProps) => {
                 />
             </MapGL>
             <TrainSelector category={category} setCategory={setCategory} />
-            {isFetching && trains.length > 0 && (
-                <div className="absolute top-4 right-4 z-10">
-                    <div className="bg-background/90 backdrop-blur-sm rounded-full p-2 shadow-lg border border-foreground/10">
-                        <div className="animate-spin h-4 w-4 border-2 border-foreground/20 border-t-foreground rounded-full" />
-                    </div>
+            <div className="absolute top-4 right-4 z-10">
+                <div className="bg-background/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg border border-foreground/10">
+                    <DataFreshness
+                        dataUpdatedAt={dataUpdatedAt}
+                        isFetching={isFetching}
+                        isError={isError}
+                        onRefresh={() => void refetch()}
+                    />
+                </div>
+            </div>
+            {!isError && filteredTrains.length === 0 && (
+                <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center p-4">
+                    <p className="rounded-lg border border-foreground/10 bg-background/90 px-4 py-2 text-sm text-foreground/70 shadow-lg backdrop-blur-sm">
+                        {trains.length === 0
+                            ? translations.noTrainsRunning
+                            : translations.noTrainsInCategory}
+                    </p>
+                </div>
+            )}
+            {stationsError && (
+                <div className="absolute bottom-4 left-4 z-10 max-w-xs rounded-lg border border-amber-500/30 bg-background/90 p-3 text-xs shadow-lg backdrop-blur-sm">
+                    <p className="text-amber-600 font-medium">{translations.mapStationDataError}</p>
+                    <button
+                        type="button"
+                        onClick={() => void refetchStations()}
+                        className="mt-1 font-medium underline underline-offset-2 hover:text-foreground"
+                    >
+                        {translations.retry}
+                    </button>
                 </div>
             )}
         </div>
