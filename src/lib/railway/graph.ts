@@ -1,5 +1,6 @@
 import type { TimeTableRow, TrainLocation, TrainType } from "../types/trainTypes";
 import { distanceBetweenCoordinates } from "@/lib/train/direction";
+import { loadRailwayLines } from "./lines";
 import {
     getCommercialArrivalStations,
     getCommercialStations,
@@ -269,6 +270,13 @@ const getGraphForLines = (lines: Coordinate[][]): Promise<Graph> => {
         graphCache = { lines, graph: buildGraph(lines) };
     }
     return graphCache.graph;
+};
+
+// Build the graph ahead of the first distance request. The build promise is
+// cached synchronously, so requests arriving while this runs share it instead
+// of starting another build.
+export const warmRailwayGraph = async (): Promise<void> => {
+    await getGraphForLines(await loadRailwayLines());
 };
 
 const toLocalMeters = (point: Coordinate, reference: Coordinate): [number, number] => {

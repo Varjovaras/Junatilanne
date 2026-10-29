@@ -2,6 +2,7 @@ import { fileURLToPath } from "node:url";
 import { defineNitroConfig } from "nitro/config";
 
 export default defineNitroConfig({
+    plugins: [fileURLToPath(new URL("./plugins/warm-railway-graph.ts", import.meta.url))],
     storage: {
         "": { driver: "fs", base: "./.data/cache" },
     },
