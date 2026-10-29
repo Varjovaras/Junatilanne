@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ClientOnly, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import DataFreshness from "@/components/common/DataFreshness";
 import Loading from "@/components/common/Loading";
 import { createRouteErrorComponent } from "@/components/common/RouteErrorComponent";
@@ -50,6 +50,8 @@ export const Route = createFileRoute("/")({
             ...(sort && !isDefaultSort(sort) ? { sort: formatSortParam(sort) } : {}),
         };
     },
+    loader: ({ context: { queryClient } }) => queryClient.ensureQueryData(homeTrainsQueryOptions()),
+    pendingComponent: Loading,
     component: Home,
     errorComponent: HomeErrorComponent,
 });
@@ -57,15 +59,7 @@ export const Route = createFileRoute("/")({
 function Home() {
     return (
         <div className="w-full">
-            <ClientOnly
-                fallback={
-                    <div className="flex items-center justify-center min-h-[calc(100vh-300px)]">
-                        <Loading />
-                    </div>
-                }
-            >
-                <HomeContent />
-            </ClientOnly>
+            <HomeContent />
         </div>
     );
 }
